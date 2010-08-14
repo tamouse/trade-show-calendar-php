@@ -32,6 +32,9 @@ $main_table_month_color         = "#ffffff";    // background colour for days in
 $main_table_month_invalid_color = "#d1d9de";    // background colour for invalid days in the month view
 $main_table_labels_back_color   = $header_back_color;     // background colour for the row labels column
 
+$available_background_color     = "#CCFAC3";
+$booked_background_color        = "#F7B0A8";
+
 // border colours for the main table when it is printed.     These are used by cdma-print.css.php
 $main_table_border_color_print        = "#879AA8";    // border colour for the main table (print view)
 $main_table_header_border_color_print = "#879AA8";    // border colour for day/week/month tables - header (print view)
@@ -61,6 +64,8 @@ $anchor_link_color_header       = $header_font_color;          // link color
 $anchor_visited_color_header    = $anchor_link_color_header;   // link color (visited)
 $anchor_hover_color_header      = $anchor_link_color_header;   // link color (hover)
 
+$cell_hover_color               = "#FAC3C9";   // highlight a cell in main table when hovering over it
+
 $column_hidden_color            = $main_table_month_invalid_color;    // hidden days in the week and month views
 $calendar_hidden_color          = "#dae0e4";                          // hidden days in the mini-cals
 $row_even_color                 = "#ffffff";        // even rows in the day and week views
@@ -85,7 +90,7 @@ $color_types = array(
     'G' => "#ccffcc",
     'H' => "#d9d982",
     'I' => "#99cc66",
-    'J' => "#e6ffe6"); 
+    'O' => "#e6ffe6"); 
 
 // colours used for pending.php and provisional bookings
 $outstanding_color         = "#FFF36C"; // font colour for the outstanding reservations message in the header

@@ -53,7 +53,7 @@ print_header($event_id, $day_id);
 echo "<h2>" . get_vocab("administration") . "</h2>\n";
 if (!empty($error))
 {
-  echo "<p class=\"error\">" . get_vocab($error) . "</p>\n";
+  echo "<p class=\"error\" id=\"$error\">" . get_vocab($error) . "</p>\n";
 }
 
 // TOP SECTION:  THE FORM FOR SELECTING AN EVENT
@@ -234,7 +234,7 @@ else
 	      </div>
 
 	      <div>
-	        <input type="submit" class="submit" value="<?php echo get_vocab("addroom") ?>">
+	        <input type="submit" class="submit" value="<?php echo get_vocab("addday") ?>">
 	      </div>
 
 	    </fieldset>
@@ -441,6 +441,9 @@ if ($is_admin && $events_defined && !empty($event_id))
 }
 echo "</div>\n";
 
+echo "<div class=\"simple_trailer\" style=\"clear: both;\">\n";
+echo "<a href=\"day.php?event_id=$event_id&day_id=$day_id\">" . get_vocab('backmain') . "</a>\n";
+echo "</div>\n";
 
 require_once "trailer.inc"
 ?>

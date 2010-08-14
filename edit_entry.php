@@ -5,22 +5,26 @@ require_once "defaultincludes.inc";
 
 require_once "cdma_sql.inc";
 
+
 global $twentyfourhour_format;
 
 // Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$hour = get_form_var('hour', 'int');
-$minute = get_form_var('minute', 'int');
-$period = get_form_var('period', 'int');
-$area = get_form_var('area', 'int');
-$room = get_form_var('room', 'int');
-$id = get_form_var('id', 'int');
-$copy = get_form_var('copy', 'int');
+$day_id = get_form_var('day_id', 'int');
+$event_id = get_form_var('event_id', 'int');
+$room_id = get_form_var('room_id', 'int');
+$start_hour = get_form_var('start_hour', 'int');
+$start_minute = get_form_var('start_minute', 'int');
+$entry_id = get_form_var('entry_id', 'int');
+
 $edit_type = get_form_var('edit_type', 'string');
 $returl = get_form_var('returl', 'string');
 $private = get_form_var('private', 'string');
+
+if (empty($returl)) {
+	$returl = "day.php";
+}
+$location = $returl . "?event_id=$event_id&day_id=$day_id&room_id=$room_id&error=notimplemented";
+redirect($location);
 
 if (empty($area))
 {

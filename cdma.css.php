@@ -192,6 +192,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
 .dwm_main th a:visited {color: <?php echo $anchor_visited_color_header ?>; text-decoration: none; font-weight: normal}
 .dwm_main th a:hover   {color: <?php echo $anchor_hover_color_header ?>;   text-decoration:underline; font-weight: normal}
+.dwm_main td:hover {background-color: <?php echo $cell_hover_color ?>;}
 
 .dwm_main#day_main th.first_last {width: <?php echo $column_row_labels_width ?>%}
 .dwm_main#week_main th {width: <?php echo $column_week ?>%}
@@ -202,12 +203,31 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
 .dwm_main#month_main a {height: 100%; width: 100%; padding: 0 2px 0 2px}
 
-a.new_booking {display: block; font-size: medium; text-align: center}
-.new_booking img {margin: auto; padding: 4px 0 2px 0}
+span.available {background-color: <?php echo $available_background_color; ?>;}
+a.available {display: block; font-size: medium; text-align: center; background-color: <?php echo $available_background_color ?>;}
+.available img {margin: auto; padding: 4px 0 2px 0}
 <?php
 if (!$show_plus_link)
 {
-  echo ".new_booking img {display: none}\n";
+  echo ".available img {display: none}\n";
+}
+?>
+span.new_slot {}
+a.new_slot {display: block; font-size: small; text-align: center}
+.new_slot img {margin: auto; padding: 4px 0 2px 0}
+<?php
+if (!show_plus_link)
+{
+	echo ".new_booking img {display: none}\n";
+}
+?>
+span.booked {background-color: <?php echo $booked_background_color;?>;}
+a.booked {display: block; font-size: medium; font-style: italic; text-align: center; background-color: <?php echo $booked_backgound_color ?>;}
+.booked img {marging: auto; padding: 4px 0 2px 0}
+<?php
+if (!show_plus_link)
+{
+	echo ".booked img {display: none}\n";
 }
 ?>
 

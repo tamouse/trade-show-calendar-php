@@ -13,6 +13,9 @@
 // The charset to use in "Content-type" header
 $vocab["charset"]            = "iso-8859-1";
 
+// misc bindings
+$vocab["notimplemented"]      = "That feature is not implemented yet";
+
 // Used in style.inc
 $vocab["cdma"]               = "CDMA Calendar Booking";
 
@@ -35,6 +38,11 @@ $vocab["gototoday"]          = "Go To Today";
 $vocab["goto"]               = "goto";
 $vocab["highlight_line"]     = "Highlight this line";
 $vocab["click_to_reserve"]   = "Click on the cell to make a reservation.";
+$vocab["available"]          = "Available";
+$vocab["booked"]             = "Booked";
+$vocab["noslot"]             = "Add slot";
+$vocab["noslotid"]           = "No slot was specified";
+$vocab["slotdeletefailed"]   = "Slot delete attempt failed";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "View Day";
@@ -282,12 +290,15 @@ $vocab["noevents"]           = "No events have been defined.";
 $vocab["addevent"]           = "Add Event";
 $vocab["name"]               = "Name";
 $vocab["day_string"]         = "Date";
+$vocab["nodays"]			 = "No days have been defined.";
+$vocab["noday"]				 = "No day selected.";
 $vocab["noevent"]            = "No event selected";
 $vocab["browserlang"]        = "Your browser is set with the following language preference order";
 $vocab["addroom"]            = "Add Room";
 $vocab["addday"]             = "Add Day";
 $vocab["capacity"]           = "Capacity";
 $vocab["norooms"]            = "No rooms have been defined.";
+$vocab["noroom"]			 = "No room selected.";
 $vocab["administration"]     = "Administration";
 $vocab["invalid_event_name"] = "This event name has already been used!";
 $vocab['invaliddate']        = "Invalid date given";
@@ -297,11 +308,14 @@ $vocab['invalid_room_name']  = "This room name has aleady been used for this eve
 $vocab['nonamegiven']        = "No name given, name is required";
 $vocab['noroomnumbergiven']  = "No room number given, required";
 $vocab['room_description']   = "Description";
+$vocab["nostarttime"]		 = "No start time given.";
+$vocab["duplicateslot"]	     = "Duplicate slot";
 
 // Used in edit_event_room.php
 $vocab["editevent"]               = "Edit Event";
 $vocab["change"]                  = "Change";
-$vocab["backadmin"]               = "Back to Rooms";
+$vocab["backadmin"]               = "Back to Admin";
+$vocab["backmain"]                = "Back to Main";
 $vocab["editroomdayevent"]        = "Edit Event, Day or Room Description";
 $vocab["editroom"]                = "Edit Room";
 $vocab["viewroom"]                = "View Room";

@@ -8,6 +8,7 @@ require_once "theme.inc";
 $event_id = get_form_var('event_id', 'int');
 $day_id = get_form_var('day_id', 'int');
 $debug_flag = get_form_var('debug_flag', 'int');
+$error = get_form_var('error' , 'string');
 
 if (empty($debug_flag))
 {
@@ -25,9 +26,22 @@ if (!isset($day_id))
 	$day_id = get_first_day_for_event($event_id);
 }
 
+$is_admin = getAdmin();
 
 // print the page header
 print_header($event_id, $day_id);
+
+if (!empty($error))
+{
+  echo "<p class=\"error\" id=\"$error\">" . get_vocab($error) . "</p>\n";
+}
+
+echo "<p>Click on <span class=\"available\">open time and room</span> to book an appointment.</p>\n";
+echo "<p>Click on an <span class=\"booked\">appointment</span> to view it in detail.</p>\n";
+if ($is_admin)
+{
+	echo "<p>Click on an empty area to create a slot.</p>\n";
+}
 
 $format = "Gi";
 
@@ -186,7 +200,7 @@ else
     // next line to display times on right side
     if ( FALSE != $row_labels_both_sides )
     {
-      $header .= "<th class=\"first_last\">" . ( $enable_periods  ? get_vocab("period") : get_vocab("time") ) . ":</th>";
+      $header .= "<th class=\"first_last\">" . get_vocab("time") . ":</th>";
     }
   
   $header .= "</tr>\n";
@@ -236,8 +250,8 @@ else
       {
         // set up the query strings to be used for the link in the cell
         $query_strings = array();
-        $query_strings['new_slot']      = "event_id=$event_id&room_id=$room_id&day_id=$day_id&hour=$hour&minute=$minute";
-        $query_strings['new_booking']   = "event_id=$event_id&room_id=$room_id&day_id=$day_id&hour=$hour&minute=$minute"; // draw_cell will add the entry_id
+        $query_strings['new_slot']      = "event_id=$event_id&room_id=$room_id&day_id=$day_id&start_hour=$hour&start_minute=$minute";
+        $query_strings['new_booking']   = "event_id=$event_id&room_id=$room_id&day_id=$day_id&start_hour=$hour&start_minute=$minute"; // draw_cell will add the entry_id
         $query_strings['view_booking']  = "event_id=$event_id&room_id=$room_id&day_id=$day_id"; // draw_cell will add the entry_id
 		$slot = get_entry_by_event_day_room($event_id, $day_id, $room_id, $hour, $minute);
         draw_cell($slot, $query_strings);
@@ -258,7 +272,7 @@ else
 
   print $before_after_links_html;
 
-  show_colour_key();
+  // show_colour_key();
 }
 }
 require_once "trailer.inc";

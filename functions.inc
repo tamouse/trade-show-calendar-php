@@ -1,5 +1,14 @@
 <?php
 
+// Pop up an alert box
+function js_alert($msg)
+{
+	echo "<script type=\"text/javascript\" charset=\"utf-8\">\n";
+	echo "//<![CDATA[\n";
+	echo "alert(\"$msg\");\n";
+	echo " //]]>\n";	
+	echo "</script>\n";
+}
 
 // Check to see if the current logged in user is an admin
 function getAdmin()
@@ -836,6 +845,7 @@ function draw_cell($cell, $query_strings)
   // $cell_class specifies the default class for the cell (odd_row, even_row or row_highlight)
   // so that the zebra stripes can be drawn, or else to allow the whole row to be highlighted.
   
+	$is_admin = getAdmin();
     
 	if(isset($cell) && ($cell != 0))
 	{       
@@ -843,11 +853,13 @@ function draw_cell($cell, $query_strings)
 		$event_id	= $cell["event_id"];
 		$day_id		= $cell["day_id"];
 		$room_id	= $cell["room_id"];
-		$start_time	= $cell["start_time"];
-		if (isset($cell["user_id"]))
+		$start_hour	= $cell["start_hour"];
+		$start_minute = $cell["start_minute"];
+		if (isset($cell["user_id"]) && $cell['user_id'] > 0)
 		{
 			$user_id	= $cell["user_id"];
 			$descr		= $cell["purpose"];
+			$descr = (empty($descr) ? "Booked" : $descr);
 			$cell_class = 'booked';
 		}
 		else
@@ -860,10 +872,11 @@ function draw_cell($cell, $query_strings)
 	else  // cell not set
 	{
 		unset($id);
-		$descr = "&nbsp;";
+		$descr = get_vocab('noslot');
 		$cell_class = 'no_slot';
-    }
+   }
 
+	
 
 	echo "<td class=\"$cell_class\">";
 	echo "<div class=\"celldiv\">\n";
@@ -871,24 +884,30 @@ function draw_cell($cell, $query_strings)
 
 	if (!isset($id)) // no slot
 	{
-		$user = getUserName();
-		$level = authGetUserLevel($user);
-		if ($level >= 2)
+		
+		if ($is_admin)
 		{
-			echo "<a class=\"new_booking\" href=\"edit_slot.php?" . $query_strings['new_slot'] . "&start_time=$start_time\">";
+			echo "<a class=\"new_slot\" href=\"add_slot.php?" . $query_strings['new_slot'] . "\">";
 			echo $descr;
 			echo "</a>\n";
 		}
 	}
 	else if (!isset($user_id)) // open slot, no booking
 	{
-		echo "<a class=\"new_booking\" href=\"edit_entry.php?id=$id&" . $query_strings['new_times'] . "\">";
+		echo "<a class=\"available\" href=\"edit_entry.php?id=$id&" . $query_strings['new_booking'] . "\">";
 		echo $descr;
 		echo "</a>\n";
+		if ($is_admin)
+		{
+			// allow for admin to delete an available slot
+			echo "<a class=\"del_slot\" href=\"del_slot.php?id=$id&" . $query_strings['new_slot'] . "\">";
+			echo "<img src=\"images/delete.png\">";
+			echo "</a>\n";
+		}
 	}
     else                 // if it is booked then show the booking
 	{
-		echo "<a class=\"old_booking\" href=\"view_entry.php?id=$id&". $query_strings['booking'] . "\">$descr</a>\n";
+		echo "<a class=\"booked\" href=\"view_entry.php?id=$id&". $query_strings['view_booking'] . "\">$descr</a>\n";
 	}
 	echo "</div>\n";
 	
