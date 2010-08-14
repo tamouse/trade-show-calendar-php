@@ -1,28 +1,5 @@
 <?php
 
-// $Id: functions.inc 1319 2010-04-09 09:57:20Z cimorrison $
-
-/////////////////////////////////////////
-// Set timezone, if one has been provided
-
-global $timezone;
-
-if (isset($timezone))
-{
-  if (function_exists("date_default_timezone_set"))
-  {
-    date_default_timezone_set($timezone);
-  }
-  else
-  {
-    putenv("TZ=$timezone");
-  }
-}
-else
-{
-  // to prevent people running into DST problems
-  die('Configuration error: $timezone has not been set.');
-}
 
 // Check to see if the current logged in user is an admin
 function getAdmin()
@@ -513,8 +490,10 @@ function validate_email_list($list)
 
 // validates a phone number against a regular expression
 // based on a configured phone number formats
-function validate_phone_number($phone)
+function validate_phone($phone)
 {
+	global $phone_number_pattern;
+	
 	(!isset($phone) ? $phone = '' : '');
 	if (!preg_match($phone_number_pattern, $phone) && '' != $phone)
 	{
@@ -858,7 +837,7 @@ function draw_cell($cell, $query_strings)
   // so that the zebra stripes can be drawn, or else to allow the whole row to be highlighted.
   
     
-	if(isset($cell))
+	if(isset($cell) && ($cell != 0))
 	{       
 		$id         = $cell["id"];
 		$event_id	= $cell["event_id"];
@@ -881,7 +860,7 @@ function draw_cell($cell, $query_strings)
 	else  // cell not set
 	{
 		unset($id);
-		$descr = get_vocab('addslot');
+		$descr = "&nbsp;";
 		$cell_class = 'no_slot';
     }
 
@@ -896,20 +875,20 @@ function draw_cell($cell, $query_strings)
 		$level = authGetUserLevel($user);
 		if ($level >= 2)
 		{
-			echo "<a class=\"new_booking\" href=\"admin.php?" . $query_strings['new_periods'] . "&amp;start_time=$start_time\">";
+			echo "<a class=\"new_booking\" href=\"edit_slot.php?" . $query_strings['new_slot'] . "&start_time=$start_time\">";
 			echo $descr;
 			echo "</a>\n";
 		}
 	}
 	else if (!isset($user_id)) // open slot, no booking
 	{
-		echo "<a class=\"new_booking\" href=\"edit_entry.php?id=$id&amp;" . $query_strings['new_times'] . "\">";
+		echo "<a class=\"new_booking\" href=\"edit_entry.php?id=$id&" . $query_strings['new_times'] . "\">";
 		echo $descr;
 		echo "</a>\n";
 	}
     else                 // if it is booked then show the booking
 	{
-		echo "<a class=\"old_booking\" href=\"view_entry.php?id=$id&amp;". $query_strings['booking'] . "\">$descr</a>\n";
+		echo "<a class=\"old_booking\" href=\"view_entry.php?id=$id&". $query_strings['booking'] . "\">$descr</a>\n";
 	}
 	echo "</div>\n";
 	
@@ -936,16 +915,13 @@ function draw_time_cell($hour, $minute)
 // returns: id of first event
 function get_first_event()
 {
-	$sql = "SELECT id FROM $tbl_events ORDER BY id LIMIT 1;";
-	$res = sql_query1($sql);
-	if (! $res)
-	{
-		return;
-	}
-	else
-	{
-		return $res[0]['id'];
-	}
+	global $tbl_event;
+	$sql = "SELECT id FROM $tbl_event ORDER BY id LIMIT 1;";
+	
+	$event_id = sql_query1($sql);
+	$event_id =  ((!isset($event_id) || ($event_id < 0)) ? 0 : $event_id);
+	return $event_id;
+  
 }
 
 // get_event_from_id($event_id) - retrieve the given event by id
@@ -959,19 +935,21 @@ function get_first_event()
 //
 function get_event_from_id($event_id)
 {
+	global $tbl_event;
 	if (isset($event_id))
 	{
-		$sql = "SELECT name, description FROM $tbl_event WHERE id = $event_id;";
-		$res = sql_query1($sql);
+		$sql = "SELECT event_name, event_description FROM $tbl_event WHERE id = $event_id;";
+		$res = sql_query($sql);
 		if (! $res)
 		{
 			fatal_error(0, sql_error());
 		}
-		return $res[0];
+		$row = sql_row_keyed($res, 0);
+		return $row;
 	}
 	else
 	{
-		return;
+		return 0;
 	}
 }
 
@@ -984,18 +962,13 @@ function get_event_from_id($event_id)
 //   id of the day entry
 function get_first_day_for_event($event_id)
 {
+	global $tbl_day;
 	if (isset($event_id))
 	{
-		$sql = "SELECT id FROM $tbl_day WHERE event_id = $event_id;";
-		$res = sql_query($sql);
-		if (! $res)
-		{
-			return; // empty result is handled by caller
-		}
-		else
-		{
-			return $res[0]['id'];
-		}
+		$sql = "SELECT id FROM $tbl_day WHERE event_id = $event_id LIMIT 1";
+		$day_id = sql_query1($sql);
+		return ((!isset($day_id) || ($day_id < 0)) ? 0 : $day_id);
+	  
 	}
 }
 
@@ -1012,55 +985,53 @@ function get_first_day_for_event($event_id)
 //
 function get_day_from_id($day_id)
 {
+	global $tbl_day;
 	if (isset($day_id))
 	{
 		$sql = "SELECT day, month, year FROM $tbl_day WHERE id = $day_id;";
-		$res = sql_query1($sql);
-		if ($res)
+		$res = sql_query($sql);
+		if ($res > 0)
 		{
-			return $res[0];
+			return sql_row_keyed($res,0);
 		}
 	}
 }
 
-// day_before($day_id) - return the day before the given day
-//
-// Parameters:
-//   $day_id - id of the day to search on
-//
-// Returns:
-//   id of previous day in event, if it exists
-//
-function day_before($day_id)
+// get_event_from_day - get the event for the given day
+function get_event_from_day($day_id)
 {
-	list ($day, $month, $year) = get_day_from_id($day_id);
-	$bt = strtotime($month . "/" . $day . "/" . $year . " - 1 day");
-	$before_a = gettime($bt);
-	$mb = $before_a['month'];
-	$db = $before_a['day'];
-	$yb = $before_a['year'];
-	$db_id = get_day_from_ymd($yb, $mb, $db);
-	return $db_id;
-	
+	global $tbl_day;
+	if (isset($day_id))
+	{	
+		$sql = "SELECT event_id FROM $tbl_day WHERE id = $day_id LIMIT 1";
+		$event_id = sql_query1($sql);
+		return ((!isset($event_id) || ($event_id < 0)) ? 0 : $event_id);
+	}
 }
-// day_after($day_id) - return the day after the given day
-//
-// Parameters:
-//   $day_id - id of the day to search on
-//
-// Returns:
-//   id of next day in event, if it exists
-//
-function day_after($day_id)
+
+// get_event_from_room - get the event for the given room
+function get_event_from_room($room_id)
 {
-	list ($day, $month, $year) = get_day_from_id($day_id);
-	$at = strtotime($month . "/" . $day . "/" . $year . " + 1 day");
-	$after_a = gettime($bt);
-	$ma = $after_a['month'];
-	$da = $after_a['day'];
-	$ya = $after_a['year'];
-	$da_id = get_day_from_ymd($ya, $ma, $da);
-	return $da_id;
-	
+	global $tbl_room;
+	if (isset($room_id))
+	{	
+		$sql = "SELECT event_id FROM $tbl_room WHERE id = $room_id LIMIT 1";
+		$event_id = sql_query1($sql);
+		return ((!isset($event_id) || ($event_id < 0)) ? 0 : $event_id);
+	}
 }
+function get_entry_by_event_day_room($event_id, $day_id, $room_id, $hour, $minute)
+{
+	global $tbl_entry;
+	if (isset($event_id) && isset($day_id) && isset($room_id) && isset($hour) && isset($minute))
+	{
+		$sql = "SELECT * FROM $tbl_entry WHERE event_id=$event_id AND day_id=$day_id AND room_id=$room_id AND start_hour=$hour AND start_minute=$minute LIMIT 1";
+		$res = sql_query($sql);
+		if ($res < 1) return 0;
+		$row = sql_row_keyed($res, 0);
+		return $row;
+		
+	}
+}
+
 ?>

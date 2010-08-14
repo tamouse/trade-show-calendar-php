@@ -342,7 +342,7 @@ function cdmaCreateRepeatEntry($starttime, $endtime, $rep_type, $rep_enddate,
 * This function always returns either 28 or 35.
 * For dates in the 5th week of a month, the resulting day will be in the 4th
 * week of the next month if no 5th week corresponding day exist.
-* :TODO: thierry_bo 030510: repeat 5th week entries only if 5th week exist.
+* TODO thierry_bo 030510: repeat 5th week entries only if 5th week exist.
 * If we want a 5th week repeat type, only 5th weeks have to be booked. We need
 * also a new "monthly repeat, corresponding day, last week of the month" type.
 *
@@ -809,11 +809,11 @@ function cdmaGetBookingInfo($id, $series, $silent=FALSE)
   return $row;
 }
 
-function cdmaGetRoomArea($id)
+function cdmaGetRoomEvent($id)
 {
   global $tbl_room;
 
-  $id = sql_query1("SELECT area_id FROM $tbl_room WHERE (id = $id)");
+  $id = sql_query1("SELECT event_id FROM $tbl_room WHERE (id = $id)");
   if ($id <= 0)
   {
     $id = 0;
@@ -822,4 +822,14 @@ function cdmaGetRoomArea($id)
   return $id;
 }
 
+function get_rooms_for_event($event_id)
+{
+	global $tbl_room;
+	$res = sql_query("SELECT * FROM $tbl_room WHERE event_id=$event_id;");
+	if (! $res)
+	{
+		return;
+	}
+	return $res;
+}
 ?>

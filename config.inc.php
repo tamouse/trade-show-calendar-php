@@ -11,16 +11,6 @@
  *   Booking System", "room" and "event").
  **************************************************************************/
 
-// The timezone your meeting rooms run in. It is especially important
-// to set this if you're using PHP 5 on Linux. In this configuration
-// if you don't, meetings in a different DST than you are currently
-// in are offset by the DST offset incorrectly.
-//
-// When upgrading an existing installation, this should be set to the
-// timezone the web server runs in.
-//
-$timezone = "Americas/Chicago";
-
 
 /*******************
  * Database settings
@@ -244,6 +234,9 @@ $text_input_max = 70;  // characters
 
 // Default report span in days:
 $default_report_days = 60;
+
+$show_plus_link = TRUE;   // Change to TRUE to always show the (+) link
+
 
 
 // Days of the week that are working days (Sunday = 0, etc.)

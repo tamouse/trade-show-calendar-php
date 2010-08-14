@@ -10,17 +10,19 @@
 # to see whether a corresponding length has been defined in the config file
 # in the array $maxlength.
 
+DROP TABLE IF EXISTS cdma_event;
 CREATE TABLE cdma_event
 (
 	id				int NOT NULL auto_increment,
 	event_name			varchar(100),
 	location		varchar(250),
-	timezone		varchar(25),
+	event_admin_email	varchar(50),
 	event_description		text,
 	
 	PRIMARY KEY (ID)
 );
 
+DROP TABLE IF EXISTS cdma_day;
 CREATE TABLE cdma_day
 (
 	id				int NOT NULL auto_increment,
@@ -33,25 +35,29 @@ CREATE TABLE cdma_day
 	PRIMARY KEY (ID)
 );
 
+DROP TABLE IF EXISTS cdma_room;
 CREATE TABLE cdma_room
 (
   id               int NOT NULL auto_increment,
   event_id		   int NOT NULL,
-  room_number	   int NOT NULL,
+  room_number	   varchar(25) DEFAULT '' NOT NULL,
   room_name        varchar(25) DEFAULT '' NOT NULL,
   room_description      text,
 
-  PRIMARY KEY (id),
+  PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS cdma_entry;
 CREATE TABLE cdma_entry
 (
   id          int NOT NULL auto_increment,
   event_id    int NOT NULL,
   day_id	  int NOT NULL,
   room_id     int NOT NULL,
-  start_time  time NOT NULL,
-  end_time    time NOT NULL,
+  start_hour  int NOT NULL,
+  start_minute int NOT NULL,
+  end_hour    int NOT NULL,
+  end_minute  int NOT NULL,
   user_id     int NOT NULL,
   purpose     varchar(250),
   comments    text,
@@ -60,11 +66,14 @@ CREATE TABLE cdma_entry
   guest_emails text,
 
   PRIMARY KEY (id),
-  KEY idxStartTime (start_time),
-  KEY idxEndTime   (end_time)
+  KEY idxStartHour (start_hour),
+  KEY idxStartMinute (start_minute),
+  KEY idxEndHour   (end_hour),
+  KEY idxEndMinute (end_minute)
 );
 
 
+DROP TABLE IF EXISTS cdma_variables;
 CREATE TABLE cdma_variables
 (
   id               int NOT NULL auto_increment,
@@ -74,6 +83,7 @@ CREATE TABLE cdma_variables
   PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS cdma_users;
 CREATE TABLE cdma_users
 (
   /* The first four fields are required. Don't remove. */

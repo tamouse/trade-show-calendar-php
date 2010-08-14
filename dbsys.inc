@@ -7,15 +7,16 @@ global $dbsys;
 // These variables specify the names of the tables in the database
 global $db_tbl_prefix;
 
-$tbl_area      = $db_tbl_prefix . "area";
+$tbl_event     = $db_tbl_prefix . "event";
 $tbl_entry     = $db_tbl_prefix . "entry";
 $tbl_repeat    = $db_tbl_prefix . "repeat";
+$tbl_day       = $db_tbl_prefix . "day";
 $tbl_room      = $db_tbl_prefix . "room";
 $tbl_users     = $db_tbl_prefix . "users";
 $tbl_variables = $db_tbl_prefix . "variables";
 
 
-$db_schema_version = 13;
+$db_schema_version = 1;
 $local_db_schema_version = 1;
 
 

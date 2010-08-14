@@ -1,28 +1,13 @@
 <?php
-// $Id: del.php 1157 2009-07-16 15:56:07Z jberanek $
 
 require_once "defaultincludes.inc";
 
 // Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
-$room = get_form_var('room', 'int');
+$day_id = get_form_var('day_id', 'int');
+$event_id = get_form_var('event_id', 'int');
+$room_id = get_form_var('room_id', 'int');
 $type = get_form_var('type', 'string');
 $confirm = get_form_var('confirm', 'string');
-
-// If we dont know the right date then make it up
-if (!isset($day) or !isset($month) or !isset($year))
-{
-  $day   = date("d");
-  $month = date("m");
-  $year  = date("Y");
-}
-if (empty($area))
-{
-  $area = get_default_area();
-}
 
 $required_level = (isset($max_level) ? $max_level : 2);
 if (!getAuthorised($required_level))
@@ -36,30 +21,35 @@ if (!getAuthorised($required_level))
 
 if ($type == "room")
 {
+	if (!isset($event_id))
+	{
+		$event_id = get_event_from_room($room_id);
+	}
+	
   // We are supposed to delete a room
   if (isset($confirm))
   {
     // They have confirmed it already, so go blast!
     sql_begin();
     // First take out all appointments for this room
-    sql_command("delete from $tbl_entry where room_id=$room");
-    sql_command("delete from $tbl_repeat where room_id=$room");
+    sql_command("delete from $tbl_entry where room_id=$room_id");
    
     // Now take out the room itself
-    sql_command("delete from $tbl_room where id=$room");
+    sql_command("delete from $tbl_room where id=$room_id");
     sql_commit();
    
     // Go back to the admin page
-    Header("Location: admin.php");
+    $location = "admin.php?event_id=$event_id";
+	redirect($location);
   }
   else
   {
-    print_header($day, $month, $year, $area, isset($room) ? $room : "");
+    print_header($event_id, $day_id);
    
     // We tell them how bad what theyre about to do is
     // Find out how many appointments would be deleted
    
-    $sql = "select name, start_time, end_time from $tbl_entry where room_id=$room";
+    $sql = "select purpose, start_hour, start_minute from $tbl_entry where room_id=$room_id";
     $res = sql_query($sql);
     if (! $res)
     {
@@ -75,9 +65,8 @@ if ($type == "room")
       
       for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
       {
-        echo "<li>".htmlspecialchars($row['name'])." (";
-        echo time_date_string($row['start_time']) . " -> ";
-        echo time_date_string($row['end_time']) . ")</li>\n";
+        echo "<li>".htmlspecialchars($row['purpose'])." (";
+        echo $row['start_hour'] . ":" . $row['start_minute'] . ")</li>\n";
       }
       
       echo "</ul>\n";
@@ -86,37 +75,101 @@ if ($type == "room")
     echo "<div id=\"del_room_confirm\">\n";
     echo "<p>" .  get_vocab("sure") . "</p>\n";
     echo "<div id=\"del_room_confirm_links\">\n";
-    echo "<a href=\"del.php?type=room&amp;room=$room&amp;confirm=Y\"><span id=\"del_yes\">" . get_vocab("YES") . "!</span></a>\n";
-    echo "<a href=\"admin.php\"><span id=\"del_no\">" . get_vocab("NO") . "!</span></a>\n";
+    echo "<a href=\"del.php?type=room&room_id=$room_id&event_id=$event_id&confirm=Y\"><span id=\"del_yes\">" . get_vocab("YES") . "!</span></a>\n";
+    echo "<a href=\"admin.php?event_id=$event_id\"><span id=\"del_no\">" . get_vocab("NO") . "!</span></a>\n";
     echo "</div>\n";
     echo "</div>\n";
-    require_once "trailer.inc";
   }
 }
 
-if ($type == "area")
+if ($type == "day")
 {
-  // We are only going to let them delete an area if there are
-  // no rooms. its easier
-  $n = sql_query1("select count(*) from $tbl_room where area_id=$area");
-  if ($n == 0)
+	if (!isset($event_id))
+	{
+		$event_id = get_event_from_day($day_id);
+	}
+
+  // We are supposed to delete a day
+  if (isset($confirm))
   {
-    // OK, nothing there, lets blast it away
-    sql_command("delete from $tbl_area where id=$area");
+    // They have confirmed it already, so go blast!
+    sql_begin();
+    // First take out all appointments for this room
+    sql_command("delete from $tbl_entry where day_id=$day_d");
    
-    // Redirect back to the admin page
-    header("Location: admin.php");
+    // Now take out the day itself
+    sql_command("delete from $tbl_day where id=$day_id");
+    sql_commit();
+   
+    // Go back to the admin page
+    $location = "admin.php?event_id=$event_id";
+	redirect($location);
   }
   else
   {
-    // There are rooms left in the area
-    print_header($day, $month, $year, $area, isset($room) ? $room : "");
-    echo "<p>\n";
-    echo get_vocab("delarea");
-    echo "<a href=\"admin.php\">" . get_vocab("backadmin") . "</a>";
-    echo "</p>\n";
-    require_once "trailer.inc";
+    print_header($event_id, $day_id);
+   
+    // We tell them how bad what theyre about to do is
+    // Find out how many appointments would be deleted
+   
+    $sql = "select purpose, start_hour, start_minute from $tbl_entry where day_id=$day_id";
+    $res = sql_query($sql);
+    if (! $res)
+    {
+      echo sql_error();
+    }
+    else if (sql_count($res) > 0)
+    {
+      echo "<p>\n";
+      echo get_vocab("deletefollowing") . ":\n";
+      echo "</p>\n";
+      
+      echo "<ul>\n";
+      
+      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+      {
+        echo "<li>".htmlspecialchars($row['purpose'])." (";
+        echo $row['start_hour'] . ":" . $row['start_minute'] . ")</li>\n";
+      }
+      
+      echo "</ul>\n";
+    }
+   
+    echo "<div id=\"del_room_confirm\">\n";
+    echo "<p>" .  get_vocab("sure") . "</p>\n";
+    echo "<div id=\"del_room_confirm_links\">\n";
+    echo "<a href=\"del.php?type=day&day_id=$day_id&?event_id=$event_id&confirm=Y\"><span id=\"del_yes\">" . get_vocab("YES") . "!</span></a>\n";
+    echo "<a href=\"admin.php?event_id=$event_id\"><span id=\"del_no\">" . get_vocab("NO") . "!</span></a>\n";
+    echo "</div>\n";
+    echo "</div>\n";
   }
 }
+
+if ($type == "event")
+{
+  // We are only going to let them delete an event if there are
+  // no rooms or days. its easier
+  $n_rooms = sql_query1("select count(*) from $tbl_room where event_id=$event_id");
+  $n_days = sql_query1("select count(*) from $tbl_day where event_id=$event_id");
+  if ($n_rooms == 0 && $n_days == 0)
+  {
+    // OK, nothing there, lets blast it away
+    sql_command("delete from $tbl_event where id=$event_id");
+   
+    // Redirect back to the admin page
+    $location ="admin.php";
+	redirect($location);
+  }
+  else
+  {
+    // There are rooms left in the event
+    print_header($event_id, $day_id);
+    echo "<p>\n";
+    echo get_vocab("delevent");
+    echo "<a href=\"admin.php?event_id=$event_id\">" . get_vocab("backadmin") . "</a>";
+    echo "</p>\n";
+  }
+}
+require_once "trailer.inc";
 
 ?>

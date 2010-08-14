@@ -10,15 +10,6 @@
  *
  **************************************************************************/
 
-// The timezone your meeting rooms run in. It is especially important
-// to set this if you're using PHP 5 on Linux. In this configuration
-// if you don't, meetings in a different DST than you are currently
-// in are offset by the DST offset incorrectly.
-//
-// When upgrading an existing installation, this should be set to the
-// timezone the web server runs in.
-//
-//$timezone = "Europe/London";
 
 /*******************
  * Database settings
@@ -48,6 +39,7 @@ $maxlength['entry.name']       = 80;  // characters   (name field in entry table
 $maxlength['event.event_name'] = 100; // characters   (name field in event table)
 $maxlength['event.description'] = 1024; // characters (description field in event table)
 $maxlength['room.room_name']   = 25;  // characters   (room_name field in room table)
+$maxlength['room.room_number']   = 25;  // characters   (room_number field in room table)
 $maxlength['room.description'] = 1024;  // characters   (description field in room table)
 $maxlength['users.name']       = 30;  // characters   (name field in users table)
 $maxlength['users.phone']      = 20;  // characters   (phone field in users table)
@@ -242,12 +234,13 @@ $text_input_max = 70;  // characters
 // Default report span in days:
 $default_report_days = 60;
 
+$show_plus_link = FALSE;   // Change to TRUE to always show the (+) link
+
 // Phone number match pattern
 // International numbers:
-$phone_number_pattern = '^((\+)?[1-9]{1,2})?([-\s\.])?((\(\d{1,4}\))|\d{1,4})(([-\s\.])?[0-9]{1,12}){1,2}$';
+$phone_number_pattern = '/^((\+)?[1-9]{1,2})?([-\s\.])?((\(\d{1,4}\))|\d{1,4})(([-\s\.])?[0-9]{1,12}){1,2}$/';
 // US numbers:
-// $phone_number_pattern = '^(?:\([2-9]\d{2}\)\ ?|[2-9]\d{2}(?:\-?|\ ?))[2-9]\d{2}[- ]?\d{4}$';
-
+// $phone_number_pattern = '/^(?:\([2-9]\d{2}\)\ ?|[2-9]\d{2}(?:\-?|\ ?))[2-9]\d{2}[- ]?\d{4}$/';
 
 
 

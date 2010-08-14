@@ -14,7 +14,7 @@
 $vocab["charset"]            = "iso-8859-1";
 
 // Used in style.inc
-$vocab["cdma"]               = "Meeting Room Booking System";
+$vocab["cdma"]               = "CDMA Calendar Booking";
 
 // Used in functions.inc
 $vocab["report"]             = "Report";
@@ -288,7 +288,7 @@ $vocab["addroom"]            = "Add Room";
 $vocab["addday"]             = "Add Day";
 $vocab["capacity"]           = "Capacity";
 $vocab["norooms"]            = "No rooms have been defined.";
-$vocab["administration"]     = "Room Details";
+$vocab["administration"]     = "Administration";
 $vocab["invalid_event_name"] = "This event name has already been used!";
 $vocab['invaliddate']        = "Invalid date given";
 $vocab['invalid_day_string'] = "This day has already been used for this event";
@@ -302,14 +302,18 @@ $vocab['room_description']   = "Description";
 $vocab["editevent"]               = "Edit Event";
 $vocab["change"]                  = "Change";
 $vocab["backadmin"]               = "Back to Rooms";
-$vocab["editroomevent"]           = "Edit Event or Room Description";
+$vocab["editroomdayevent"]        = "Edit Event, Day or Room Description";
 $vocab["editroom"]                = "Edit Room";
 $vocab["viewroom"]                = "View Room";
+$vocab["editday"]                 = "Edit Day";
+$vocab["viewday"]                 = "View Day";
 $vocab["update_room_failed"]      = "Update room failed: ";
 $vocab["error_room"]              = "Error: room ";
 $vocab["not_found"]               = " not found";
 $vocab["update_event_failed"]     = "Update event failed: ";
 $vocab["error_event"]             = "Error: event ";
+$vocab["update_day_failed"]       = "Update day failed: ";
+$vocab["error_day"]               = "Error: day ";
 $vocab["room_admin_email"]        = "Room admin email";
 $vocab["event_admin_email"]       = "Event admin email";
 //$vocab["area_first_slot_start"]   = "Start of first slot";
@@ -339,14 +343,14 @@ $vocab["default_settings"]        = "Default/forced settings";
 //$vocab["treat_respect"]           = "Respect the privacy setting of the booking";
 //$vocab["treat_private"]           = "Treat all bookings as private, ignoring their privacy settings";
 //$vocab["treat_public"]            = "Treat all bookings as public, ignoring their privacy settings";
-//$vocab["sort_key"]                = "Sort key";
-//$vocab["sort_key_note"]           = "This is the key used for ordering rooms";
+$vocab["room_number"]             = "Room number";
+$vocab["room_number_note"]        = "Room number";
 //$vocab["booking_policies"]        = "Booking policies";
 //$vocab["min_book_ahead"]          = "Advance booking - minimum";
 //$vocab["max_book_ahead"]          = "Advance booking - maximum";
 //$vocab["custom_html"]             = "Custom HTML";
 //$vocab["custom_html_note"]        = "This field can be used for displaying your own HTML, for example an embedded Google map";
-                     
+$vocab["duplicate_day_string"]      = "Duplicate date for this event";
 
 // Used in edit_users.php
 $vocab["name_empty"]         = "You must enter a name.";

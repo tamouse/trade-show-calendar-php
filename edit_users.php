@@ -40,6 +40,7 @@
 
 require_once "defaultincludes.inc";
 
+
 // Get form variables
 $day_id = get_form_var('day_id', 'int');
 $event_id = get_form_var('event_id', 'int');
@@ -56,123 +57,123 @@ $pwd_invalid = get_form_var('pwd_invalid', 'string');
 
 // Validates that the password conforms to the password policy
 // (Ideally this function should also be matched by client-side
-	// validation, but unfortunately JavaScript's native support for Unicode
-	// pattern matching is very limited.   Would need to be implemented using
-	// an add-in library).
-	function validate_password($password)
+// validation, but unfortunately JavaScript's native support for Unicode
+// pattern matching is very limited.   Would need to be implemented using
+// an add-in library).
+function validate_password($password)
+{
+	global $unicode_encoding;
+
+	// Everything is OK
+	return TRUE;
+}
+
+
+// Get the type that should be used with get_form_var() for
+// a field which is a member of the array returned by get_field_info()
+function get_form_var_type($field)
+{
+	switch($field['nature'])
 	{
-		global $unicode_encoding;
-
-		// Everything is OK
-		return TRUE;
-	}
-
-
-	// Get the type that should be used with get_form_var() for
-	// a field which is a member of the array returned by get_field_info()
-	function get_form_var_type($field)
-	{
-		switch($field['nature'])
-		{
-			case 'character':
+		case 'character':
 			$type = 'string';
 			break;
-			case 'integer':
+		case 'integer':
 			$type = 'int';
 			break;
-			// We can only really deal with the types above at the moment
-			default:
+		// We can only really deal with the types above at the moment
+		default:
 			$type = 'string';
 			break;
-		}
-		return $type;
+	}
+	return $type;
+}
+
+
+// Produce the HTML for a freeze_panes sub-table
+//
+//   $info       an array containing the data
+//   $columns    the columns in that data to display
+//   $class      the class name tio assign to the table
+//   $action     whether an action button is required
+function freeze_panes_table_html($info, $columns, $class, $action=FALSE)
+{
+	global $tbl_users, $PHP_SELF;
+	global $user, $level, $min_user_editing_level, $max_content_length;
+	global $fields;
+
+	$html = '';
+	$html .= "<div class=\"$class\">\n";
+	$html .= "<table class=\"admin_table\">\n";
+	$html .= "<thead>\n";
+	$html .= "<tr>";
+	if ($action)
+	{
+		// First column which is an action button
+		$html .= "<th><div>" . get_vocab("action") . "</div></th>";
 	}
 
-
-	// Produce the HTML for a freeze_panes sub-table
-	//
-	//   $info       an array containing the data
-	//   $columns    the columns in that data to display
-	//   $class      the class name tio assign to the table
-	//   $action     whether an action button is required
-	function freeze_panes_table_html($info, $columns, $class, $action=FALSE)
+	// Column headers
+	foreach ($fields as $field)
 	{
-		global $tbl_users, $PHP_SELF;
-		global $user, $level, $min_user_editing_level, $max_content_length;
-		global $fields;
+		$fieldname = $field['name'];
+		if (in_array($fieldname, $columns))
+		{
+			$html .= "<th><div>" . get_loc_field_name($tbl_users, $fieldname) . "</div></th>";
+		}
+	}
 
-		$html = '';
-		$html .= "<div class=\"$class\">\n";
-		$html .= "<table class=\"admin_table\">\n";
-		$html .= "<thead>\n";
-		$html .= "<tr>";
+	$html .= "</tr>\n";
+	$html .= "</thead>\n";
+
+	$html .= "<tbody>\n";
+	$row_class = "odd_row";
+	foreach ($info as $line)
+	{
+		$row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
+		$html .= "<tr class=\"$row_class\">\n";
 		if ($action)
 		{
-			// First column which is an action button
-			$html .= "<th><div>" . get_vocab("action") . "</div></th>";
+			// First column (the action button)
+			$html .= "<td class=\"action\"><div>\n";
+			// You can only edit a user if you have sufficient admin rights, or else if that user is yourself
+			if (($level >= $min_user_editing_level) || (strcasecmp($line['name'], $user) == 0))
+			{
+				$html .= "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
+				$html .= "<div>\n";
+				$html .= "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
+				$html .= "<input type=\"hidden\" name=\"Id\" value=\"" . $line['id'] . "\">\n";
+				$html .= "<input type=\"image\" class=\"button\" src=\"images/edit.png\"
+					title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
+				$html .= "</div>\n";
+				$html .= "</form>\n";
+			}
+			else
+			{
+				$html .= "&nbsp;\n";
+			}
+			$html .= "</div></td>\n";
 		}
 
-		// Column headers
+		// Column contents
 		foreach ($fields as $field)
 		{
-			$fieldname = $field['name'];
-			if (in_array($fieldname, $columns))
+			$key = $field['name'];
+			if (in_array($key, $columns))
 			{
-				$html .= "<th><div>" . get_loc_field_name($tbl_users, $fieldname) . "</div></th>";
-			}
-		}
-
-		$html .= "</tr>\n";
-		$html .= "</thead>\n";
-
-		$html .= "<tbody>\n";
-		$row_class = "odd_row";
-		foreach ($info as $line)
-		{
-			$row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
-			$html .= "<tr class=\"$row_class\">\n";
-			if ($action)
-			{
-				// First column (the action button)
-				$html .= "<td class=\"action\"><div>\n";
-				// You can only edit a user if you have sufficient admin rights, or else if that user is yourself
-				if (($level >= $min_user_editing_level) || (strcasecmp($line['name'], $user) == 0))
+				$col_value = $line[$key];
+				switch($key)
 				{
-					$html .= "<form method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-					$html .= "<div>\n";
-					$html .= "<input type=\"hidden\" name=\"Action\" value=\"Edit\">\n";
-					$html .= "<input type=\"hidden\" name=\"Id\" value=\"" . $line['id'] . "\">\n";
-					$html .= "<input type=\"image\" class=\"button\" src=\"images/edit.png\"
-						title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
-					$html .= "</div>\n";
-					$html .= "</form>\n";
-				}
-				else
-				{
-					$html .= "&nbsp;\n";
-				}
-				$html .= "</div></td>\n";
-			}
-
-			// Column contents
-			foreach ($fields as $field)
-			{
-				$key = $field['name'];
-				if (in_array($key, $columns))
-				{
-					$col_value = $line[$key];
-					switch($key)
-					{
-						// special treatment for some fields
-						case 'level':
+					// special treatment for some fields
+					case 'level':
 						// the level field contains a code and we want to display a string
 						$html .= "<td><div>" . get_vocab("level_$col_value") . "</div></td>\n";
 						break;
-						case 'email':
+					case 'email':
 						// we don't want to truncate the email address
 						$html .= "<td><div>" . htmlspecialchars($col_value) . "</div></td>\n";
 						break;
-						default:
+					default:
 						if (($field['nature'] == 'boolean') || 
 							(($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
 						{
@@ -196,27 +197,26 @@ $pwd_invalid = get_form_var('pwd_invalid', 'string');
 							$html .= "</div></td>\n";
 						}
 						break;
-					}  // end switch
-				}
-			}  // end foreach
+				}  // end switch
+			}
+		}  // end foreach
 
-			$html .= "</tr>\n";
+		$html .= "</tr>\n";
 
-		}  // end while
+	}  // end while
 
-		$html .= "</tbody>\n";
-		$html .= "</table>\n";
-		$html .= "</div>\n";
+	$html .= "</tbody>\n";
+	$html .= "</table>\n";
+	$html .= "</div>\n";
 
-		return $html;
-	}
+	return $html;
+}
 
 
-	// Get the information about the fields in the users table
-	$fields = sql_field_info($tbl_users);
+// Get the information about the fields in the users table
+$fields = sql_field_info($tbl_users);
 
-	$nusers = sql_query1("SELECT COUNT(*) FROM $tbl_users");
-
+$nusers = sql_query1("SELECT COUNT(*) FROM $tbl_users");
 /*---------------------------------------------------------------------------*\
 |                         Authenticate the current user                         |
 \*---------------------------------------------------------------------------*/
@@ -294,7 +294,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 		}
 
 		print "<div id=\"form_container\">";
-		print "<form id=\"form_edit_users\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)). "\">\n";
+		print "<form id=\"form_edit_users\" method=\"post\" action=\"edit_users.php\">\n";
 		?>
 			<fieldset class="admin">
 			<legend><?php echo (($Action == "Edit") ? get_vocab("edit_user") : get_vocab("add_new_user"));?></legend>
@@ -509,12 +509,14 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 
 if (isset($Action) && ($Action == "Update"))
 {
+	
 	// If you haven't got the rights to do this, then exit
 	$my_id = sql_query1("SELECT id FROM $tbl_users WHERE name='".addslashes($user)."' LIMIT 1");
+
 	if (($level < $min_user_editing_level) && ($Id != $my_id ))
 	{
-		Header("Location: edit_users.php");
-		exit;
+		$location="edit_users.php";
+		redirect($location);
 	}
 
 	// otherwise go ahead and update the database
@@ -665,7 +667,6 @@ if (isset($Action) && ($Action == "Update"))
 				exit;
 			}
 
-
 			// If we got here, then we've passed validation and we need to
 			// enter the data into the database
 
@@ -731,9 +732,6 @@ if (isset($Action) && ($Action == "Update"))
 			" VALUES " . "(" . implode(",",$values_list) . ");";
 	}
 
-	/* DEBUG lines - check the actual sql statement going into the db */
-	//echo "Final SQL string: <code>$operation</code>";
-	//exit;
 	$r = sql_command($operation);
 	if ($r == -1)
 	{

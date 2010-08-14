@@ -5,7 +5,7 @@ require_once "defaultincludes.inc";
 
 require_once "cdma_sql.inc";
 
-redirect("day.php");
+
 
 global $twentyfourhour_format;
 
@@ -25,6 +25,7 @@ if (!isset($event_id))
 	$event_id = get_first_event();
 }
 
+redirect("day.php?event_id=$event_id");
 
 
 if (!isset($edit_type))

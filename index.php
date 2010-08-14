@@ -15,6 +15,6 @@ $redirect_str = "day.php";
 
 redirect($redirect_str);
 
-exit;
+
 
 ?>

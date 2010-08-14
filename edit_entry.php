@@ -1,5 +1,5 @@
 <?php
-// $Id: edit_entry.php 1330 2010-04-20 19:16:33Z cimorrison $
+// TODO 2010-08-14 modify for new entry schema
 
 require_once "defaultincludes.inc";
 

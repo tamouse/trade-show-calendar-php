@@ -1,6 +1,5 @@
 <?php
 
-// $Id: admin.php 1314 2010-03-28 09:48:50Z cimorrison $
 
 require_once "defaultincludes.inc";
 
@@ -24,20 +23,18 @@ if (empty($day_id))
 }
 
 
-// Check to see whether the Edit or Delete buttons have been pressed and redirect
+// Check to see whether the Edit or Delete buttons on the event have been pressed and redirect
 // as appropriate
-$std_query_string = "event_id=$event_id&amp;day_id=$day_id&amp;room_id=$room_id";
+$std_query_string = "event_id=$event_id";
 if (isset($edit_x))
 {
   $location = "edit_event_day_room.php?$std_query_string";
   redirect($location);
-  exit;
 }
 if (isset($delete_x))
 {
-  $location = "del.php?$std_query_string";
+  $location = "del.php?type=event&$std_query_string";
   redirect($location);
-  exit;
 }
   
 // Users must be at least Level 1 for this page as we will be displaying
@@ -52,20 +49,6 @@ $is_admin = getAdmin();
 
 print_header($event_id, $day_id);
 
-// Get the details we need for this event
-if (isset($event_id))
-{
-  $res = sql_query1("SELECT event_name, event_description  FROM $tbl_event WHERE id=$event_id LIMIT 1");
-  if (! $res) fatal_error(0, sql_error());
-  if (sql_count($res) == 1)
-  {
-    $row = sql_row_keyed($res, 0);
-    $event_name = $row['event_name'];
-    $event_descr = $row['event_description'];
-  }
-  sql_free($res);
-}
-
 
 echo "<h2>" . get_vocab("administration") . "</h2>\n";
 if (!empty($error))
@@ -75,8 +58,9 @@ if (!empty($error))
 
 // TOP SECTION:  THE FORM FOR SELECTING AN EVENT
 echo "<div id=\"event_form\">\n";
-$sql = "select id, name from $tbl_event order by name";
+$sql = "select id, event_name from $tbl_event order by event_name";
 $res = sql_query($sql);
+if ($res == -1) fatal_error(0, "select from $tbl_event failed: " . sql_error());
 $events_defined = $res && (sql_count($res) > 0);
 if ($events_defined)
 {
@@ -91,7 +75,7 @@ if ($events_defined)
   for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
   {
     $selected = ($row['id'] == $event_id) ? "selected=\"selected\"" : "";
-    echo "<option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['name']) . "</option>";
+    echo "<option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['event_name']) . "</option>";
   }
   echo "</select>\n";
   
@@ -136,11 +120,6 @@ if ($is_admin)
         <input type="text" id="event_name" name="name" maxlength="<?php echo $maxlength['event.event_name'] ?>">
       </div>
 
-		<div>
-			<label for="event_desc"><?php echo get_vocab("description") ?>:</label>
-			<input type="textarea" id="event_desc" name="event_description">
-		</div>
-          
       <div>
         <input type="submit" class="submit" value="<?php echo get_vocab("addevent") ?>">
       </div>
@@ -162,7 +141,9 @@ echo "</h2>\n";
 
 echo "<div id=\"day_form\">\n";
 if (isset($event_id)) {
-	$res = sql_query("SELECT * FROM $tbl_day WHERE event_id=$event_id ORDER BY day_string;");
+	$sql = "SELECT * FROM $tbl_day WHERE event_id=$event_id ORDER BY day_string";
+
+	$res = sql_query($sql);
 	if (! $res) {
 		fatal_error(0, sql_error());
 	}
@@ -195,7 +176,7 @@ if (isset($event_id)) {
 		// Body of table showing defined days in event
 	    echo "<tbody>\n";
 	    $row_class = "odd_row";
-	    foreach ($rooms as $r)
+	    foreach ($days as $r)
 	    {
 	      $row_class = ($row_class == "even_row") ? "odd_row" : "even_row";
 	      echo "<tr class=\"$row_class\">\n";
@@ -212,14 +193,14 @@ if (isset($event_id)) {
 	        echo "</div></td>\n";
 	        // Edit link
 	        echo "<td><div>\n";
-	        echo "<a href=\"edit_day.php?day_id=" . $r['id'] . "\">\n";
+	        echo "<a href=\"edit_event_day_room.php?day_id=" . $r['id'] . "\">\n";
 	        echo "<img src=\"images/edit.png\" width=\"16\" height=\"16\" 
 	                   alt=\"" . get_vocab("edit") . "\"
 	                   title=\"" . get_vocab("edit") . "\">\n";
 	        echo "</a>\n";
 	        echo "</div></td>\n";
 	      }
-	      echo "<td><div><a href=\"edit_day.php?day_id=" . $r['id'] . "\">" . htmlspecialchars($r['day_string']) . "</a></div></td>\n";
+	      echo "<td><div><a href=\"edit_event_day_room.php?day_id=" . $r['id'] . "\">" . htmlspecialchars($r['day_string']) . "</a></div></td>\n";
 	      echo "</tr>\n";
 	    }
 	    echo "</tbody>\n";
@@ -246,7 +227,7 @@ else
 	      <input type="hidden" name="type" value="day">
 	      <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
 
-			// Here is where a jQuery day picker goes
+			<!-- here is where a jQuery date picker goes -->
 	      <div>
 	          <label for="day_string" class="required"><?php echo get_vocab("day_string") ?>:</label>
 	          <input type="text" id="day_string" name="day_string">
@@ -333,14 +314,14 @@ if (isset($event_id))
         echo "</div></td>\n";
         // Edit link
         echo "<td><div>\n";
-        echo "<a href=\"edit_event_room.php?room_id=" . $r['id'] . "\">\n";
+        echo "<a href=\"edit_event_day_room.php?room_id=" . $r['id'] . "\">\n";
         echo "<img src=\"images/edit.png\" width=\"16\" height=\"16\" 
                    alt=\"" . get_vocab("edit") . "\"
                    title=\"" . get_vocab("edit") . "\">\n";
         echo "</a>\n";
         echo "</div></td>\n";
       }
-      echo "<td><div><a href=\"edit_event_room.php?room_id=" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</a></div></td>\n";
+      echo "<td><div><a href=\"edit_event_day_room.php?room_id=" . $r['id'] . "\">" . htmlspecialchars($r['room_name']) . "</a></div></td>\n";
       echo "</tr>\n";
     }
     echo "</tbody>\n";
@@ -354,7 +335,7 @@ if (isset($event_id))
     echo "<tr>\n";
     // ignore these columns, either because we don't want to display them,
     // or because we have already displayed them in the header column
-    $ignore = array('id', 'event_id', 'room_name', 'sort_key', 'custom_html');
+    $ignore = array('id', 'event_id', 'room_name');
     foreach($fields as $field)
     {
       if (!in_array($field['name'], $ignore))
@@ -387,11 +368,7 @@ if (isset($event_id))
         {
           switch ($field['name'])
           {
-            // the standard CDMA fields
-            case 'room_description':
-              echo "<td><div>" . htmlspecialchars($r[$field['name']]) . "</div></td>\n";
-              break;
-            // any user defined fields
+           // any user defined fields
             default:
               if (($field['nature'] == 'boolean') || 
                   (($field['nature'] == 'integer') && isset($field['length']) && ($field['length'] <= 2)) )
@@ -453,12 +430,7 @@ if ($is_admin && $events_defined && !empty($event_id))
         <label for="room_name" class="required"><?php echo get_vocab("name") ?>:</label>
         <input type="text" id="room_name" name="name" maxlength="<?php echo $maxlength['room.room_name'] ?>">
       </div>
-        
-      <div>
-        <label for="room_description" class="optional"><?php echo get_vocab("description") ?>:</label>
-        <input type="textarea" id="room_description" name="room_description" maxlength="<?php echo $maxlength['room.description'] ?>">
-      </div>
-        
+                
       <div>
         <input type="submit" class="submit" value="<?php echo get_vocab("addroom") ?>">
       </div>
