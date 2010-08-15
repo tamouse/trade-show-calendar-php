@@ -6,6 +6,9 @@ require_once "defaultincludes.inc";
 
 require_once "version.inc";
 
+$location = "day.php" . "?error=notimplemented";
+redirect($location);
+
 // Get form variables
 $day = get_form_var('day', 'int');
 $month = get_form_var('month', 'int');

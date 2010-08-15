@@ -107,6 +107,17 @@ $vocab["brief_description"]  = "Brief Description.";
 $vocab["useful_n-weekly_value"] = "useful n-weekly value.";
 $vocab["private"]            = "Private";
 $vocab["unavailable"]        = "Private";
+$vocab["invalid_purpose"]    = "Invalid purpose";
+$vocab["starttime"]          = "Start Time";
+$vocab["endtime"]            = "End Time";
+$vocab["creator"]            = "Creator";
+$vocab["purpose"]            = "Purpose";
+$vocab["comments"]           = "Comments";
+$vocab["guests"]             = "Guests";
+$vocab["guestsemails"]        = "Guests' Emails";
+$vocab["goback"]             = "Go Back";
+$vocab["cantfindentry"]      = "Cannot find entry in database";
+
 
 // Used in view_entry.php
 $vocab["description"]        = "Description";

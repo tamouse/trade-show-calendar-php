@@ -10,6 +10,8 @@ define('REPORT',  01);
 define('SUMMARY', 02);
 define('CSV',     04);
 
+$location = "day.php" . "?error=notimplemented";
+redirect($location);
 
 function date_time_string($t)
 {

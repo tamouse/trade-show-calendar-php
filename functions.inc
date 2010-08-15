@@ -859,7 +859,7 @@ function draw_cell($cell, $query_strings)
 		{
 			$user_id	= $cell["user_id"];
 			$descr		= $cell["purpose"];
-			$descr = (empty($descr) ? "Booked" : $descr);
+			$descr = (empty($descr) ? get_vocab('booked') : $descr);
 			$cell_class = 'booked';
 		}
 		else
@@ -907,7 +907,7 @@ function draw_cell($cell, $query_strings)
 	}
     else                 // if it is booked then show the booking
 	{
-		echo "<a class=\"booked\" href=\"view_entry.php?id=$id&". $query_strings['view_booking'] . "\">$descr</a>\n";
+		echo "<a class=\"booked\" href=\"edit_entry.php?id=$id&". $query_strings['view_booking'] . "\">$descr</a>\n";
 	}
 	echo "</div>\n";
 	
@@ -1039,6 +1039,8 @@ function get_event_from_room($room_id)
 		return ((!isset($event_id) || ($event_id < 0)) ? 0 : $event_id);
 	}
 }
+
+// get an entry by the event, day, room, hour, and minute
 function get_entry_by_event_day_room($event_id, $day_id, $room_id, $hour, $minute)
 {
 	global $tbl_entry;
@@ -1051,6 +1053,99 @@ function get_entry_by_event_day_room($event_id, $day_id, $room_id, $hour, $minut
 		return $row;
 		
 	}
+}
+
+// get a user's id based on user name
+function getUserIDByName($user)
+{
+	global $tbl_users;
+	if (empty($user)) return 0;
+	$sql = "SELECT id FROM $tbl_users WHERE name='" . addslashes($user) . "' LIMIT 1";
+	$user_id = sql_query1($sql);
+	return (($user_id < 1) ? 0 : $user_id);
+}
+
+// get user's name based on their id
+function get_user_name($id)
+{
+	global $tbl_users;
+	if (isset($id) && $id > 0) {
+		$sql = "SELECT name FROM $tbl_users WHERE id=$id";
+		$name = sql_query1($sql);
+		if (empty($name) || $name < 1) {
+			return '';
+		} else {
+			return $name;
+		}
+	}
+}
+
+// get the event name by the event's id
+function get_event_name_by_id($id)
+{
+	global $tbl_event;
+	if (isset($id) && $id > 0)
+	{
+		$sql = "SELECT event_name FROM $tbl_event WHERE id=$id LIMIT 1";
+		$event_name = sql_query1($sql);
+		if (empty($event_name) || $event_name <0)
+		{
+			fatal_error(0, "Event with no name: id=$id");
+		}
+		return $event_name;
+	}
+	return '';
+}
+
+// get the room's name by the room's id
+function get_room_name_by_id($id)
+{
+	global $tbl_room;
+	if (isset($id) && $id > 0)
+	{
+		$sql = "SELECT room_name FROM $tbl_room WHERE id=$id LIMIT 1";
+		$room_name = sql_query1($sql);
+		if (empty($room_name) || $room_name <0)
+		{
+			fatal_error(0, "Room with no name: id=$id");
+		}
+		return $room_name;
+	}
+	return '';
+}
+
+// get the days's day_string by the day's id
+function get_day_string_by_id($id)
+{
+	global $tbl_day;
+	if (isset($id) && $id > 0)
+	{
+		$sql = "SELECT day_string FROM $tbl_day WHERE id=$id LIMIT 1";
+		$day_string = sql_query1($sql);
+		if (empty($day_string) || $day_string <0)
+		{
+			fatal_error(0, "Day with no day_string: id=$id");
+		}
+		return $day_string;
+	}
+	return '';
+}
+
+// get_entry_creator_id
+function get_entry_creator_id($id)
+{
+	global $tbl_entry;
+	if (isset($id) && $id > 0)
+	{
+		$sql = "SELECT user_id as creator_id FROM $tbl_entry WHERE id=$id LIMIT 1";
+		$creator_id = sql_query1($sql);
+		if ($creator_id < 1)
+		{
+			return 0;
+		}
+		return $creator_id;
+	}
+	return 0;
 }
 
 ?>

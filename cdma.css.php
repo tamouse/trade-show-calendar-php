@@ -222,7 +222,7 @@ if (!show_plus_link)
 }
 ?>
 span.booked {background-color: <?php echo $booked_background_color;?>;}
-a.booked {display: block; font-size: medium; font-style: italic; text-align: center; background-color: <?php echo $booked_backgound_color ?>;}
+a.booked {display: block; font-size: medium; font-style: italic; text-align: center; background-color: <?php echo $booked_background_color; ?>;}
 .booked img {marging: auto; padding: 4px 0 2px 0}
 <?php
 if (!show_plus_link)

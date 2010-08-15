@@ -1,92 +1,59 @@
 <?php
-// $Id: del_entry.php 1288 2009-12-17 18:32:24Z cimorrison $
 
 require_once "defaultincludes.inc";
 
-require_once "cdma_sql.inc";
-
-// Get form variables
-$day = get_form_var('day', 'int');
-$month = get_form_var('month', 'int');
-$year = get_form_var('year', 'int');
-$area = get_form_var('area', 'int');
 $id = get_form_var('id', 'int');
-$series = get_form_var('series', 'int');
-$returl = get_form_var('returl', 'string');
-$action = get_form_var('action', 'string');
-$note = get_form_var('note', 'string');
+$event_id = get_form_var('event_id', 'int');
+$room_id = get_form_var('room_id', 'int');
+$day_id = get_form_var('day_id', 'int');
+$user_id = get_form_var('user_id', 'int'); // id of the current user
+$creator_id = get_form_var('creator_id', 'int'); // id of the entry creator
 
-if (!isset($note))
+$returl = "day.php?event_id=$event_id&day_id=$day_id&room_id=$room_id";
+
+if (!isset($id))
 {
-  $note = "";
+	$location = $returl . "&error=noentryid";
+	redirect($location);
 }
 
-if (empty($returl))
+// Verify that the user has permissions to delete this entry
+if (($user_id == $creator_id) || (authGetUserLevel($user) >= 2))
 {
-  switch ($default_view)
-  {
-    case "month":
-      $returl = "month.php";
-      break;
-    case "week":
-      $returl = "week.php";
-      break;
-    default:
-      $returl = "day.php";
-  }
-  $returl .= "?year=$year&month=$month&day=$day&area=$area";
+	$sql = "SELECT * FROM $tbl_entry WHERE id=$id LIMIT 1";
+	$res = sql_query($sql);
+	if ($res < 0)
+	{
+		fatal_error(TRUE, get_vocab("cantfindentry") . " id=$id " . sql_error());
+	}
+	$row = sql_row_keyed($res, 0);
+	sql_free($res);
+
+	// Acquire a mutex to lock out others who might be deleting the new event
+	if (!sql_mutex_lock("$tbl_entry"))
+	{
+		fatal_error(TRUE, get_vocab("failed_to_acquire"));
+	}
+	
+	$sql = "UPDATE $tbl_entry SET " .
+		"user_id=0, " .
+		"purpose=NULL, " .
+		"comments=NULL, " .
+		"guests=NULL, " .
+		"guest_emails=NULL " .
+		"WHERE id=$id";
+	$res = sql_command($sql);
+    if ($res < 0)
+	{
+		fatal_error(1, get_vocab("updateentryfailed") . " id=$id " . sql_error());
+	}
+	// if everything is OK, release the mutex and go back to
+	// the admin page (for the new event)
+	sql_mutex_unlock("$tbl_entry");
+	
+	
+	redirect($returl);
 }
-
-if (getAuthorised(1) && ($info = cdmaGetBookingInfo($id, FALSE, TRUE)))
-{
-  $user = getUserName();
-  // check that the user is allowed to delete this entry
-  if (isset($action) && ($action="reject"))
-  {
-    $authorised = auth_book_admin($user, $info['room_id']);
-  }
-  else
-  {
-    $authorised = getWritable($info['create_by'], $user, $info['room_id']);
-  }
-  if ($authorised)
-  {
-    $day   = strftime("%d", $info["start_time"]);
-    $month = strftime("%m", $info["start_time"]);
-    $year  = strftime("%Y", $info["start_time"]);
-    $area  = cdmaGetRoomArea($info["room_id"]);
-    
-    $notify_by_email = $mail_settings['admin_on_delete']  || $mail_settings['book_admin_on_provisional'];
-
-    if ($notify_by_email)
-    {
-      require_once "functions_mail.inc";
-      // Gather all fields values for use in emails.
-      $mail_previous = getPreviousEntryData($id, $series);
-    }
-    sql_begin();
-    $result = cdmaDelEntry(getUserName(), $id, $series, 1);
-    sql_commit();
-    if ($result)
-    {
-      // Send a mail to the Administrator
-      if ($notify_by_email)
-      {
-        if (isset($action) && ($action == "reject"))
-        {
-          $result = notifyAdminOnDelete($mail_previous, $action, $note);
-        }
-        else
-        {
-          $result = notifyAdminOnDelete($mail_previous);
-        }
-      }
-      Header("Location: $returl");
-      exit();
-    }
-  }
-}
-
 // If you got this far then we got an access denied.
 showAccessDenied($day_id, $event_id);
 ?>

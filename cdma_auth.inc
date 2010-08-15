@@ -51,16 +51,16 @@ function getAuthorised($level)
  *   0        - The user does not have the required access
  *   non-zero - The user has the required access
  */
-function getWritable($creator, $user, $room)
+function getWritable($creator_id, $user_id, $room_id)
 {
   // Always allowed to modify your own stuff
-  if(strcasecmp($creator, $user) == 0)
+  if($creator_id == $user_id)
   {
     return 1;
   }
   
   // Otherwise you have to be a (booking) admin for this room
-  if (auth_book_admin($user, $room))
+  if (auth_book_admin($user_id, $room_id))
   {
     return 1;
   }
