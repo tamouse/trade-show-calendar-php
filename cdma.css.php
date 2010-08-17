@@ -232,6 +232,8 @@ if (!show_plus_link)
 }
 ?>
 
+div.instructions {text-align: center;}
+
 <?php
 // The following section deals with the contents of the table cells in the month view.    It is designed
 // to ensure that the new booking link is active anywhere in the cell that there isn't another link, for 
@@ -818,8 +820,10 @@ div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1
 
 
 /* -------------- DAY SELECTOR -----------------*/
-div.day_selector {margin-top: 10pt; margin-bottom: 10pt; padding: 10pt;}
-td.day_selector_cell {font-size: large; margin: 5pt; padding: 5pt;}
+
+div.day_selector {text-align: center; margin-top: 5pt; margin-bottom: 5pt; padding: 5pt;}
+table.day_selector_table {margin: 0 auto 0 auto;}
+td.day_selector_cell {font-size: large;  padding: 5pt;}
 a.day_selector_link {display: block;}
 .unselected {background-color: <?php echo $day_selector_unselected_bg_color ?>; color: <?php echo $day_selector_unselected_fg_color ?>;}
 .selected {background-color: <?php echo $day_selector_selected_bg_color ?>; color: <?php echo $day_selector_selected_fg_color ?>;}

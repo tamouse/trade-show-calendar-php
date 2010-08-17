@@ -16,7 +16,7 @@
     ?>
     <script src="cdma-js-overrides.js" type="text/javascript"></script>
     <!--[if IE]>
-    <link rel="stylesheet" href="cdma-ie.css" type="text/css">
+    <link rel="stylesheet" href="cdma-ie.css.php" type="text/css">
     <![endif]-->
     <!--[if IE 8]>
     <link rel="stylesheet" href="cdma-ie8.css" type="text/css">

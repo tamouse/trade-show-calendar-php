@@ -56,7 +56,6 @@ if (!$clipped)
 }
 ?>
 
-
 /* ------------ TRAILER.INC ---------------------*/
 
 /* opacity for IE7 and below is implemented with filter, but only works if the */

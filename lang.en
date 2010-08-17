@@ -45,6 +45,9 @@ $vocab["noslot"]             = "Add slot";
 $vocab["noslotid"]           = "No slot was specified";
 $vocab["slotdeletefailed"]   = "Slot delete attempt failed";
 $vocab["selectdayfailed"]	 = "Selection of day entries failed";
+$vocab['instructions1']      = "Click on <span class=\"available\">available</span> space to book an appointment.";
+$vocab['instructions2']      = "Click on an <span class=\"booked\">booked</span> space to edit it.";
+$vocab['instructions3']      = "Click on a time slot to add an appointment slot. Click on a <span class=\"available\" space to edit or delete it.";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "View Day";

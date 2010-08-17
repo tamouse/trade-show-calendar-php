@@ -48,15 +48,7 @@ if (!empty($error))
   echo "<p class=\"error\" id=\"$error\">" . get_vocab($error) . "</p>\n";
 }
 
-if ($mode == 0)
-{
-	echo "<p>Click on <span class=\"available\">open time and room</span> to book an appointment.</p>\n";
-	echo "<p>Click on an <span class=\"booked\">appointment</span> to view it in detail.</p>\n";
-}
-else
-{
-	echo "<p>Click on a time slot to add an appointment slot</p>\n";
-}
+
 
 $format = "Gi";
 
@@ -69,6 +61,15 @@ if ($show_event_selector)
 
 echo make_day_selector_html($event_id, $room_id, $day_id, $mode);
 
+if ($mode == 0)
+{
+	echo "<div class=\"instructions\">" . get_vocab('instructions1') . " \n";
+	echo get_vocab('instructions2') . "</div>\n";
+}
+else
+{
+	echo "<div class=\"instructions\">" . get_vocab('instructions3') . "</div>\n";
+}
 // We need to know what all the rooms area called, so we can show them all
 // pull the data from the db and store it. Convienently we can print the room
 // headings and capacities at the same time
