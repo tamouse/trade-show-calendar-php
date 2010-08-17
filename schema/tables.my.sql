@@ -40,7 +40,7 @@ CREATE TABLE cdma_room
 (
   id               int NOT NULL auto_increment,
   event_id		   int NOT NULL,
-  room_number	   varchar(25) DEFAULT '' NOT NULL,
+  room_number	   int NOT NULL,
   room_name        varchar(25) DEFAULT '' NOT NULL,
   room_description      text,
 
@@ -59,7 +59,7 @@ CREATE TABLE cdma_entry
   end_hour    int NOT NULL,
   end_minute  int NOT NULL,
   user_id     int NOT NULL,
-  purpose     varchar(250),
+  purpose     varchar(80),
   comments    text,
   confirmed   tinyint NOT NULL DEFAULT 1,
   guests      text,

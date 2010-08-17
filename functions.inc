@@ -260,7 +260,68 @@ function fromPeriodString($start_period, &$units, $dur_units)
   $units = 60 * $units;
 }
 
+// format a time string from hours and minutes
+function formatTime($hour, $minute)
+{
+	global $time_format_str; // from configuration files
+	if (!isset($hour) || !isset($minute))
+	{
+		return '';
+	}
+	$t = mktime($hour, $minute);
+	$time_string = date($time_format_str, $t);
+	return $time_string;
+}
 
+// format a date string from day, month, year
+function formatDate($day, $month, $year)
+{
+	global $date_format_str; // from configuration files
+	if (!isset($day) || !isset($month) || !isset($year))
+	{
+		return '';
+	}
+	$t = mktime(0, 0, 0, $month, $day, $year);
+	$date_string = date($date_format_str, $t);
+	return $date_string;
+}
+
+// Convert a time string to hour and minute
+function convertTimeToArray($time_str)
+{
+	if (empty($time_str))
+	{
+		return array(-1, -1);
+	}
+	$t = strtotime($time_str);
+	if (!$t)
+	{
+		return array(-1, -1);
+	}
+	$t_array = getdate($t);
+	$hour = $t_array['hours'];
+	$minute = $t_array['minutes'];
+	return array($hour, $minute);
+}
+
+// Convert a date string to month, day, year
+function convertDateToArray($date_str)
+{
+	if (emptry($date_str))
+	{
+		return array(-1, -1, -1);
+	}
+	$t = strtotime($date_str);
+	if (!$t)
+	{
+		return array(-1, -1, -1);
+	}
+	$d_array = getdate($t);
+	$year = $d_array['year'];
+	$month = $d_array['month'];
+	$day = $d_array['day'];
+	return array($month, $day, $year);
+}
 
 function genDateSelector($prefix, $day, $month, $year)
 {
@@ -476,6 +537,20 @@ function cdma_entity_decode($string)
   return $string;
 }
 
+// validates an hour of the day.
+// must be between 0 and 23.
+function validateHour($hour)
+{
+	return (((isset($hour)) && (is_numeric($hour)) && ($hour >= 0) && ($hour <= 23)) ? TRUE : FALSE);
+}
+
+// validates a minute of an hour
+// must be between 0 and 59.
+function validateMinute($minute)
+{
+	return (((isset($minute)) && (is_numeric($minute)) && ($minute >= 0) && ($minute <= 59)) ? TRUE : FALSE);
+}
+
 // validates a comma separated list of email addresses
 // returns FALSE if any one of them is invalid, otherwise TRUE
 function validate_email_list($list)
@@ -591,73 +666,92 @@ function round_t_up($t, $resolution, $am7)
   }
 }
 
-// generates some html that can be used to select which area should be
-// displayed.
-function make_area_select_html( $link, $current, $year, $month, $day )
+// generate some html to allow selection of the current event
+function make_event_select_html($event_id, $room_id, $day_id, $show_edit_buttons)
 {
-  global $tbl_area;
-  $out_html = "
-<form id=\"areaChangeForm\" method=\"get\" action=\"$link\">
-  <div>
-    <select class=\"room_area_select\" id=\"area_select\" name=\"area\" onchange=\"this.form.submit()\">";
-  
-    $sql = "select id, area_name from $tbl_area order by area_name";
-    $res = sql_query($sql);
-    if ($res)
-    {
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-      {
-        $selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
-        $out_html .= "
-      <option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['area_name']) . "</option>";
-      }
-    }
-    // Note:  the submit button will not be displayed if JavaScript is enabled
-    $out_html .= "
-    </select>
-  
-    <input type=\"hidden\" name=\"day\"   value=\"$day\">
-    <input type=\"hidden\" name=\"month\" value=\"$month\">
-    <input type=\"hidden\" name=\"year\"  value=\"$year\">
-    <input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">
-    </div>
-</form>\n";
+	global $tbl_event;
+	$out_html = "<div id=\"event_form\">\n";
+	$sql = "select id, event_name from $tbl_event order by event_name";
+	$res = sql_query($sql);
+	if ($res == -1) fatal_error(0, "select from $tbl_event failed: " . sql_error());
+	$events_defined = $res && (sql_count($res) > 0);
+	if ($events_defined)
+	{
+	  // If there are some events defined, then show the event form
+	  $out_html .= "<form id=\"eventChangeForm\" method=\"get\" action=\"$PHP_SELF\">\n";
+	  $out_html .= "<fieldset>\n";
+	  $out_html .= "<legend></legend>\n";
 
-  return $out_html;
-} // end make_area_select_html
+	  // The event selector
+	  $out_html .= "<label id=\"event_label\" for=\"event_select\">" . get_vocab("event") . ":</label>\n";
+	  $out_html .= "<select class=\"room_event_select\" id=\"event_select\" name=\"event_id\" onchange=\"this.form.submit()\">";
+	  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+	  {
+	    $selected = ($row['id'] == $event_id) ? "selected=\"selected\"" : "";
+	    $out_html .= "<option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['event_name']) . "</option>";
+	  }
+	  $out_html .= "</select>\n";
 
-function make_room_select_html( $link, $area, $current, $year, $month, $day )
+	  // Some hidden inputs for current day, room
+	  $out_html .= "<input type=\"hidden\" name=\"day_id\" value=\"$day_id\">\n";
+	  $out_html .= "<input type=\"hidden\" name=\"room_id\" value=\"$room_id\">\n";
+
+
+	  // The change event button (won't be needed or displayed if JavaScript is enabled)
+	  $out_html .= "<input type=\"submit\" name=\"change\" class=\"js_none\" value=\"" . get_vocab("change") . "\">\n";
+
+	  // If they're an admin then give them edit and delete buttons for the event
+	  // and also a form for adding a new event
+	  if ($show_edit_buttons)
+	  {
+	    // Can't use <button> because IE6 does not support those properly
+	    $out_html .= "<input type=\"image\" class=\"button\" name=\"edit\" src=\"images/edit.png\"
+	           title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
+	    $out_html .= "<input type=\"image\" class=\"button\" name=\"delete\" src=\"images/delete.png\"
+	           title=\"" . get_vocab("delete") . "\" alt=\"" . get_vocab("delete") . "\">\n";
+	  }
+
+	  $out_html .= "</fieldset>\n";
+	  $out_html .= "</form>\n";
+	}
+	else
+	{
+	  $out_html .= "<h2>" . get_vocab("noevents") . "</h2>\n";
+	}
+	$out_html .= "</div>"; // end event_form
+	return $out_html;
+}
+
+// Form for changing days in an event
+function make_day_selector_html($event_id, $room_id, $day_id, $mode)
 {
-  global $tbl_room;
-  $out_html = "
-<form id=\"roomChangeForm\" method=\"get\" action=\"$link\">
-  <div>
-    <select class=\"room_area_select\" name=\"room\" onchange=\"this.form.submit()\">";
-  
-    $sql = "select id, room_name from $tbl_room where area_id=$area order by sort_key";
-    $res = sql_query($sql);
-    if ($res)
-    {
-      for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-      {
-        $selected = ($row['id'] == $current) ? "selected=\"selected\"" : "";
-        $out_html .= "
-      <option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['room_name']) . "</option>";
-      }
-    }
-    // Note:  the submit button will not be displayed if JavaScript is enabled
-    $out_html .= "
-    </select>
-    <input type=\"hidden\" name=\"day\"   value=\"$day\">
-    <input type=\"hidden\" name=\"month\" value=\"$month\">
-    <input type=\"hidden\" name=\"year\"  value=\"$year\">
-    <input type=\"hidden\" name=\"area\"  value=\"$area\">
-    <input type=\"submit\" class=\"js_none\" value=\"".get_vocab("change")."\">
-  </div>
-</form>\n";
-
-  return $out_html;
-} // end make_area_select_html
+	global $tbl_day;
+	echo "<div class=\"day_selector\">\n";
+	$sql = "select id, day_string from $tbl_day where event_id=$event_id order by year, month, day";
+	$res = sql_query($sql);
+	if ($res == -1) fatal_error(0, "select from $tbl_day failed: " . sql_error());
+	$days_defined = $res && (sql_count($res) > 0);
+	if ($days_defined)
+	{
+		// If there are some days defined, then show the days as tabs across the top of the page
+		echo "<table class=\"day_selector_table\">\n";
+		echo "<tr class=\"day_selector_row\">\n";
+		for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
+		{
+			$selected = ($row['id'] == $day_id) ? "selected" : "unselected"; // define tab's subclass
+			$location = $PHP_SELF . "?event_id=" . $event_id . "&room_id=" . $room_id . "&day_id=" . $row['id'] . "&mode=" . $mode;
+			echo "<td class=\"day_selector_cell " . $selected . "\" >\n";
+			echo "<a class=\"day_selector_link\" href=\"" . $location . "\" >" . $row['day_string'] . "</a>\n";
+			echo "</td>\n";
+		}
+		echo "</tr></table>\n";
+	}
+	else
+	{
+		echo "<h2>" . get_vocab("nodays") . "</h2>\n";
+	}
+	echo "</div>\n"; // end div day_selector
+}
 
 
 // This will return the appropriate value for isdst for mktime().
@@ -821,9 +915,9 @@ function is_hidden_day ($dow)
   return (isset($hidden_days) && in_array($dow, $hidden_days));
 }
 
-function draw_cell($cell, $query_strings)
+function draw_cell($cell, $query_strings, $mode)
 {
-  // draws a single cell in the main table of the room view
+  // draws a single cell in the main table of the day or slot view
   //
   // $cell is aan array that looks like this:
   // 
@@ -842,11 +936,14 @@ function draw_cell($cell, $query_strings)
   //    ['new_booking']     the string to be used for an empty cell if there is a slot
   //    ['view_booking']       the string to be used for a full cell
   //
+  // $mode specifies whether this is editing appointments or slots
+  //
   // $cell_class specifies the default class for the cell (odd_row, even_row or row_highlight)
   // so that the zebra stripes can be drawn, or else to allow the whole row to be highlighted.
   
 	$is_admin = getAdmin();
     
+	// Don't need to change anything here to use this in either mode
 	if(isset($cell) && ($cell != 0))
 	{       
 		$id         = $cell["id"];
@@ -859,20 +956,22 @@ function draw_cell($cell, $query_strings)
 		{
 			$user_id	= $cell["user_id"];
 			$descr		= $cell["purpose"];
-			$descr = (empty($descr) ? get_vocab('booked') : $descr);
+			$descr = (empty($descr) ? get_vocab('booked') : truncateToDisplay($descr))
+				. "<br/><span class=\"appointmentsettings\">(" . formatTime($start_hour, $start_minute) . " - " . formatTime($cell["end_hour"],$cell["end_minute"]) . ")</span>";
 			$cell_class = 'booked';
 		}
 		else
 		{
 			unset($user_id);
-			$descr		= get_vocab('available');
+			$descr		= truncateToDisplay(get_vocab('available'))
+				. "<br/><span class=\"appointmentsettings\">(" . formatTime($start_hour, $start_minute) . " - " . formatTime($cell["end_hour"],$cell["end_minute"]) . ")</span>";
 			$cell_class = 'available';
 		}
 	}
 	else  // cell not set
 	{
 		unset($id);
-		$descr = get_vocab('noslot');
+		$descr = truncateToDisplay(get_vocab('noslot'));
 		$cell_class = 'no_slot';
    }
 
@@ -885,23 +984,26 @@ function draw_cell($cell, $query_strings)
 	if (!isset($id)) // no slot
 	{
 		
-		if ($is_admin)
+		if ($mode)
 		{
-			echo "<a class=\"new_slot\" href=\"add_slot.php?" . $query_strings['new_slot'] . "\">";
+			echo "<a class=\"new_slot\" href=\"edit_slot.php?" . $query_strings['new_slot'] . "\">";
 			echo $descr;
 			echo "</a>\n";
 		}
 	}
 	else if (!isset($user_id)) // open slot, no booking
 	{
-		echo "<a class=\"available\" href=\"edit_entry.php?id=$id&" . $query_strings['new_booking'] . "\">";
-		echo $descr;
-		echo "</a>\n";
-		if ($is_admin)
+		if ($mode)
 		{
 			// allow for admin to delete an available slot
-			echo "<a class=\"del_slot\" href=\"del_slot.php?id=$id&" . $query_strings['new_slot'] . "\">";
-			echo "<img src=\"images/delete.png\">";
+			echo "<a class=\"available\" href=\"edit_slot.php?id=$id&" . $query_strings['new_slot'] . "\">";
+			echo $descr;
+			echo "</a>\n";
+		}
+		else
+		{
+			echo "<a class=\"available\" href=\"edit_entry.php?id=$id&" . $query_strings['new_booking'] . "\">";
+			echo $descr;
 			echo "</a>\n";
 		}
 	}
@@ -914,6 +1016,14 @@ function draw_cell($cell, $query_strings)
 	echo "</td>\n";
 }  // end function draw_cell
 
+// shortens a string so that it will display in a cell
+function truncateToDisplay($text)
+{
+	global $max_content_length;
+	$sstr = substr($text, 0, $max_content_length);
+	$sstr .= (strlen($text) > $max_content_length) ? " ..." : "";
+	return $sstr;
+}
 
 // Draw a time cell to be used in the first and last columns of the day view
 //   $hour - hour of the day
@@ -1072,11 +1182,7 @@ function get_user_name($id)
 	if (isset($id) && $id > 0) {
 		$sql = "SELECT name FROM $tbl_users WHERE id=$id";
 		$name = sql_query1($sql);
-		if (empty($name) || $name < 1) {
-			return '';
-		} else {
-			return $name;
-		}
+		return (is_numeric($name) && $name < 0 ? '' : $name);
 	}
 }
 
@@ -1141,11 +1247,53 @@ function get_entry_creator_id($id)
 		$creator_id = sql_query1($sql);
 		if ($creator_id < 1)
 		{
-			return 0;
+			return -2;
 		}
 		return $creator_id;
 	}
-	return 0;
+	return -1;
 }
 
+// get the full date record by date id
+function get_date_record_by_id($id)
+{
+	global $tbl_day;
+	if (!isset($id))
+	{
+		return -1;
+	}
+	$sql = "SELECT * FROM $tbl_day WHERE id=$id LIMIT 1";
+	$res = sql_query($sql);
+	if ((! $res) || ($res < 0))
+	{
+		return -2;
+		
+	}
+	$row = sql_row_keyed($res, 0);
+	return $row;
+	
+}
+
+// Return the number of events in the database
+function eventCount()
+{
+	global $tbl_event;
+	$sql = "SELECT COUNT(id) FROM $tbl_event";
+	$count = sql_query1($sql);
+	if ($count < 0)
+	{
+		fatal_error(0, get_vocab("eventcountfailed") . " " . sql_error($res));
+	}
+	return $count;
+}
+
+// Return the number of users in the database
+function userCount()
+{
+	global $tbl_users;
+	$sql = "SELECT COUNT(ID) FROM $tbl_users";
+	$count = sql_query1($sql);
+	if ($count < 0) fatal_error(0, get_vocab("usercountfailed") . " " . sql_error($res));
+	return $count;
+}
 ?>

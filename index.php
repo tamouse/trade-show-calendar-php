@@ -11,8 +11,20 @@
 require_once "defaultincludes.inc";
 require_once "cdma_sql.inc";
 
-$redirect_str = "day.php";
+// Check for initial conditions
+if (userCount() == 0)
+{
+	redirect("edit_users.php");
+}
 
+if (eventCount() == 0)
+{
+	redirect("admin.php");
+}
+
+$event_id = get_first_event();
+
+$redirect_str = "day.php?event_id=$event_id";
 redirect($redirect_str);
 
 

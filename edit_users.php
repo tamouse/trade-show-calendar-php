@@ -192,8 +192,7 @@ function freeze_panes_table_html($info, $columns, $class, $action=FALSE)
 							// strings
 							$text = htmlspecialchars($col_value);
 							$html .= "<td title=\"$text\"><div>";
-							$html .= substr($text, 0, $max_content_length);
-							$html .= (strlen($text) > $max_content_length) ? " ..." : "";
+							$html .= truncateToDisplay($text);
 							$html .= "</div></td>\n";
 						}
 						break;

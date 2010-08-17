@@ -31,8 +31,18 @@
     <link rel="stylesheet" href="cdma-ielte6.css" type="text/css">
     <![endif]-->
 
+	<!-- import jquery stuff -->
+	<link type="text/css" href="jquery/cdma/css/custom-theme/jquery-ui-1.8.4.custom.css" rel="Stylesheet" />	
+		<script type="text/javascript" src="jquery/cdma/js/jquery-1.4.2.min.js"></script>
+		<script type="text/javascript" src="jquery/cdma/js/jquery-ui-1.8.4.custom.min.js"></script>
+		<link rel="stylesheet" href="jquery/css/jquery.ui.timepicker.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+		
+		<script type="text/javascript" src="jquery/js/jquery.ui.timepicker.js"></script>
+		
+	
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo get_charset(); ?>">
     <meta name="robots" content="noindex">
+		<link rel="shortcut icon" href="favicon.ico" />
 <?php
 
 global $refresh_rate;

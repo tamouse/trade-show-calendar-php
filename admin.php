@@ -45,6 +45,8 @@ if (!getAuthorised(1))
   exit();
 }
 
+$event_name = get_event_name_by_id($event_id);
+
 $is_admin = getAdmin();
 
 print_header($event_id, $day_id);
@@ -56,84 +58,57 @@ if (!empty($error))
   echo "<p class=\"error\" id=\"$error\">" . get_vocab($error) . "</p>\n";
 }
 
+
+
+// Button to go to slot management.
+// Use the day.php function, but set mode to 1 to manage slots instead of appointments
+?>
+<form id="gotoSlots" method="get" action="day.php">
+<input type="hidden" name="event_id" value="<?php echo $event_id ?>" id="event_id"/>
+<input type="hidden" name="mode" value="1" id="mode"/>
+<input type="submit" name="gotoSlots" value="<?php echo get_vocab('gotoSlots') ?>" id="gotoSlots"/>
+</form>
+
+<?php
 // TOP SECTION:  THE FORM FOR SELECTING AN EVENT
-echo "<div id=\"event_form\">\n";
-$sql = "select id, event_name from $tbl_event order by event_name";
-$res = sql_query($sql);
-if ($res == -1) fatal_error(0, "select from $tbl_event failed: " . sql_error());
-$events_defined = $res && (sql_count($res) > 0);
-if ($events_defined)
+
+// Check to see if there is at least one event.
+// NOTE: This system will be used in settings of a single event. Therefore, only define one event in the database.
+// Per conversation with Christopher Spencer, 8/15/2010 with Tamara Temple <tamara@tamaratemple.com>
+$events_defined = (eventCount() > 0 ? TRUE : FALSE);
+if (!$events_defined)
 {
-  // If there are some events defined, then show the event form
-  echo "<form id=\"eventChangeForm\" method=\"get\" action=\"$PHP_SELF\">\n";
-  echo "<fieldset>\n";
-  echo "<legend></legend>\n";
-  
-  // The event selector
-  echo "<label id=\"event_label\" for=\"event_select\">" . get_vocab("event") . ":</label>\n";
-  echo "<select class=\"room_event_select\" id=\"event_select\" name=\"event_id\" onchange=\"this.form.submit()\">";
-  for ($i = 0; ($row = sql_row_keyed($res, $i)); $i++)
-  {
-    $selected = ($row['id'] == $event_id) ? "selected=\"selected\"" : "";
-    echo "<option $selected value=\"". $row['id']. "\">" . htmlspecialchars($row['event_name']) . "</option>";
-  }
-  echo "</select>\n";
-  
-  // Some hidden inputs for current day, room
-  echo "<input type=\"hidden\" name=\"day_id\" value=\"$day_id\">\n";
-  echo "<input type=\"hidden\" name=\"room_id\" value=\"$room_id\">\n";
+	if ($is_admin)
+	{
+		// New event form
+		?>
+			<div id="new_event_form">
+			<form id="add_event" class="form_admin" action="add.php" method="post">
+			<fieldset>
+			<legend><?php echo get_vocab("addevent") ?></legend>
 
-  
-  // The change event button (won't be needed or displayed if JavaScript is enabled)
-  echo "<input type=\"submit\" name=\"change\" class=\"js_none\" value=\"" . get_vocab("change") . "\">\n";
-  
-  // If they're an admin then give them edit and delete buttons for the event
-  // and also a form for adding a new event
-  if ($is_admin)
-  {
-    // Can't use <button> because IE6 does not support those properly
-    echo "<input type=\"image\" class=\"button\" name=\"edit\" src=\"images/edit.png\"
-           title=\"" . get_vocab("edit") . "\" alt=\"" . get_vocab("edit") . "\">\n";
-    echo "<input type=\"image\" class=\"button\" name=\"delete\" src=\"images/delete.png\"
-           title=\"" . get_vocab("delete") . "\" alt=\"" . get_vocab("delete") . "\">\n";
-  }
-  
-  echo "</fieldset>\n";
-  echo "</form>\n";
+			<input type="hidden" name="type" value="event">
+
+			<div>
+			<label for="event_name" class="required"><?php echo get_vocab("name") ?>:</label>
+			<input type="text" id="event_name" name="name" maxlength="<?php echo $maxlength['event.event_name'] ?>">
+			</div>
+
+			<div>
+			<input type="submit" class="submit" value="<?php echo get_vocab("addevent") ?>">
+			</div>
+
+			</fieldset>
+			</form>
+			</div>
+			<?php
+	}
 }
-else
-{
-  echo "<p>" . get_vocab("noevents") . "</p>\n";
-}
-if ($is_admin)
-{
-  // New event form
-  ?>
-  <form id="add_event" class="form_admin" action="add.php" method="post">
-    <fieldset>
-    <legend><?php echo get_vocab("addevent") ?></legend>
-        
-      <input type="hidden" name="type" value="event">
-
-      <div>
-        <label for="event_name" class="required"><?php echo get_vocab("name") ?>:</label>
-        <input type="text" id="event_name" name="name" maxlength="<?php echo $maxlength['event.event_name'] ?>">
-      </div>
-
-      <div>
-        <input type="submit" class="submit" value="<?php echo get_vocab("addevent") ?>">
-      </div>
-
-    </fieldset>
-  </form>
-  <?php
-}
-echo "</div>";  // event_form
 
 
 // MIDDLE SECTION: DAYS IN THE SELECTED EVENT
 echo "<h2>";
-echo get_vocab("days");
+echo get_vocab("capdays");
 if (isset($event_name)) {
 	echo " " . get_vocab("in") . " " . htmlspecialchars($event_name);
 }
@@ -215,33 +190,39 @@ else
 	echo "<p>" . get_vocab("noevent") . "</p>\n";
 }
 
-	// Give admins a form for adding days to the event - provided 
-	// there's an event selected
-	if ($is_admin && $events_defined && !empty($event_id))
-	{
+// Give admins a form for adding days to the event - provided 
+// there's an event selected
+if ($is_admin && $events_defined && !empty($event_id))
+{
 	?>
-	  <form id="add_day" class="form_admin" action="add.php" method="post">
-	    <fieldset>
-	    <legend><?php echo get_vocab("addday") ?></legend>
+		<form id="add_day" class="form_admin" action="add.php" method="post">
+		<fieldset>
+		<legend><?php echo get_vocab("addday") ?></legend>
 
-	      <input type="hidden" name="type" value="day">
-	      <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
+		<input type="hidden" name="type" value="day">
+		<input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
 
-			<!-- here is where a jQuery date picker goes -->
-	      <div>
-	          <label for="day_string" class="required"><?php echo get_vocab("day_string") ?>:</label>
-	          <input type="text" id="day_string" name="day_string">
-	      </div>
+	<script type="text/javascript">
+		$(function() {
+			$("#day_string").datepicker({dateFormat: 'mm/dd/yy'});
+			$( "#day_string" ).datepicker({ gotoCurrent: true });
+			$("#day_string").datepicker();
+		});
+		</script>
+		<div>
+		<label for="day_string" class="required"><?php echo get_vocab("day_string") ?>:</label>
+		<input type="text" id="day_string" name="day_string">
+		</div>
 
-	      <div>
-	        <input type="submit" class="submit" value="<?php echo get_vocab("addday") ?>">
-	      </div>
+		<div>
+		<input type="submit" class="submit" value="<?php echo get_vocab("addday") ?>">
+		</div>
 
-	    </fieldset>
-	  </form>
-	<?php
-	}
-	echo "</div>\n";
+		</fieldset>
+		</form>
+		<?php
+}
+echo "</div>\n";
 
 
 // BOTTOM SECTION: ROOMS IN THE SELECTED EVENT
@@ -442,7 +423,7 @@ if ($is_admin && $events_defined && !empty($event_id))
 echo "</div>\n";
 
 echo "<div class=\"simple_trailer\" style=\"clear: both;\">\n";
-echo "<a href=\"day.php?event_id=$event_id&day_id=$day_id\">" . get_vocab('backmain') . "</a>\n";
+echo "<a href=\"index.php?event_id=$event_id&day_id=$day_id\">" . get_vocab('backmain') . "</a>\n";
 echo "</div>\n";
 
 require_once "trailer.inc"

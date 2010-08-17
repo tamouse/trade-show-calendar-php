@@ -26,6 +26,7 @@ $vocab["help"]               = "Help";
 $vocab["search"]             = "Search";
 $vocab["not_php3"]           = "WARNING: This probably doesn't work with PHP3";
 $vocab["outstanding"]        = "pending bookings";
+$vocab["eventcountfailed"]   = "Event count failed";
 
 // Used in day.php
 $vocab["addslot"]            = "Add slot";
@@ -43,6 +44,7 @@ $vocab["booked"]             = "Booked";
 $vocab["noslot"]             = "Add slot";
 $vocab["noslotid"]           = "No slot was specified";
 $vocab["slotdeletefailed"]   = "Slot delete attempt failed";
+$vocab["selectdayfailed"]	 = "Selection of day entries failed";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "View Day";
@@ -118,6 +120,10 @@ $vocab["guestsemails"]        = "Guests' Emails";
 $vocab["goback"]             = "Go Back";
 $vocab["cantfindentry"]      = "Cannot find entry in database";
 
+// Used in edit_slot.php
+$vocab["deleteslot"]         = "Delete Slot";
+$vocab["invalid_starttime"]  = "Invalid start time!";
+$vocab["invalid_endtime"]    = "Invalid end time";
 
 // Used in view_entry.php
 $vocab["description"]        = "Description";
@@ -293,8 +299,10 @@ $vocab["fulldescription_short"] = "Full Description";
 $vocab["no_rooms_for_event"]  = "No rooms defined for this event";
 
 // Used in admin.php
+$vocab["gotoSlots"]          = "Manage slots in calendar -->";
 $vocab["edit"]               = "Edit";
 $vocab["delete"]             = "Delete";
+$vocab["capdays"]            = "Days";
 $vocab["rooms"]              = "Rooms";
 $vocab["in"]                 = "in";
 $vocab["noevents"]           = "No events have been defined.";
@@ -322,7 +330,7 @@ $vocab['room_description']   = "Description";
 $vocab["nostarttime"]		 = "No start time given.";
 $vocab["duplicateslot"]	     = "Duplicate slot";
 
-// Used in edit_event_room.php
+// Used in edit_event_day_room.php
 $vocab["editevent"]               = "Edit Event";
 $vocab["change"]                  = "Change";
 $vocab["backadmin"]               = "Back to Admin";
@@ -386,7 +394,7 @@ $vocab["deletefollowing"]    = "This will delete the following bookings";
 $vocab["sure"]               = "Are you sure?";
 $vocab["YES"]                = "YES";
 $vocab["NO"]                 = "NO";
-$vocab["delevent"]            = "You must delete all rooms in this event before you can delete it<p>";
+$vocab["delevent"]            = "You must delete all days and rooms in this event before you can delete it<p>";
 
 // Used in help.php
 $vocab["about_cdma"]         = "About CDMA";

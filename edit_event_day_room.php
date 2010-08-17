@@ -58,10 +58,10 @@ $new_event = get_form_var ('new_event', 'int');
 $old_event = get_form_var ('old_event', 'int');
 $old_event_name = get_form_var('old_event_name', 'string');
 $room_id = get_form_var('room_id', 'int');
-$room_number = get_form_var('room_number', 'string');
+$room_number = get_form_var('room_number', 'int');
 $room_name = get_form_var('room_name', 'string');
 $room_desc = get_form_var('room_description', 'string');
-$old_room_number = get_form_var('old_room_number', 'string');
+$old_room_number = get_form_var('old_room_number', 'int');
 $old_room_name = get_form_var('old_room_name', 'string');
 $old_room_desc = get_form_var('old_room_desc', 'string');
 $event_name = get_form_var('event_name', 'string');
@@ -113,6 +113,7 @@ if (isset($change_done))
 $valid_email = TRUE;
 $valid_event = TRUE;
 $valid_room_name = TRUE;
+$valid_room_number = TRUE;
 $valid_day_string = TRUE;
 
 
@@ -167,8 +168,12 @@ if (isset($change_room) && !empty($room_id))
 	{
 		fatal_error(TRUE, get_vocab("failed_to_acquire"));
 	}
+	if (!isset($room_number) || (!is_numeric($room_number)))
+	{
+		$valid_room_number = FALSE;
+	}
 	// Check the new event still exists
-	if (sql_query1("SELECT COUNT(*) FROM $tbl_event WHERE id=$new_event LIMIT 1") < 1)
+	elseif (sql_query1("SELECT COUNT(*) FROM $tbl_event WHERE id=$new_event LIMIT 1") < 1)
 	{
 		$valid_event = FALSE;
 	}
@@ -176,11 +181,16 @@ if (isset($change_room) && !empty($room_id))
 	// (only do this if you're changing the room name or the event - if you're
 	// just editing the other details for an existing room we don't want to reject
 	// the edit because the room already exists!)
-	elseif ( (($new_event != $old_event) || ($room_name != $old_room_name) || ($room_number != $old_room_number))
-		&& sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE room_name='" . addslashes($room_name) . "' AND event_id=$new_event LIMIT 1") > 0
-		&& sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE room_number='" . addslashes($room_number) . "' AND event_id=$new_event LIMIT 1") > 0)
+	elseif ( (($new_event != $old_event) || ($room_name != $old_room_name) )
+		&& sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE room_name='" . addslashes($room_name) . "' AND event_id=$new_event LIMIT 1") > 0)
 	{
 		$valid_room_name = FALSE;
+	}
+	// Also do the same check for room number
+	elseif ( (($new_event != $old_event) || ($room_number != $old_room_number))
+		&& sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE room_number=" . $room_number . " AND event_id=$new_event LIMIT 1") > 0)
+	{
+		$valid_room_number = FALSE;
 	}
 	// If everything is still OK, update the database
 	else
@@ -202,7 +212,7 @@ if (isset($change_room) && !empty($room_id))
 					$assign_array[] = "room_name='" . addslashes($room_name) . "'";
 					break;
 					case 'room_number':
-					$assign_array[] = "room_number='" . addslashes($room_number) . "'";
+					$assign_array[] = "room_number=" . $room_number;
 					break;
 					case 'room_description':
 					$assign_array[] = "room_description='" . addslashes($room_desc) . "'";
@@ -361,7 +371,7 @@ if (isset($change_day) && !empty($day_id))
 	  }
 	}
 	// DEBUG START
-	echo "<p>\$day_string=$day_string</p>\n";
+	// echo "<p>\$day_string=$day_string</p>\n";
 	// echo "<pre>\n";
 	// print_r();
 	// echo "</pre>\n";
@@ -374,6 +384,12 @@ if (isset($change_day) && !empty($day_id))
 		$location="admin.php?event_id=$event_id&room_id=$room_id&day_id=$day_id";
 		redirect($location);
 	}
+	$t = strtotime($day_string);
+	if (!t)
+	{
+		$valid_day_string = FALSE;
+	}
+
 	// Check the new event still exists
 	if (sql_query1("SELECT COUNT(*) FROM $tbl_event WHERE id=$new_event LIMIT 1") < 1)
 	{
@@ -414,25 +430,16 @@ if (isset($change_day) && !empty($day_id))
 						$assign_array[] = "event_id=$new_event";
 						break;
 					case 'day_string':
-					$t = strtotime($day_string);
-					if (! $t) {
-						$error = 'invaliddate';
-						$location="admin.php?event_id=$new_event&error=$error";
-						redirect($location);
-					}
-					else 
-					{
-						$day_ar = getdate($t);
+						$day_ar = getdate($t);				// $t is set above where the $day_string is validated
 						$day = $day_ar['mday'];
 						$month = $day_ar['mon'];
 						$year = $day_ar['year'];
-						$day_string = date("Y-m-d", $t);
-						$assign_array[] = $field['name'] . "='" . $day_string . "'";
+						$day_string = date($date_format_str, $t);
+						$assign_array[] = $field['name'] . "='" . addslashes($day_string) . "'";
 						$assign_array[] = "day=$day";
 						$assign_array[] = "month=$month";
 						$assign_array[] = "year=$year";
-					}
-					break;
+						break;
 
 					default:
 					$var = $room_var_prefix . $field['name'];
@@ -715,6 +722,13 @@ if (!empty($day_id))
             // first of all deal with the standard CDMA fields
 			case 'day_string':
 			?>
+				<script type="text/javascript">
+					$(function() {
+						$("#day_string").datepicker({dateFormat: 'mm/dd/yy'});
+						$( "#day_string" ).datepicker({ gotoCurrent: true });
+						$("#day_string").datepicker();
+					});
+					</script>
 				<input type="hidden" name="old_day_string" value="<?php echo $row['day_string']?>">
 				<label for="day_string"><?php echo get_vocab('day_string'); ?>:</label>
 				<input type="text" id="day_string" name="day_string" <?php echo $disabled ?> value="<?php echo htmlspecialchars($row['day_string']); ?>">

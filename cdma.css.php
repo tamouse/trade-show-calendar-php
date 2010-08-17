@@ -204,7 +204,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main#month_main a {height: 100%; width: 100%; padding: 0 2px 0 2px}
 
 span.available {background-color: <?php echo $available_background_color; ?>;}
-a.available {display: block; font-size: medium; text-align: center; background-color: <?php echo $available_background_color ?>;}
+a.available {display: block; font-size: small; text-align: center; background-color: <?php echo $available_background_color ?>;}
 .available img {margin: auto; padding: 4px 0 2px 0}
 <?php
 if (!$show_plus_link)
@@ -212,6 +212,7 @@ if (!$show_plus_link)
   echo ".available img {display: none}\n";
 }
 ?>
+.appointmentsettings {font-size: x-small;}
 span.new_slot {}
 a.new_slot {display: block; font-size: small; text-align: center}
 .new_slot img {margin: auto; padding: 4px 0 2px 0}
@@ -222,7 +223,7 @@ if (!show_plus_link)
 }
 ?>
 span.booked {background-color: <?php echo $booked_background_color;?>;}
-a.booked {display: block; font-size: medium; font-style: italic; text-align: center; background-color: <?php echo $booked_background_color; ?>;}
+a.booked {display: block; font-size: small; font-style: italic; text-align: center; background-color: <?php echo $booked_background_color; ?>;}
 .booked img {marging: auto; padding: 4px 0 2px 0}
 <?php
 if (!show_plus_link)
@@ -414,7 +415,7 @@ for ($i=1; $i<=$classes_required; $i++)
 }
 
 ?>
-div.celldiv {overflow: hidden; margin: 0; padding: 0}
+div.celldiv {overflow: hidden; margin: 0; padding: 0; height: 40px}
 .row_labels div.celldiv {overflow: visible}  /* we want to see the content in the row label columns */
 <?php
 
@@ -814,3 +815,13 @@ div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1
 #confirm_buttons td#note {padding-top: 0}
 #confirm_buttons td#note form {width: 100%}
 #confirm_buttons td#note textarea {width: 100%; height: 6em}
+
+
+/* -------------- DAY SELECTOR -----------------*/
+div.day_selector {margin-top: 10pt; margin-bottom: 10pt; padding: 10pt;}
+td.day_selector_cell {font-size: large; margin: 5pt; padding: 5pt;}
+a.day_selector_link {display: block;}
+.unselected {background-color: <?php echo $day_selector_unselected_bg_color ?>; color: <?php echo $day_selector_unselected_fg_color ?>;}
+.selected {background-color: <?php echo $day_selector_selected_bg_color ?>; color: <?php echo $day_selector_selected_fg_color ?>;}
+a.day_selector_link:hover {background-color: <?php echo $day_selector_hover_bg_color ?>;}
+

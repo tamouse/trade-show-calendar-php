@@ -18,7 +18,7 @@ if (!isset($id))
 }
 
 // Verify that the user has permissions to delete this entry
-if (($user_id == $creator_id) || (authGetUserLevel($user) >= 2))
+if (($user_id == $creator_id) || (getAdmin()))
 {
 	$sql = "SELECT * FROM $tbl_entry WHERE id=$id LIMIT 1";
 	$res = sql_query($sql);

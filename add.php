@@ -9,7 +9,7 @@ $day_id = get_form_var('day_id', 'int');
 $event_id = get_form_var('event_id', 'int');
 $name = get_form_var('name', 'string');
 $day_string = get_form_var('day_string', 'string');
-$room_number = get_form_var('room_number', 'string');
+$room_number = get_form_var('room_number', 'int');
 $type = get_form_var('type', 'string');
 
 $required_level = (isset($max_level) ? $max_level : 2);
@@ -80,12 +80,12 @@ if ($type == "day")
 			$day = $day_ar['mday'];
 			$month = $day_ar['mon'];
 			$year = $day_ar['year'];
+			$day_string = date($date_format_str, $t);
 			// Acquire a mutex  to lock out others who might be editing days
 			if (!sql_mutex_lock("$tbl_day"))
 			{
 				fatal_error(TRUE, get_vocab("failed_to_acquire"));
 			}
-			$day_string = date("Y-m-d", $t);
 			// Acquire a mutex to lock out others who might be editing days
 			if (!sql_mutex_lock("$tbl_day"))
 			{
@@ -125,19 +125,13 @@ if ($type == "room")
 	{
 		$error = 'nonamegiven';
 	}
-	else if (empty($room_number))
-	{
-		$error = 'noroomnumbergiven';
-	}
 	else
 	{
 		
 		// Truncate the name and description fields to the maximum length as a precaution.
 		$name = substr($name, 0, $maxlength['room.room_name']);
-		$room_number = substr($room_number, 0, $maxlength['room.room_number']);
 		// Add SQL escaping
 		$room_name_q = addslashes($name);
-		$room_number_q = addslashes($room_number);
 		// Acquire a mutex to lock out others who might be editing rooms
 		if (!sql_mutex_lock("$tbl_room"))
 		{
@@ -149,8 +143,7 @@ if ($type == "room")
 			$error = "invalid_room_name";
 		}
 		// Check that the room number is unique within the event
-		$sql = "SELECT COUNT(*) FROM $tbl_room WHERE room_number='$room_number_q' AND event_id=$event_id LIMIT 1";
-		if (sql_query1($sql) > 0)
+		else if (sql_query1("SELECT COUNT(*) FROM $tbl_room WHERE room_number=$room_number AND event_id=$event_id LIMIT 1") > 0)
 		{
 			$error = "invalid_room_number";
 		}
@@ -158,7 +151,7 @@ if ($type == "room")
 		else
 		{
 			$sql = "INSERT INTO $tbl_room (room_name, room_number, event_id)
-			VALUES ('$room_name_q', '$room_number_q', $event_id)";
+			VALUES ('$room_name_q', $room_number, $event_id)";
 			if (sql_command($sql) < 0)
 			{
 				fatal_error(1, sql_error());

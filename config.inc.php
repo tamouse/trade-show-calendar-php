@@ -40,31 +40,22 @@ $db_tbl_prefix = "cdma_";
 /*********************************
  * Site identification information
  *********************************/
-$cdma_admin = "Tamara Temple";
-$cdma_admin_email = "tamara@tamaratemple.com";  // NOTE:  there are more email addresses in $mail_settings below
+$cdma_admin = "CDMA Administrator";
+$cdma_admin_email = "cdma_email";  // NOTE:  there are more email addresses in $mail_settings below
 
 // The company name is mandatory.   It is used in the header and also for email notifications.
 // The company logo, additional information and URL are all optional.
 
-$cdma_company = "MiishkaWeb.net";   // This line must always be uncommented ($cdma_company is used in various places)
+$cdma_company = "Qualcomm";   // This line must always be uncommented ($cdma_company is used in various places)
 
 // Uncomment this next line to use a logo instead of text for your organisation in the header
-//$cdma_company_logo = "your_logo.gif";    // name of your logo file.   This example assumes it is in the cdma directory
+$cdma_company_logo = "images/qualcomm.gif";    // name of your logo file.   This example assumes it is in the cdma directory
 
 // Uncomment this next line for supplementary information after your company name or logo
 //$cdma_company_more_info = "You can put additional information here";  // e.g. "XYZ Department"
 
 // Uncomment this next line to have a link to your organisation in the header
-$cdma_company_url = "http://www.tamaratemple.com/";
-
-// This is to fix URL problems when using a proxy in the environment.
-// If links inside cdma appear broken, then specify here the URL of
-// your cdma root directory, as seen by the users. For example:
-// $url_base =  "http://webtools.uab.ericsson.se/oam";
-// It is also recommended that you set this if you intend to use email
-// notifications, to ensure that the correct URL is displayed in the
-// notification.
-$url_base = "";
+$cdma_company_url = "http://www.cdmacalendar.com/";
 
 
 /*******************
@@ -89,9 +80,9 @@ $url_base = "";
 // Available options are:
 
 // "default"        Default cdma theme
-// "classic126"     Same colour scheme as cdma 1.2.6
+// "classic126"     Same colour scheme as mrbs 1.2.6
 
-$theme = "default";
+$theme = "cdma";
 
 
 // TIMES SETTINGS
@@ -160,88 +151,24 @@ $max_slots = 60;
 // [These are all variables that control the appearance of pages and could in time
 //  become per-user settings]
 
-// Start of week: 0 for Sunday, 1 for Monday, etc.
-$weekstarts = 0;
+// Determines whether to show the event selector (if false, assumes only one event in system at a time)
+$show_event_selector = FALSE;
 
-// Days of the week that should be hidden from display
-// 0 for Sunday, 1 for Monday, etc.
-// For example, if you want Saturdays and Sundays to be hidden set $hidden_days = array(0,6);
-//
-// By default the hidden days will be removed completely from the main table in the week and month
-// views.   You can alternatively arrange for them to be shown as narrow, greyed-out columns
-// by editing the CSS file.   Look for $column_hidden_width in cdma.css.php.
-//
-// [Note that although they are hidden from display in the week and month views, they 
-// can still be booked from the edit_entry form and you can display the bookings by
-// jumping straight into the day view from the date selector.]
-$hidden_days = array();
+// Determine whether to show the help link on the banner
+$display_help = FALSE;
 
-// Trailer date format: 0 to show dates as "Jul 10", 1 for "10 Jul"
-$dateformat = 0;
-
-// Time format in pages. 0 to show dates in 12 hour format, 1 to show them
-// in 24 hour format
-$twentyfourhour_format = 0;
-
-// Page refresh time (in seconds). Set to 0 to disable
-$refresh_rate = 0;
-
-// Trailer type.   FALSE gives a trailer complete with links to days, weeks and months before
-// and after the current date.    TRUE gives a simpler trailer that just has links to the
-// current day, week and month.
-$simple_trailer = FALSE;
 
 // should events be shown as a list or a drop-down select box?
-$event_list_format = "list";
-//$event_list_format = "select";
+//$event_list_format = "list";
+$event_list_format = "select";
 
-// To display the row labels (times, rooms or days) on the right hand side as well as the 
-// left hand side in the day and week views, set to TRUE;
-// (was called $times_right_side in earlier versions of cdma)
-$row_labels_both_sides = FALSE;
+// Turn off row labeling altogether
+$row_labels = FALSE;
 
 // To display the column headers (times, rooms or days) on the bottom of the table as
 // well as the top in the day and week views, set to TRUE;
 $column_labels_both_ends = FALSE;
-
-// Define default room to start with (used by index.php)
-// Room numbers can be determined by looking at the Edit or Delete URL for a
-// room on the admin page.
-// Default is 0
-$default_room = 0;
-
-// Define clipping behaviour for the cells in the day and week views.
-// Set to TRUE if you want the cells in the day and week views to be clipped.   This
-// gives a table where all the rows have the same hight, regardless of content.
-// Alternatively set to FALSE if you want the cells to expand to fit the content.
-// (FALSE not supported in IE6 and IE7 due to their incomplete CSS support)
-$clipped = TRUE;                
-
-// Define the maximum length of a string that can be displayed in an admin table cell
-// (eg the rooms and users lists) before it is truncated.  (This is necessary because 
-// you don't want a cell to contain for example a 2 kbyte text string, which could happen
-// with user defined fields).
-$max_content_length = 20;  // characters
-
-// The maximum length of a database field for which a text input can be used on a form
-// (eg when editing a user or room).  If longer than this a text area will be used.
-$text_input_max = 70;  // characters
                                 
-
-/************************
- * Miscellaneous settings
- ************************/
-
-// Default report span in days:
-$default_report_days = 60;
-
-$show_plus_link = TRUE;   // Change to TRUE to always show the (+) link
-
-
-
-// Days of the week that are working days (Sunday = 0, etc.)
-$working_days = array(1,2,3,4,5);  // Mon-Fri
-
 /***********************************************
  * Authentication settings - read AUTHENTICATION
  ***********************************************/
@@ -281,39 +208,8 @@ $auth["session_php"]["session_expire_time"] = (60*60*24*30); // 30 days
 // of automatically determining the cookie path to use
 $cookie_path_override = '';
 
-// The list of administrators (can modify other peoples settings).
-//
-// This list is not needed when using the 'db' authentication scheme EXCEPT
-// when upgrading from a pre-cdma 1.4.2 system that used db authentication.
-// Pre-1.4.2 the 'db' authentication scheme did need this list.   When running
-// edit_users.php for the first time in a 1.4.2 system or later, with an existing
-// users list in the database, the system will automatically add a field to
-// the table for access rights and give admin rights to those users in the database
-// for whom admin rights are defined here.   After that this list is ignored.
-unset($auth["admin"]);              // Include this when copying to config.inc.php
-$auth["admin"][] = "127.0.0.1";     // localhost IP address. Useful with IP sessions.
-$auth["admin"][] = "admin"; // A user name from the user list. Useful 
-                                    // with most other session schemes.
-//$auth["admin"][] = "10.0.0.1";
-//$auth["admin"][] = "10.0.0.2";
-//$auth["admin"][] = "10.0.0.3";
-
-// 'auth_config' user database
-// Format: $auth["user"]["name"] = "password";
-$auth["user"]["admin"] = "Pq6Y0i5b";
-$auth["user"]["tamara"] = "nitwood";
-
-
 // 'session_http' configuration settings
 $auth["realm"]  = "cdma";
-
-// 'session_remote_user' configuration settings
-//$auth['remote_user']['login_link'] = '/login/link.html';
-//$auth['remote_user']['logout_link'] = '/logout/link.html';
-
-// 'auth_ext' configuration settings
-$auth["prog"]   = "";
-$auth["params"] = "";
 
 // 'auth_db' configuration settings
 // The highest level of access (0=none; 1=user; 2+=admin).    Used in edit_users.php
@@ -322,42 +218,6 @@ $auth["params"] = "";
 $max_level = 2;
 // The lowest level of admin allowed to edit other users
 $min_user_editing_level = 2;
-
-
-// 'auth_db_ext' configuration settings
-// The 'db_system' variable is equivalent to the core cdma $dbsys variable,
-// and allows you to use any of cdma's database abstraction layers for
-// db_ext authentication.
-$auth['db_ext']['db_system'] = 'mysql';
-$auth['db_ext']['db_host'] = 'localhost';
-$auth['db_ext']['db_username'] = 'root';
-$auth['db_ext']['db_password'] = '';
-$auth['db_ext']['db_name'] = 'authdb';
-$auth['db_ext']['db_table'] = 'users';
-$auth['db_ext']['column_name_username'] = 'name';
-$auth['db_ext']['column_name_password'] = 'password';
-// Either 'md5', 'sha1', 'crypt' or 'plaintext'
-$auth['db_ext']['password_format'] = 'plaintext';
-
-
-
-// 'auth_pop3' configuration settings
-// See AUTHENTICATION for details of how check against multiple servers
-// Where is the POP3 server
-$pop3_host = "pop3-server-name";
-// The POP3 server port
-$pop3_port = "110";
-
-// 'auth_smtp' configuration settings
-$auth['smtp']['server'] = 'myserver.example.org';
-
-// General settings
-// If you want only administrators to be able to book slots, set this
-// variable to TRUE
-$auth['only_admin_can_book'] = FALSE;
-// If you want only administrators to be able to make repeat bookings,
-// set this variable to TRUE
-$auth['only_admin_can_book_repeat'] = FALSE;
 
 
 /**********************************************
@@ -428,30 +288,7 @@ $mail_settings['username_suffix'] = '';
 // ----------------------
 // Set the name of the backend used to transport your mails. Either 'mail',
 // 'smtp' or 'sendmail'. Default is 'mail'. See INSTALL for more details.
-$mail_settings['admin_backend'] = 'smtp';
-
-/*******************
- * Sendmail settings
- */
- 
-// Set the path of the Sendmail program (only used with "sendmail" backend).
-// Default is '/usr/bin/sendmail'
-$sendmail_settings['path'] = '/usr/bin/sendmail';
-// Set additional Sendmail parameters (only used with "sendmail" backend).
-// (example "-t -i"). Default is ''
-$sendmail_settings['args'] = '';
-
-/*******************
- * SMTP settings
- */
-
-// These settings are only used with the "smtp" backend"
-$smtp_settings['host'] = 'tamaratemple.com';  // SMTP server
-$smtp_settings['port'] = 25;           // SMTP port number
-$smtp_settings['auth'] = true;        // Whether to use SMTP authentication
-$smtp_settings['username'] = 'tamara@tamaratemple.com';       // Username (if using authentication)
-$smtp_settings['password'] = 'Nitwood1';       // Password (if using authentication)
-
+$mail_settings['admin_backend'] = 'sendmail';
 
 // EMAIL - MISCELLANEOUS
 // ---------------------
@@ -519,37 +356,6 @@ $summary_filename = "summary.csv";
 // CSV format
 $csv_row_sep = "\n";  // Separator between rows/records
 $csv_col_sep = ",";   // Separator between columns/fields
-
-
-
-/***************************************
- * DOCTYPE - internal use, do not change
- ***************************************/
-
- define('DOCTYPE', '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">');
- 
- // Records which DOCTYPE is being used.    Do not change - it will not change the DOCTYPE
- // that is used;  it is merely used when the code needs to know the DOCTYPE, for example
- // in calls to nl2br.   TRUE means XHTML, FALSE means HTML.
- define('IS_XHTML', FALSE);
-
-
-/********************************************************
- * PHP System Configuration - internal use, do not change
- ********************************************************/
-// Reset display_errors for development
-ini_set('display_errors',1);
-
-// Disable magic quoting on database returns:
-set_magic_quotes_runtime(0);
-
-// Make sure notice errors are not reported, they can break cdma code:
-$error_level = E_ALL ^ E_NOTICE;
-if (defined("E_DEPRECATED"))
-{
-  $error_level = $error_level ^ E_DEPRECATED;
-}
-error_reporting ($error_level);
 
 
 

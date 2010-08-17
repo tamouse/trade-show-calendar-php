@@ -35,7 +35,7 @@ $db_tbl_prefix = "cdma_";
 // Field lengths in the database tables
 // NOTE:  these must be kept in step with the database.   If you change the field
 // lengths in the database then you should change the values here, and vice versa.
-$maxlength['entry.name']       = 80;  // characters   (name field in entry table)
+$maxlength['entry.purpose']       = 80;  // characters   (purpose field in entry table)
 $maxlength['event.event_name'] = 100; // characters   (name field in event table)
 $maxlength['event.description'] = 1024; // characters (description field in event table)
 $maxlength['room.room_name']   = 25;  // characters   (room_name field in room table)
@@ -174,16 +174,24 @@ $max_slots = 60;
 // [These are all variables that control the appearance of pages and could in time
 //  become per-user settings]
 
+// Determines whether to show the event selector (if false, assumes only one event in system at a time)
+$show_event_selector = TRUE;
+
+// Determine whether to show the help link on the banner
+$display_help = TRUE;
+
 // Start of week: 0 for Sunday, 1 for Monday, etc.
 $weekstarts = 0;
 
 
 // Trailer date format: 0 to show dates as "Jul 10", 1 for "10 Jul"
 $dateformat = 0;
+$date_format_str = "m-d-y"; // m-d-yy
 
 // Time format in pages. 0 to show dates in 12 hour format, 1 to show them
 // in 24 hour format
 $twentyfourhour_format = 1;
+$time_format_str = "h:i A"; // H:MM AM
 
 // Page refresh time (in seconds). Set to 0 to disable
 $refresh_rate = 0;
@@ -200,6 +208,9 @@ $event_list_format = "select";
 // To view weeks in the bottom (trailer.inc) as week numbers (42) instead of
 // 'first day of the week' (13 Oct), set this to TRUE
 $view_week_number = FALSE;
+
+// To show row labels, set the following to true
+$row_labels = TRUE;
 
 // To display the row labels (times, rooms or days) on the right hand side as well as the 
 // left hand side in the day and week views, set to TRUE;
@@ -220,7 +231,7 @@ $default_room = 0;
 // (eg the rooms and users lists) before it is truncated.  (This is necessary because 
 // you don't want a cell to contain for example a 2 kbyte text string, which could happen
 // with user defined fields).
-$max_content_length = 20;  // characters
+$max_content_length = 15;  // characters
 
 // The maximum length of a database field for which a text input can be used on a form
 // (eg when editing a user or room).  If longer than this a text area will be used.
