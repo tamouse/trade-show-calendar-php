@@ -12,13 +12,15 @@ require_once "defaultincludes.inc";
 require_once "cdma_sql.inc";
 
 // Check for initial conditions
-if (userCount() == 0)
+if (get_num_records($tbl_users) == 0)
 {
+	// no users, must create first one
 	redirect("edit_users.php");
 }
 
-if (eventCount() == 0)
+if (get_num_records($tbl_event) == 0)
 {
+	// no events, must create at least one
 	redirect("admin.php");
 }
 

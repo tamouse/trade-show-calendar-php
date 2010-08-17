@@ -41,22 +41,23 @@ $db_tbl_prefix = "cdma_";
  * Site identification information
  *********************************/
 $cdma_admin = "CDMA Administrator";
-$cdma_admin_email = "cdma_email";  // NOTE:  there are more email addresses in $mail_settings below
+$cdma_admin_email = "no-reply@cdmacalendar.com";  // NOTE:  there are more email addresses in $mail_settings below
 
 // The company name is mandatory.   It is used in the header and also for email notifications.
 // The company logo, additional information and URL are all optional.
 
-$cdma_company = "Qualcomm";   // This line must always be uncommented ($cdma_company is used in various places)
+$cdma_company = "CDMA Summit";   // This line must always be uncommented ($cdma_company is used in various places)
 
 // Uncomment this next line to use a logo instead of text for your organisation in the header
-$cdma_company_logo = "images/qualcomm.gif";    // name of your logo file.   This example assumes it is in the cdma directory
+$cdma_company_logo = "images/cdmablanklogo.png";    // name of your logo file.   This example assumes it is in the cdma directory
 
 // Uncomment this next line for supplementary information after your company name or logo
-//$cdma_company_more_info = "You can put additional information here";  // e.g. "XYZ Department"
+unset($cdma_company_more_info);  // e.g. "XYZ Department"
 
 // Uncomment this next line to have a link to your organisation in the header
-$cdma_company_url = "http://www.cdmacalendar.com/";
+$cdma_company_url = "index.php";
 
+$display_app_title = FALSE; // use entire space for branding
 
 /*******************
  * Themes
@@ -152,7 +153,7 @@ $max_slots = 60;
 //  become per-user settings]
 
 // Determines whether to show the event selector (if false, assumes only one event in system at a time)
-$show_event_selector = FALSE;
+$display_events = FALSE;
 
 // Determine whether to show the help link on the banner
 $display_help = FALSE;

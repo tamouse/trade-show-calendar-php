@@ -42,6 +42,10 @@ function get_form_var($variable, $type = 'string')
     {
       $value = (array)$_POST[$variable];
     }
+	else if ($type == 'checkbox')
+	{
+		$value="checked";
+	}
     else
     {
       $value = $_POST[$variable];
@@ -53,6 +57,10 @@ function get_form_var($variable, $type = 'string')
     {
       $value = (array)$HTTP_POST_VARS[$variable];
     }
+	else if ($type == 'checkbox')
+	{
+		$value="checked";
+	}
     else
     {
       $value = $HTTP_POST_VARS[$variable];
@@ -64,6 +72,10 @@ function get_form_var($variable, $type = 'string')
     {
       $value = (array)$_GET[$variable];
     }
+	else if ($type == 'checkbox')
+	{
+		$value="checked";
+	}
     else
     {
       $value = $_GET[$variable];
@@ -75,6 +87,10 @@ function get_form_var($variable, $type = 'string')
     {
       $value = (array)$HTTP_GET_VARS[$variable];
     }
+	else if ($type == 'checkbox')
+	{
+		$value="checked";
+	}
     else
     {
       $value = $HTTP_GET_VARS[$variable];

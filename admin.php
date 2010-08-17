@@ -50,6 +50,19 @@ $event_name = get_event_name_by_id($event_id);
 $is_admin = getAdmin();
 
 print_header($event_id, $day_id);
+// Insert javascript functions for this page
+?>
+<script type="text/javascript">
+ $(document).ready(function(){
+ 	$(function() {
+ 		$("input:submit", ".submit_buttons").button();
+ 	});
+ 
+  });
+ 
+</script>
+
+<?php
 
 
 echo "<h2>" . get_vocab("administration") . "</h2>\n";
@@ -58,16 +71,20 @@ if (!empty($error))
   echo "<p class=\"error\" id=\"$error\">" . get_vocab($error) . "</p>\n";
 }
 
-
+echo "<div class=\"left_side\">\n";
 
 // Button to go to slot management.
 // Use the day.php function, but set mode to 1 to manage slots instead of appointments
 ?>
+<div class="gotoSlots">
 <form id="gotoSlots" method="get" action="day.php">
 <input type="hidden" name="event_id" value="<?php echo $event_id ?>" id="event_id"/>
 <input type="hidden" name="mode" value="1" id="mode"/>
+<div class="submit_buttons">
 <input type="submit" name="gotoSlots" value="<?php echo get_vocab('gotoSlots') ?>" id="gotoSlots"/>
+</div>
 </form>
+</div>
 
 <?php
 // TOP SECTION:  THE FORM FOR SELECTING AN EVENT
@@ -94,7 +111,7 @@ if (!$events_defined)
 			<input type="text" id="event_name" name="name" maxlength="<?php echo $maxlength['event.event_name'] ?>">
 			</div>
 
-			<div>
+			<div class="submit_buttons">
 			<input type="submit" class="submit" value="<?php echo get_vocab("addevent") ?>">
 			</div>
 
@@ -107,6 +124,7 @@ if (!$events_defined)
 
 
 // MIDDLE SECTION: DAYS IN THE SELECTED EVENT
+
 echo "<h2>";
 echo get_vocab("capdays");
 if (isset($event_name)) {
@@ -214,7 +232,7 @@ if ($is_admin && $events_defined && !empty($event_id))
 		<input type="text" id="day_string" name="day_string">
 		</div>
 
-		<div>
+		<div class="submit_buttons">
 		<input type="submit" class="submit" value="<?php echo get_vocab("addday") ?>">
 		</div>
 
@@ -222,8 +240,11 @@ if ($is_admin && $events_defined && !empty($event_id))
 		</form>
 		<?php
 }
-echo "</div>\n";
+echo "</div>\n"; // end of day form
+echo "</div>\n"; // end of left side
 
+
+echo "<div class=\"right_side\">\n";
 
 // BOTTOM SECTION: ROOMS IN THE SELECTED EVENT
 echo "<h2>\n";
@@ -412,7 +433,7 @@ if ($is_admin && $events_defined && !empty($event_id))
         <input type="text" id="room_name" name="name" maxlength="<?php echo $maxlength['room.room_name'] ?>">
       </div>
                 
-      <div>
+      <div class="submit_buttons">
         <input type="submit" class="submit" value="<?php echo get_vocab("addroom") ?>">
       </div>
         
@@ -420,7 +441,8 @@ if ($is_admin && $events_defined && !empty($event_id))
   </form>
 <?php
 }
-echo "</div>\n";
+echo "</div>\n"; // end of room form
+echo "</div>\n"; // end of right side
 
 echo "<div class=\"simple_trailer\" style=\"clear: both;\">\n";
 echo "<a href=\"index.php?event_id=$event_id&day_id=$day_id\">" . get_vocab('backmain') . "</a>\n";

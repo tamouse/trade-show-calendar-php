@@ -64,6 +64,7 @@ $vocab["editentry"]          = "Edit Entry";
 $vocab["copyentry"]          = "Copy Entry";
 $vocab["editseries"]         = "Edit Series";
 $vocab["copyseries"]         = "Copy Series";
+$vocab["emailthis"]          = "Email Appointment?";
 $vocab["namebooker"]         = "Brief Description";
 $vocab["fulldescription"]    = "Full Description:<br>&nbsp;&nbsp;(Number of people,<br>&nbsp;&nbsp;Internal/External etc)";
 $vocab["date"]               = "Date";
@@ -122,6 +123,9 @@ $vocab["guests"]             = "Guests";
 $vocab["guestsemails"]        = "Guests' Emails";
 $vocab["goback"]             = "Go Back";
 $vocab["cantfindentry"]      = "Cannot find entry in database";
+$vocab["purposerequired"]    = "Purpose is a required field.";
+$vocab['guestshelp']         = "Enter a list of guests for this booking, separated by commas.";
+$vocab['guestemailhelp']     = "Enter emails for each of the guests listed previously, in the same order as each guest, separated by commas.<br />Emails will be validated to make sure they conform to proper rules for email addresses<br />If you don't know a particular guest's email address, put in $email_placeholder_string (two stars) instead of the email address.";
 
 // Used in edit_slot.php
 $vocab["deleteslot"]         = "Delete Slot";
@@ -406,6 +410,12 @@ $vocab["system"]             = "System";
 $vocab["servertime"]         = "Server time";
 $vocab["please_contact"]     = "Please contact ";
 $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
+
+// Used in email_entry.php
+$vocab["sureemail"]          = "Do you want to send a confirmation email of the Appointment?";
+$vocab["emailsent"]          = "Confirmation email sent";
+$vocab["mailerror"]          = "Error mailing confirmation message";
+$vocab["norecipients"]       = "No email recipients";
 
 // Used in mysql.inc AND pgsql.inc
 $vocab["failed_connect_db"]  = "Fatal Error: Failed to connect to database";

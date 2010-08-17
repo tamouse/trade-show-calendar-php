@@ -204,10 +204,12 @@ function init()
           {
             echo "<div id=\"more_info\">$cdma_company_more_info</div>\n";
           }
+			if ($display_app_title) {
           ?>
           <div id="cdma">
             <a href="index.php"><?php echo get_vocab("cdma") ?></a>
-          </div>
+          </div> 
+			<?php } ?>
         </div>
       </td>
       <?php

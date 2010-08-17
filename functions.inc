@@ -572,6 +572,14 @@ function validate_email_list($list)
   return TRUE;
 }
 
+// Strip the email place holders
+function stripEmailPlaceholders($s)
+{
+	global $email_placeholder_pattern;
+	$stripped = preg_replace($email_placeholder_pattern, '', $s);
+	return $stripped;
+}
+
 // validates a phone number against a regular expression
 // based on a configured phone number formats
 function validate_phone($phone)
@@ -667,7 +675,7 @@ function round_t_up($t, $resolution, $am7)
 }
 
 // generate some html to allow selection of the current event
-function make_event_select_html($event_id, $room_id, $day_id, $show_edit_buttons)
+function make_event_selector_html($event_id, $room_id, $day_id, $show_edit_buttons)
 {
 	global $tbl_event;
 	$out_html = "<div id=\"event_form\">\n";
@@ -956,15 +964,15 @@ function draw_cell($cell, $query_strings, $mode)
 		{
 			$user_id	= $cell["user_id"];
 			$descr		= $cell["purpose"];
-			$descr = (empty($descr) ? get_vocab('booked') : truncateToDisplay($descr))
-				. "<br/><span class=\"appointmentsettings\">(" . formatTime($start_hour, $start_minute) . " - " . formatTime($cell["end_hour"],$cell["end_minute"]) . ")</span>";
+			$descr = truncateToDisplay(get_vocab('booked'))
+				. "<br/><span class=\"appointmentsettings\">(" . formatTime($start_hour, $start_minute) . " to<br />" . formatTime($cell["end_hour"],$cell["end_minute"]) . ")</span>";
 			$cell_class = 'booked';
 		}
 		else
 		{
 			unset($user_id);
 			$descr		= truncateToDisplay(get_vocab('available'))
-				. "<br/><span class=\"appointmentsettings\">(" . formatTime($start_hour, $start_minute) . " - " . formatTime($cell["end_hour"],$cell["end_minute"]) . ")</span>";
+				. "<br/><span class=\"appointmentsettings\">(" . formatTime($start_hour, $start_minute) . " to<br />" . formatTime($cell["end_hour"],$cell["end_minute"]) . ")</span>";
 			$cell_class = 'available';
 		}
 	}
@@ -1287,13 +1295,25 @@ function eventCount()
 	return $count;
 }
 
-// Return the number of users in the database
-function userCount()
+// Return the number of records in a table
+function get_num_records($table)
 {
-	global $tbl_users;
-	$sql = "SELECT COUNT(ID) FROM $tbl_users";
+	$sql = "SELECT COUNT(ID) FROM $table";
 	$count = sql_query1($sql);
-	if ($count < 0) fatal_error(0, get_vocab("usercountfailed") . " " . sql_error($res));
+	if ($count < 0) fatal_error(0, get_vocab("recordcountfailed") . " " . sql_error());
 	return $count;
 }
+
+// retrieve an database record from a given table by its id
+function get_record_by_id($table, $id)
+{
+	$sql = "SELECT * FROM $table WHERE id=$id LIMIT 1";
+	$res = sql_query($sql);
+	if ($res <= 0) {
+		return -2;
+	}
+	$row = sql_row_keyed($res, 0);
+	return $row;
+}
+
 ?>

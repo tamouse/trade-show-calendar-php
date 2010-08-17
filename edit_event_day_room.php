@@ -489,6 +489,22 @@ if (isset($change_day) && !empty($day_id))
 
 print_header($event_id, $day_id);
 
+// Insert javascript functions for this page
+?>
+<script type="text/javascript">
+ $(document).ready(function(){
+ 	$(function() {
+ 		$("input:submit", ".submit_buttons").button();
+ 		
+ 	});
+ 
+  });
+ 
+</script>
+
+<?php
+
+
 if ($is_admin)
 {
   // Heading is confusing for non-admins
@@ -541,32 +557,35 @@ if (!empty($room_id))
       <input type="hidden" name="room_id" value="<?php echo $row["id"]?>">
     
       <?php
-      $res = sql_query("SELECT id, event_name FROM $tbl_event");
-      if (!$res)
-      {
-        fatal_error(FALSE, "Fatal error: " . sql_error());  // should not happen
-      }
-      if (sql_count($res) == 0)
-      {
-        fatal_error(FALSE, get_vocab('noevents'));  // should not happen
-      }
-      
-      // The event select box
-      echo "<div>\n";
-      echo "<label for=\"new_event\">" . get_vocab("event") . ":</label>\n";
-      echo "<select id=\"new_event\" name=\"new_event\"$disabled>\n";
-        for ($i = 0; ($row_event = sql_row_keyed($res, $i)); $i++)
-        {
-          echo "<option value=\"" . $row_event['id'] . "\"";
-          if ($row_event['id'] == $row['event_id'])
-          {
-            echo " selected=\"selected\"";
-          }
-          echo ">" . $row_event['event_name'] . "</option>\n";
-        }  
-      echo "</select>\n";
-      echo "<input type=\"hidden\" name=\"old_event\" value=\"" . $row['event_id'] . "\">\n";
-      echo "</div>\n";
+	if ($display_events)
+	{
+		$res = sql_query("SELECT id, event_name FROM $tbl_event");
+		if (!$res)
+		{
+			fatal_error(FALSE, "Fatal error: " . sql_error());  // should not happen
+		}
+		if (sql_count($res) == 0)
+		{
+			fatal_error(FALSE, get_vocab('noevents'));  // should not happen
+		}
+
+		// The event select box
+		echo "<div>\n";
+		echo "<label for=\"new_event\">" . get_vocab("event") . ":</label>\n";
+		echo "<select id=\"new_event\" name=\"new_event\"$disabled>\n";
+		for ($i = 0; ($row_event = sql_row_keyed($res, $i)); $i++)
+		{
+			echo "<option value=\"" . $row_event['id'] . "\"";
+			if ($row_event['id'] == $row['event_id'])
+			{
+				echo " selected=\"selected\"";
+			}
+			echo ">" . $row_event['event_name'] . "</option>\n";
+		}  
+		echo "</select>\n";
+		echo "<input type=\"hidden\" name=\"old_event\" value=\"" . $row['event_id'] . "\">\n";
+		echo "</div>\n";
+	}
 	if (!isset($fields))
 	{
 		$fields = sql_field_info($tbl_room);
@@ -650,13 +669,12 @@ if (!empty($room_id))
       }
       echo "</fieldset>\n";
         
-      ?>
-    </fieldset>
-  </form>
+    	echo "</fieldset>";
+  		echo "</form>\n";
 
-  <?php
 }
 
+echo "<div class=\"day_region\">\n";
 
 // THE DAY FORM
 if (!empty($day_id))
@@ -682,32 +700,36 @@ if (!empty($day_id))
       <input type="hidden" name="day_id" value="<?php echo $row["id"]?>">
     
       <?php
-      $res = sql_query("SELECT id, event_name FROM $tbl_event");
-      if (!$res)
-      {
-        fatal_error(FALSE, "Fatal error: " . sql_error());  // should not happen
-      }
-      if (sql_count($res) == 0)
-      {
-        fatal_error(FALSE, get_vocab('noevents'));  // should not happen
-      }
-      
-      // The event select box
-      echo "<div>\n";
-      echo "<label for=\"new_event\">" . get_vocab("event") . ":</label>\n";
-      echo "<select id=\"new_event\" name=\"new_event\"$disabled>\n";
-        for ($i = 0; ($row_event = sql_row_keyed($res, $i)); $i++)
-        {
-          echo "<option value=\"" . $row_event['id'] . "\"";
-          if ($row_event['id'] == $row['event_id'])
-          {
-            echo " selected=\"selected\"";
-          }
-          echo ">" . $row_event['event_name'] . "</option>\n";
-        }  
-      echo "</select>\n";
-      echo "<input type=\"hidden\" name=\"old_event\" value=\"" . $row['event_id'] . "\">\n";
-      echo "</div>\n";
+	if ($display_events)
+	{
+		$res = sql_query("SELECT id, event_name FROM $tbl_event");
+		if (!$res)
+		{
+			fatal_error(FALSE, "Fatal error: " . sql_error());  // should not happen
+		}
+		if (sql_count($res) == 0)
+		{
+			fatal_error(FALSE, get_vocab('noevents'));  // should not happen
+		}
+
+		// The event select box
+		echo "<div>\n";
+		echo "<label for=\"new_event\">" . get_vocab("event") . ":</label>\n";
+		echo "<select id=\"new_event\" name=\"new_event\"$disabled>\n";
+		for ($i = 0; ($row_event = sql_row_keyed($res, $i)); $i++)
+		{
+			echo "<option value=\"" . $row_event['id'] . "\"";
+			if ($row_event['id'] == $row['event_id'])
+			{
+				echo " selected=\"selected\"";
+			}
+			echo ">" . $row_event['event_name'] . "</option>\n";
+		}  
+		echo "</select>\n";
+		echo "<input type=\"hidden\" name=\"old_event\" value=\"" . $row['event_id'] . "\">\n";
+		echo "</div>\n";
+	}
+
 	if (!isset($fields))
 	{
 		$fields = sql_field_info($tbl_day);
@@ -780,23 +802,20 @@ if (!empty($day_id))
       // Submit and Back buttons (Submit only if they're an admin)  
       echo "<fieldset class=\"submit_buttons\">\n";
       echo "<legend></legend>\n";
-      echo "<div id=\"edit_event_day_room_submit_back\">\n";
+		echo "<div id=\"submit_buttons\">\n";
       echo "<input class=\"submit\" type=\"submit\" name=\"change_done\" value=\"" . get_vocab("backadmin") . "\">\n";
-      echo "</div>\n";
       if ($is_admin)
       { 
-        echo "<div id=\"edit_event_day_room_submit_save\">\n";
         echo "<input class=\"submit\" type=\"submit\" name=\"change_day\" value=\"" . get_vocab("change") . "\">\n";
-        echo "</div>\n";
       }
-      echo "</fieldset>\n";
-        
-      ?>
-    </fieldset>
-  </form>
 
-  <?php
+	echo "</div>\n";
+      echo "</fieldset>\n";
+echo "</fieldset>\n";    
+  echo "</form>\n";
 }
+
+
 
 // THE event FORM
 if (!empty($event_id))

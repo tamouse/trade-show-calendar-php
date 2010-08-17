@@ -230,6 +230,10 @@ $(document).ready(function(){
 		'hourCols'		  		: 8,// 6 or 8 columns
 		'closeOnComplete'	    : true
 	});
+ 	$(function() {
+		$("input:submit", ".submit_buttons").button();
+		
+	});
 		
 });
 </script>
@@ -267,9 +271,17 @@ $(document).ready(function(){
 		$slot_date = get_date_record_by_id($day_id);
 	}
 ?>
+
 	<div id="event_name">
-	<label for="event_name"><?php echo get_vocab('event') ?></label>
-	<input type="text" name="event_name" value="<?php echo htmlspecialchars($event_name) ?>" id="event_name" disabled="disabled"/>
+	<?php
+	if ($display_events) 
+	{
+	?>
+		<label for="event_name"><?php echo get_vocab('event') ?></label>
+		<input type="text" name="event_name" value="<?php echo htmlspecialchars($event_name) ?>" id="event_name" disabled="disabled"/>
+	<?php
+	} 
+	 ?>
 	<input type="hidden" name="event_id" value="<?php echo ($id ? $row['event_id'] : $event_id) ?>" id="event_id" />
 	</div>
 

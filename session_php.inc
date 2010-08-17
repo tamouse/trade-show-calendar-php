@@ -245,7 +245,9 @@ function PrintLogonBox()
                     <input type="hidden" name="Action" value="SetName">
                     <input type="hidden" name="NewUserName" value="">
                     <input type="hidden" name="NewUserPassword" value="">
+					<div class="submit_buttons">
                     <input type="submit" value=" <?php echo get_vocab('logoff') ?> ">
+					</div>
                   </div>
                 </form>
 <?php
@@ -258,7 +260,9 @@ function PrintLogonBox()
                   <div>
                     <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
                     <input type="hidden" name="Action" value="QueryName">
+						<div class="submit_buttons">
                     <input type="submit" value=" <?php echo get_vocab('login') ?> ">
+						</div>
                   </div>
                 </form>
 <?php

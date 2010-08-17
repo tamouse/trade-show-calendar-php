@@ -10,6 +10,7 @@ $day_id = get_form_var('day_id', 'int');
 $mode = get_form_var('mode', 'int');
 $debug_flag = get_form_var('debug_flag', 'int');
 $error = get_form_var('error' , 'string');
+$message = get_form_var('message', 'string');
 
 if (empty($mode)) $mode = 0; // managing appointments
 // if $mode is set to 1, we're managing slots;
@@ -47,6 +48,10 @@ if (!empty($error))
 {
   echo "<p class=\"error\" id=\"$error\">" . get_vocab($error) . "</p>\n";
 }
+if (!empty($message))
+{
+	echo "<p class=\"message\" id=\"$message\">" . get_vocab($message) . "</p>\n";
+}
 
 
 
@@ -54,7 +59,7 @@ $format = "Gi";
 
 // TOP SECTION:  THE FORM FOR SELECTING A EVENTS (maybe) AND DAYS
 
-if ($show_event_selector)
+if ($display_events)
 {
 	echo make_event_selector_html($event_id, $room_id, $day_id, FALSE);
 }

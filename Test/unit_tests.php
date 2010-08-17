@@ -6,6 +6,18 @@ global $verbose;
 
 $verbose=TRUE;
 
+function test_stripEmailPlaceholders()
+{
+	global $verbose;
+	$instring = "**, mail@gmail.com, **";
+	$expected = " mail@gmail.com,";
+	if ($verbose) echo "Sending $instring\n";
+	$result = stripEmailPlaceholders($instring);
+	if ($verbose) echo "Returned: $result Expected: $expected\n";
+	if ($result == $expected) return TRUE;
+	return FALSE;
+}
+
 function test_truncateToDisplay()
 {
 	global $verbose;
@@ -74,6 +86,19 @@ function test_eventCount()
 	return ($count >= 0 ? TRUE : FALSE);
 }
 
+function check_entry_table_fields()
+{
+	global $verbose, $tbl_entry;
+	if ($verbose) echo "Searching for fields\n";
+	$fields = sql_field_info($tbl_entry);
+	if ($verbose) {
+		echo "Fields in $tbl_entry:\n";
+		print_r($fields);
+		echo "\n";
+	}
+	return TRUE;
+}
+
 function _run_test($testname)
 {
 	global $verbose;
@@ -99,7 +124,7 @@ function _send_header()
 	echo "Unit Tests\n\n";
 }
 
-function inspect_var($var)
+function _inspect_var($var)
 {
 	echo "$var: ";
 	$cmd = "print_r(" . "\$" . $var . ");"; echo $cmd;
@@ -109,11 +134,11 @@ function inspect_var($var)
 
 function _print_environment()
 {
-	inspect_var("_GET");
-	inspect_var("_POST");
-	inspect_var("_SERVER");
-	inspect_var("_ENV");
-	inspect_var("GLOBALS");
+	_inspect_var("_GET");
+	_inspect_var("_POST");
+	_inspect_var("_SERVER");
+	_inspect_var("_ENV");
+	_inspect_var("GLOBALS");
 	
 }
 // main
@@ -125,6 +150,9 @@ _run_test('test_eventCount');
 _run_test('test_convertTimeToArray');
 _run_test('test_truncateToDisplay');
 
+_run_test('test_stripEmailPlaceholders');
+
+_run_test('check_entry_table_fields');
 // _print_environment();
 
 

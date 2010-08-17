@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * confirmation message template. 
+ *
+ * @author Tamara Temple
+ * @version $Id$
+ * @copyright Tamara Temple Development, 17 August, 2010
+ * @package default
+ **/
+
+/**
+ * Simply include this file to interpolate variables.
+ * Note: use include, not include_once, so it gets reinterpolated with each setting.
+ **/
+
+$confirmation_message = <<<EOM
+<html>
+<head>
+	<title>$SUBJECT</title>
+</head>
+<body>
+<table border="0" cellspacing="5" cellpadding="5" align="center" width="70%">
+	<tr><td>
+	<p>Dear $RECIPIENT,</p>
+	<p>Greetings from $ORGANIZERNAME!</p>
+	<p>This email is confirm your appointment is scheduled.</p>
+	<blockquote>
+	<h2>Details</h2>
+	<ul>
+	<li>Purpose: $PURPOSE</li>
+	<li>Start Time: $STARTTIME</li>
+	<li>End Time: $ENDTIME</li>
+	<li>Location: $ROOMNAME</li>
+	</ul>
+	</blockquote>
+	<p>If you have questions, you can contact me at $ORGANIZEREMAIL or $ORGANIZERPHONE.</p>	
+	</td></tr>
+</table>
+</body>
+</html>
+EOM
+
+
+?>

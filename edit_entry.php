@@ -17,6 +17,7 @@ $start_minute = get_form_var('start_minute', 'int');
 $id = get_form_var('id', 'int');
 $change_entry = get_form_var('change_entry', 'string');
 $delete_entry = get_form_var('delete_entry', 'string');
+$email_entry = get_form_var('email_entry', 'string');
 $goback = get_form_var('goback', 'string');
 $new_purpose = get_form_var('new_purpose', 'string');
 $old_purpose = get_form_var('old_purpose', 'string');
@@ -28,6 +29,8 @@ $new_guests = get_form_var('new_guests', 'string');
 $old_guests = get_form_var('old_guests', 'string');
 $new_guest_emails = get_form_var('new_guests_emails', 'string');
 $old_guest_emails = get_form_var('old_guests_emails', 'string');
+$old_confirmed = get_form_var('old_confirmed', 'string');
+$new_confirmed = get_form_var('new_confirmed', 'checkbox');
 
 $returl = "day.php?";
 
@@ -92,6 +95,12 @@ if (!empty($goback))
 	redirect($location);
 }
 
+if (!empty($email_entry))
+{
+	$location = "email_entry.php?event_id=$event_id&day_id=$day_id&room_id=$room_id&entry_id=$id&confirmed=Y"; // bypass confirmation
+	redirect($location);
+}
+
 $entry_var_prefix = "en_";
     
 if (!getAuthorised(1))
@@ -133,12 +142,13 @@ if (!empty($change_entry))
 	{
 		$validPurpose = FALSE;
 	}
-	else if (!validate_email_list($new_guest_emails))
+	else if (!validate_email_list(stripEmailPlaceholders($new_guest_emails)))
 	{
 		$validEmail = FALSE;
 	}
 	else if (($old_purpose!= $new_purpose) || ($old_comments != $new_comments) || ($old_confirmed != $new_confirmed)
-		|| ($old_guests != $new_guests) || ($old_guest_emails != $new_guest_emails))
+		|| ($old_guests != $new_guests) || ($old_guest_emails != $new_guest_emails)
+		|| ($old_confirmed != $new_confirmed))
 	{
 		// changes were made on the form, update with the new entries
 		// Get the information about the fields in the given table
@@ -213,6 +223,10 @@ if (!empty($change_entry))
 						$assign_array[] = $field['name'] . "='" . addslashes($new_guest_emails) . "'";
 						break;
 						
+					case 'confirmed':
+						$assign_array[] = $field['name'] . "=" . (isset($new_confirmed) ? 1 : 0);
+						break;
+						
 					default:
 					$var = $room_var_prefix . $field['name'];
 					switch ($field['nature'])
@@ -245,7 +259,14 @@ if (!empty($change_entry))
 		// if everything is OK, release the mutex and go back to
 		// the admin page (for the new event)
 		sql_mutex_unlock("$tbl_entry");
-		$location = "day.php?&event_id=$event_id&day_id=$day_id&room_id=$room_id";
+		if (isset($new_confirmed))
+		{
+			$location = "email_entry.php?event_id=$event_id&day_id=$day_id&room_id=$room_id&entry_id=$id";
+		}
+		else
+		{
+			$location = "day.php?&event_id=$event_id&day_id=$day_id&room_id=$room_id";
+		}
 		redirect($location);
 	}
 }
@@ -273,6 +294,16 @@ print_header($event_id, $day_id);
 
 // Insert javascript functions for this page
 ?>
+<script type="text/javascript">
+ $(document).ready(function(){
+ 	$(function() {
+ 		$("input:submit", ".submit_buttons").button();
+ 		
+ 	});
+ 
+  });
+ 
+</script>
 
 <?php
 
@@ -318,8 +349,10 @@ $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabl
 	$entry_date = get_date_record_by_id($row['day_id']);
 ?>
 	<div id="event_name">
-	<label for="event_name"><?php echo get_vocab('event') ?></label>
-	<input type="text" name="event_name" value="<?php echo htmlspecialchars($event_name) ?>" id="event_name" disabled="disabled"/>
+	<?php if ($display_events) { ?>
+		<label for="event_name"><?php echo get_vocab('event') ?></label>
+		<input type="text" name="event_name" value="<?php echo htmlspecialchars($event_name) ?>" id="event_name" disabled="disabled"/>
+	<?php } ?>
 	<input type="hidden" name="event_id" value="<?php echo $row['event_id'] ?>" id="event_id" />
 	</div>
 
@@ -386,27 +419,36 @@ $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabl
 	</div>
 
 	<div id="purpose">
-	<label for="new_purpose"><?php echo get_vocab('purpose') ?></label>
+	<label for="new_purpose" class="required"><?php echo get_vocab('purpose') ?></label>
 	<input type="text" name="new_purpose" value="<?php echo htmlspecialchars(($first_pass ? $row['purpose'] : $new_purpose)) ?>" id="new_purpose" <?php echo $disabled ?>/>
-	<input type="hidden" name="old_purpose" value="<?php echo htmlspecialchars(($first_pass ? $row['purpose'] : $new_purpose)) ?>">
+	<input type="hidden" name="old_purpose" value="<?php echo htmlspecialchars(($first_pass ? $row['purpose'] : $new_purpose)) ?>"/>
+	<?php echo get_vocab('purposerequired') ?>
 	</div>
 	
 	<div id="comments">
 	<label for="new_comments"><?php echo get_vocab('comments') ?></label>
-	<textarea rows="9" columns="40" name="new_comments" id="new_comments" <?php echo $disabled ?>><?php echo htmlspecialchars(($first_pass ? $row['comments'] : $new_comments)) ?></textarea>
-	<input type="hidden" name="old_comments" value="<?php echo htmlspecialchars(($first_pass ? $row['comments'] : $new_comments)) ?>">
+	<textarea name="new_comments" id="new_comments" <?php echo $disabled ?>><?php echo htmlspecialchars(($first_pass ? $row['comments'] : $new_comments)) ?></textarea>
+	<input type="hidden" name="old_comments" value="<?php echo htmlspecialchars(($first_pass ? $row['comments'] : $new_comments)) ?>"/>
 	</div>
 	
 	<div id="guests">
 	<label for="new_guests"><?php echo get_vocab('guests') ?></label>
-	<textarea rows="9" columns="40" name="new_guests" id="new_guests" <?php echo $disabled ?>><?php echo htmlspecialchars(($first_pass ? $row['guests'] : $new_guests)) ?></textarea>
-	<input type="hidden" name="old_guests" value="<?php echo htmlspecialchars(($first_pass ? $row['guests'] : $new_guests)) ?>">
+	<textarea name="new_guests" id="new_guests" <?php echo $disabled ?>><?php echo htmlspecialchars(($first_pass ? $row['guests'] : $new_guests)) ?></textarea>
+	<input type="hidden" name="old_guests" value="<?php echo htmlspecialchars(($first_pass ? $row['guests'] : $new_guests)) ?>"/>
+	<?php echo get_vocab('guestshelp'); ?>
 	</div>
 
 	<div id="guest_emails">
 	<label for="new_guest_emails"><?php echo get_vocab('guestsemails') ?></label>
-	<textarea rows="9" columns="40" name="new_guests_emails" id="new_guest_emails" <?php echo $disabled ?>><?php echo htmlspecialchars(($first_pass ? $row['guest_emails'] : $new_guest_emails)) ?></textarea>
-	<input type="hidden" name="old_guest_emails" value="<?php echo htmlspecialchars(($first_pass ? $row['guest_emails'] : $new_guest_emails)) ?>">
+	<textarea  name="new_guests_emails" id="new_guest_emails" <?php echo $disabled ?>><?php echo htmlspecialchars(($first_pass ? $row['guest_emails'] : $new_guest_emails)) ?></textarea>
+	<input type="hidden" name="old_guest_emails" value="<?php echo htmlspecialchars(($first_pass ? $row['guest_emails'] : $new_guest_emails)) ?>"/>
+	<?php echo get_vocab('guestemailhelp') ?>
+	</div>
+	
+	<div id="confirmed">
+	<label for="new_confirmed"><?php echo get_vocab('confirmed') ?>?</label>
+	<input type="checkbox" class="checkbox" name="new_confirmed" id="new_confirmed" value="<?php echo ($first_pass ? (($row['confirmed']==1) ? "checked" : "") : $new_confirmed) ?>" <?php echo ($first_pass ? (($row['confirmed']==1) ? "checked" : "") : $new_confirmed) ?>/>
+	<input type="hidden" name="old_confirmed" value="<?php echo ($first_pass ? ($row['confirmed']==1 ? "checked" : '') : $new_confirmed) ?>"/>
 	</div>
 
 	</fieldset>
@@ -417,13 +459,14 @@ $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabl
 	echo "<div class=\"submit_buttons\">\n";
 	if ($is_admin || isEditable($user_id, $row['user_id']))
 	{
-		echo "<input class=\"submit\" type=\"submit\" name=\"change_entry\" value=\"" . get_vocab("change") . "\">\n";
+		echo "<input class=\"submit\" type=\"submit\" name=\"change_entry\" value=\"" . get_vocab("change") . "\"/>\n";
 		if ($id)
 		{
-			echo "<input class=\"submit\" type=\"submit\" name=\"delete_entry\" value=\"" . get_vocab("deleteentry") . "\">\n";
+			echo "<input class=\"submit\" type=\"submit\" name=\"delete_entry\" value=\"" . get_vocab("deleteentry") . "\"/>\n";
 		}
+		echo "<input class=\"submit\" type=\"submit\" name=\"email_entry\" value=\"" . get_vocab("emailthis") . "\"/>\n";
 	}
-	echo "<input class=\"submit\" type=\"submit\" name=\"goback\" value=\"" . get_vocab("goback") . "\">\n";
+	echo "<input class=\"submit\" type=\"submit\" name=\"goback\" value=\"" . get_vocab("goback") . "\"/>\n";
 	echo "</fieldset>\n";
 
 	?>

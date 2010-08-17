@@ -175,13 +175,16 @@ $max_slots = 60;
 //  become per-user settings]
 
 // Determines whether to show the event selector (if false, assumes only one event in system at a time)
-$show_event_selector = TRUE;
+$display_events = TRUE;
 
 // Determine whether to show the help link on the banner
 $display_help = TRUE;
 
 // Start of week: 0 for Sunday, 1 for Monday, etc.
 $weekstarts = 0;
+
+// Determines whether to display the app title (allows using whole space for branding)
+$display_app_title = TRUE;
 
 
 // Trailer date format: 0 to show dates as "Jul 10", 1 for "10 Jul"
@@ -244,6 +247,10 @@ $text_input_max = 70;  // characters
 
 // Default report span in days:
 $default_report_days = 60;
+
+// Pattern to use as placeholder for missing email addresses
+$email_placeholder_pattern = '/\*\*\s*,?/';
+$email_placeholder_string = '**'; // used in help message to display what will be matched as a replacement, without the trailing comma
 
 $show_plus_link = FALSE;   // Change to TRUE to always show the (+) link
 

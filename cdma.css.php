@@ -26,7 +26,8 @@ body {font-size: small;
     background-color: <?php echo $body_background_color ?>}
 
 .current {color: <?php echo $highlight_font_color ?>}                        /* used to highlight the current item */
-.error   {color: <?php echo $highlight_font_color ?>; font-weight: bold}     /* for error messages */
+.error   {color: <?php echo $error_font_color ?>; font-weight: bold}     /* for error messages */
+.message {color: <?php echo $standard_font_color ?>}
 
 h1 {font-size: x-large}
 h2 {font-size: large}
@@ -118,12 +119,14 @@ div#custom_html {float: left; padding: 0 0 3em 1em}
 #areaChangeForm input {float: left; margin: -0.2em 0.5em 0 0}
 #areaChangeForm input.button {display: block; float: left; margin: 0 0.7em}
 
-div.header_columns, div.body_columns {position: relative; float: left; overflow-x: scroll; overflow-y: hidden}
+div.header_columns, div.body_columns {position: relative; float: left; overflow-x: visible; overflow-y: hidden}
 div.header_columns {max-width: 20%}
 div.body_columns {max-width: 80%}
 
 .body_columns .admin_table th:first-child {border-left-color: <?php echo $admin_table_border_color ?>}
 
+div.left_side {display: block; margin: 5pt; padding: 5pt; }
+div.right_side {display: block; margin: 5pt; padding: 5pt; }
 
 /* ------------ DAY/WEEK/MONTH.PHP ------------------*/
 
@@ -466,6 +469,15 @@ span#del_no  {display:block; position: absolute; left: 50%; margin-left: 1em; fo
 #del_room_confirm_links a:hover {cursor: pointer}                  /* for IE */
 #del_room_confirm_links span:hover {text-decoration: underline}    /* for Firefox */
 
+/* ----------- EMAIL_ENTRY.PHP ----------------------*/
+div#send_email_confirm {padding-bottom: 3em}
+#send_email_confirm p {text-align: center; font-size: large; font-weight: bold}
+div#send_email_confirm_links {position: relative; margin-left: auto; margin-right: auto}
+span#email_yes {display:block; position: absolute; right: 50%; margin-right: 1em; font-size: large}
+span#email_no  {display:block; position: absolute; left: 50%; margin-left: 1em; font-size: large}
+#send_email_confirm_links a:hover {cursor: pointer}                  /* for IE */
+#send_email_confirm_links span:hover {text-decoration: underline}    /* for Firefox */
+
 
 /* ------------ EDIT_AREA_ROOM.PHP ------------------*/
 .edit_area_room .form_general fieldset fieldset {padding-top: 0.5em; padding-bottom: 0.5em}
@@ -554,6 +566,7 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 }
 
 .edit_entry     .form_general label {max-width: <?php echo $edit_entry_left_col_max_width ?>em}
+.required {color: <?php echo $highlight_font_color ?>}
 .report         .form_general label {max-width: <?php echo $report_left_col_max_width ?>em}
 .search         .form_general label {max-width: <?php echo $search_left_col_max_width ?>em}
 .edit_area_room .form_general label {max-width: <?php echo $edit_area_room_left_col_max_width ?>em; width: <?php echo $edit_area_room_left_col_width ?>em}
@@ -577,7 +590,7 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 /* font family and size needs to be the same for input and textarea as their widths are defined in ems */
 .form_general textarea {
     display: block; float: left; 
-    width: <?php echo $edit_entry_textarea_width ?>em; height: 11em; 
+    width: <?php echo $edit_entry_textarea_width ?>em; height: 4em; 
     margin-left: <?php echo $general_gap ?>em; margin-bottom: 0.5em;
     font-family: <?php echo $standard_font_family ?>; font-size: small
 }
@@ -586,7 +599,8 @@ form#edit_room {float: left; width: auto; margin: 0 2em 1em 1em}
 .form_general input.checkbox {margin-top: 0.2em}
 .edit_area_room .form_general input.checkbox {width: auto; margin-left: <?php echo $general_gap ?>em}
 .edit_area_room .form_general #booking_policies input.text {width: 2.0em}
-.form_general input.submit {display: block; width: auto; float: left; clear: left; margin-top: 1.0em}
+/* .form_general input.submit {display: block; width: auto; float: left; clear: left; margin-top: 1.0em} */
+.form_general input.submit {display: inline; width: auto; float: left; margin-top: 1.0em}
 
 div#edit_entry_submit {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $edit_entry_left_col_max_width ?>em}
 div#report_submit     {width: <?php echo $general_left_col_width ?>%; max-width: <?php echo $report_left_col_max_width ?>em}
