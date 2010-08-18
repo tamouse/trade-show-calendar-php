@@ -31,13 +31,6 @@ function get_entries($event_id, $day_id)
 	global $tbl_entry;
 	
 	$sql = "SELECT * FROM $tbl_entry WHERE event_id=$event_id AND day_id=$day_id ORDER BY start_hour, start_minute";
-	// DEBUG START
-//	echo "<p>sql=$sql</p>\n";
-// 	echo "<pre>\n";
-// 	print_r();
-// 	echo "</pre>\n";
-	// exit;
-	// DEBUG END
 	
 	$res = sql_query($sql);
 	if (!$res)
@@ -64,13 +57,6 @@ function get_appointments_for_user($event_id, $day_id, $user_id)
 	global $tbl_entry;
 	
 	$sql = "SELECT * FROM $tbl_entry WHERE event_id=$event_id AND day_id=$day_id AND user_id=$user_id ORDER BY start_hour, start_minute";
-	// DEBUG START
-	echo "<p>sql=$sql</p>\n";
-	echo "<pre>\n";
-//	print_r();
-	echo "</pre>\n";
-	// exit;
-	// DEBUG END
 	
 	$res = sql_query($sql);
 	if (!$res)
@@ -225,7 +211,7 @@ for ($i=0; $i < count($days), $day=$days[$i]; $i++)
 		// emit_code_for_entry
 		echo "<div class=\"report_day_entry\">\n";
 		?>
-		<table class="report_entry" width="80%" cellpadding="2pt" onMouseUp="location.href='edit_entry.php<?php echo ($entry['user_id'] > 0 ? "entry" : "slot") ?>?event_id=<?php echo $entry['event_id'] ?>&day_id=<?php echo $entry['day_id'] ?>&room_id=<?php echo $entry['room_id'] ?>&id=<?php echo $entry['id'] ?>'">
+		<table class="report_entry" width="80%" cellpadding="2pt" onMouseUp="location.href='edit_<?php echo ($entry['user_id'] > 0 ? "entry" : "slot") ?>.php?event_id=<?php echo $entry['event_id'] ?>&day_id=<?php echo $entry['day_id'] ?>&room_id=<?php echo $entry['room_id'] ?>&id=<?php echo $entry['id'] ?>'">
 		<tr class="report_entry_row" >
 			<td width="40%" class="report_entry_cell">
 			<?php
