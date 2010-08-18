@@ -40,8 +40,9 @@ $main_table_month_color         = "#ffffff";    // background colour for days in
 $main_table_month_invalid_color = "#d1d9de";    // background colour for invalid days in the month view
 $main_table_labels_back_color   = $header_back_color;     // background colour for the row labels column
 
-$available_background_color     = "#CCFAC3";
-$booked_background_color        = "#F7B0A8";
+$available_background_color     = "#CCFAC3"; // greenish cast to show open appointment slots
+$booked_background_color        = "#F7B0A8"; // pinkish cast to show bookings belonging to other users
+$booked_mine_background_color   = "#F7F6B5"; // yellowish cash to show bookings belonging to current user
 
 // border colours for the main table when it is printed.     These are used by cdma-print.css.php
 $main_table_border_color_print        = "#879AA8";    // border colour for the main table (print view)

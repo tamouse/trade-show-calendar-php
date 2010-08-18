@@ -225,7 +225,7 @@ for ($i=0; $i < count($days), $day=$days[$i]; $i++)
 		// emit_code_for_entry
 		echo "<div class=\"report_day_entry\">\n";
 		?>
-		<table class="report_entry" width="80%" cellpadding="2pt" onMouseUp="location.href='edit_<?php echo ($entry['user_id'] > 0 ? "entry" : "slot") ?>?event_id=<?php echo $entry['event_id'] ?>&day_id=<?php echo $entry['day_id'] ?>&room_id=<?php echo $entry['room_id'] ?>&id=<?php echo $entry['id'] ?>'">
+		<table class="report_entry" width="80%" cellpadding="2pt" onMouseUp="location.href='edit_entry.php<?php echo ($entry['user_id'] > 0 ? "entry" : "slot") ?>?event_id=<?php echo $entry['event_id'] ?>&day_id=<?php echo $entry['day_id'] ?>&room_id=<?php echo $entry['room_id'] ?>&id=<?php echo $entry['id'] ?>'">
 		<tr class="report_entry_row" >
 			<td width="40%" class="report_entry_cell">
 			<?php

@@ -233,6 +233,15 @@ if (!show_plus_link)
 	echo ".booked img {display: none}\n";
 }
 ?>
+span.booked_mine {background-color: <?php echo $booked_mine_background_color;?>;}
+a.booked_mine {display: block; font-size: small; font-style: italic; text-align: center; background-color: <?php echo $booked_mine_background_color; ?>;}
+.booked_mine img {marging: auto; padding: 4px 0 2px 0}
+<?php
+if (!show_plus_link)
+{
+	echo ".booked_mine img {display: none}\n";
+}
+?>
 
 div.instructions {text-align: center;}
 

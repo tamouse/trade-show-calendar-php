@@ -115,7 +115,12 @@ $is_admin = (authGetUserLevel($user) >= 2);
 // get the creator id from the entry
 $creator_id = get_entry_creator_id($id);
 
-
+if (!isEditable($user_id, $creator_id) && !$is_admin)
+{
+	// Don't let other users see entry details
+	$location = "day.php?event_id=$event_id&room_id=$room_id&day_id=$day_id";
+	redirect($location);
+}
 // Note: if $creator_id = 0, this is a new appointment
 if ($creator_id == 0)
 {

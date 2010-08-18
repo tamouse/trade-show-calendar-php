@@ -950,6 +950,9 @@ function draw_cell($cell, $query_strings, $mode)
   // so that the zebra stripes can be drawn, or else to allow the whole row to be highlighted.
   
 	$is_admin = getAdmin();
+	$current_user = getUserName();
+	$current_user_rec = get_user_from_user_name($current_user);
+	$current_user_id = $current_user_rec['id'];
     
 	// Don't need to change anything here to use this in either mode
 	if(isset($cell) && ($cell != 0))
@@ -966,7 +969,7 @@ function draw_cell($cell, $query_strings, $mode)
 			$descr		= $cell["purpose"];
 			$descr = get_vocab('booked')
 				. "<br/><span class=\"appointmentsettings\">(" . formatTime($start_hour, $start_minute) . " to<br />" . formatTime($cell["end_hour"],$cell["end_minute"]) . ")</span>";
-			$cell_class = 'booked';
+			$cell_class = ($current_user_id == $cell['user_id'] ? 'booked_mine' : 'booked');
 		}
 		else
 		{
@@ -994,7 +997,7 @@ function draw_cell($cell, $query_strings, $mode)
 		
 		if ($mode)
 		{
-			echo "<a class=\"new_slot\" href=\"edit_slot.php?" . $query_strings['new_slot'] . "\">";
+			echo "<a class=\"$cell_class\" href=\"edit_slot.php?" . $query_strings['new_slot'] . "\">";
 			echo $descr;
 			echo "</a>\n";
 		}
@@ -1004,20 +1007,20 @@ function draw_cell($cell, $query_strings, $mode)
 		if ($mode)
 		{
 			// allow for admin to delete an available slot
-			echo "<a class=\"available\" href=\"edit_slot.php?id=$id&" . $query_strings['new_slot'] . "\">";
+			echo "<a class=\"$cell_class\" href=\"edit_slot.php?id=$id&" . $query_strings['new_slot'] . "\">";
 			echo $descr;
 			echo "</a>\n";
 		}
 		else
 		{
-			echo "<a class=\"available\" href=\"edit_entry.php?id=$id&" . $query_strings['new_booking'] . "\">";
+			echo "<a class=\"$cell_class\" href=\"edit_entry.php?id=$id&" . $query_strings['new_booking'] . "\">";
 			echo $descr;
 			echo "</a>\n";
 		}
 	}
     else                 // if it is booked then show the booking
 	{
-		echo "<a class=\"booked\" href=\"edit_entry.php?id=$id&". $query_strings['view_booking'] . "\">$descr</a>\n";
+		echo "<a class=\"$cell_class\" href=\"edit_entry.php?id=$id&". $query_strings['view_booking'] . "\">$descr</a>\n";
 	}
 	echo "</div>\n";
 	
