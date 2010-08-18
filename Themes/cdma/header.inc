@@ -115,6 +115,17 @@ if ($page == 'pending')
 } // pending
 ?>
 
+// This will create jqueryui buttons out of all submit buttons of the class 'submit_buttons'
+// It will load when the document is ready
+	 $(document).ready(function(){
+	 	$(function() {
+	 		$("input:submit", ".submit_buttons").button();
+
+	 	});
+
+	  });
+
+
 // actions to be taken on page load
 function init()
 {

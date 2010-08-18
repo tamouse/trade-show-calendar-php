@@ -17,7 +17,6 @@ require_once "theme.inc";
                                 
 ?>
 
-
 /* ------------ GENERAL -----------------------------*/
 
 body {font-size: small;
@@ -86,7 +85,7 @@ select.room_area_select {margin-right: 0.5em}
 <?php
 // Adjust the label width to suit the longest label - it will depend on the translation being used
 // The input width can normally be left alone
-$admin_form_label_width       = '7.0';   // em
+$admin_form_label_width       = '15.0';   // em
 $admin_form_gap               = '1.0';   // em
 $admin_form_input_width       = '10.5';   // em   (Also used in edit_area_room.php)
 
@@ -420,7 +419,7 @@ for ($i=1; $i<=$classes_required; $i++)
 }
 
 ?>
-div.celldiv {overflow: hidden; margin: 0; padding: 0; height: 40px}
+div.celldiv {overflow: hidden; margin: 0; padding: 0; height: 50px}
 .row_labels div.celldiv {overflow: visible}  /* we want to see the content in the row label columns */
 <?php
 
@@ -758,29 +757,43 @@ table#pending_list {width: 100%}
 #pending_list table th.header_start_time {text-transform: uppercase}
 
 /* ------------ REPORT.PHP ----------------------*/
-.div_report h2, #div_summary h1 {border-top: 2px solid <?php echo $report_h2_border_color ?>;
-    padding-top: 0.5em; margin-top: 2.0em}
-.div_report h3 {border-top: 1px solid <?php echo $report_h3_border_color ?>;
-    padding-top: 0.5em; margin-bottom: 0}
-.div_report table {clear: both; width: 100%; margin-top: 0.5em}
-.div_report col.col1 {width: 8em}
-.div_report td:first-child {text-align: right; font-weight: bold}
-.div_report .createdby td, .div_report .lastupdate td {font-size: x-small}
-div.report_entry_title {width: 100%; float: left;
-    border-top: 1px solid <?php echo $report_entry_border_color ?>; margin-top: 0.8em}
-div.report_entry_name  {width: 40%;  float: left; font-weight: bold}
-div.report_entry_when  {width: 60%;  float: right; text-align: right}
-#div_summary table {border-spacing: 1px; border-collapse: collapse;
-    border-color: <?php echo $report_table_border_color ?>; border-style: solid;
-    border-top-width: 1px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 1px}
-#div_summary td, #div_summary th {padding: 0.1em 0.2em 0.1em 0.2em;
-    border-color: <?php echo $report_table_border_color ?>; border-style: solid;
-    border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
-#div_summary th {background-color: transparent; font-weight: bold; text-align: center}
-#div_summary td {text-align: right}
-#div_summary td.count {border-right-width: 0}
-#div_summary td:first-child {font-weight: bold}
-p.report_entries {font-weight: bold}
+/*
+ * 
+ * .div_report h2, #div_summary h1 {border-top: 2px solid <?php echo $report_h2_border_color ?>;
+ *     padding-top: 0.5em; margin-top: 2.0em}
+ * .div_report h3 {border-top: 1px solid <?php echo $report_h3_border_color ?>;
+ *     padding-top: 0.5em; margin-bottom: 0}
+ * .div_report table {clear: both; width: 100%; margin-top: 0.5em}
+ * .div_report col.col1 {width: 8em}
+ * .div_report td:first-child {text-align: right; font-weight: bold}
+ * .div_report .createdby td, .div_report .lastupdate td {font-size: x-small}
+ * div.report_entry_title {width: 100%; float: left;
+ *     border-top: 1px solid <?php echo $report_entry_border_color ?>; margin-top: 0.8em}
+ * div.report_entry_name  {width: 40%;  float: left; font-weight: bold}
+ * div.report_entry_when  {width: 60%;  float: right; text-align: right}
+ * #div_summary table {border-spacing: 1px; border-collapse: collapse;
+ *     border-color: <?php echo $report_table_border_color ?>; border-style: solid;
+ *     border-top-width: 1px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 1px}
+ * #div_summary td, #div_summary th {padding: 0.1em 0.2em 0.1em 0.2em;
+ *     border-color: <?php echo $report_table_border_color ?>; border-style: solid;
+ *     border-top-width: 0; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 0}
+ * #div_summary th {background-color: transparent; font-weight: bold; text-align: center}
+ * #div_summary td {text-align: right}
+ * #div_summary td.count {border-right-width: 0}
+ * #div_summary td:first-child {font-weight: bold}
+ * p.report_entries {font-weight: bold}
+ * 
+ */
+.report_title {}
+div.report_day {margin-left: 15px; padding: 5px;}
+div.day_heading {clear: both; margin-top: 20pt; margin-bottom: 10px; padding: 0; font-weight: bold; font-size: large;}
+div.report_day_entry {clear: both; margin-left: 15pt; margin-top: 5pt; margin-bottom: 10pt;}
+table.report_header {background-color: <?php echo $report_table_background_color ?>; border-color: <?php echo $report_table_border_color ?>
+	border-style: solid; border-size: 1pt}
+table.report_entry {background-color: <?php echo $report_table_background_color ?>; border-color: <?php echo $report_table_border_color ?>
+	border-style: solid; border-size: 1pt}
+table.report_entry:hover {background-color: <?php echo $report_hover_color ?>; font-style: italic; font-weight: bold;}
+td.report_entry_cell {border-style: none;}
 
 /* ------------ SEARCH.PHP ----------------------*/
 span#search_str {color: <?php echo $highlight_font_color ?>}

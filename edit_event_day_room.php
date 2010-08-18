@@ -489,22 +489,6 @@ if (isset($change_day) && !empty($day_id))
 
 print_header($event_id, $day_id);
 
-// Insert javascript functions for this page
-?>
-<script type="text/javascript">
- $(document).ready(function(){
- 	$(function() {
- 		$("input:submit", ".submit_buttons").button();
- 		
- 	});
- 
-  });
- 
-</script>
-
-<?php
-
-
 if ($is_admin)
 {
   // Heading is confusing for non-admins

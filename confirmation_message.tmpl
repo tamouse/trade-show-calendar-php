@@ -23,18 +23,21 @@ $confirmation_message = <<<EOM
 <table border="0" cellspacing="5" cellpadding="5" align="center" width="70%">
 	<tr><td>
 	<p>Dear $RECIPIENT,</p>
-	<p>Greetings from $ORGANIZERNAME!</p>
-	<p>This email is confirm your appointment is scheduled.</p>
+	<p>Greetings from $ORGANIZERFIRSTNAME $ORGANIZERLASTNAME!</p>
+	$CUSTOMMSG
 	<blockquote>
 	<h2>Details</h2>
 	<ul>
+	<li>Organizer: $ORGANIZERFIRSTNAME $ORGANIZERLASTNAME &lt;$ORGANIZEREMAIL&gt; $ORGANIZERPHONE
 	<li>Purpose: $PURPOSE</li>
 	<li>Start Time: $STARTTIME</li>
 	<li>End Time: $ENDTIME</li>
-	<li>Location: $ROOMNAME</li>
+	<li>Location: $LOCATION</li>
+	<li>Guests: $GUESTLIST</li>
 	</ul>
 	</blockquote>
-	<p>If you have questions, you can contact me at $ORGANIZEREMAIL or $ORGANIZERPHONE.</p>	
+	<p>If you have questions, you can contact me at $ORGANIZEREMAIL or $ORGANIZERPHONE.</p>
+	<p>Sent by $SENDERFIRSTNAME $SENDERLASTNAME &lt;$SENDEREMAIL&gt; $SENDERPHONE</p>
 	</td></tr>
 </table>
 </body>

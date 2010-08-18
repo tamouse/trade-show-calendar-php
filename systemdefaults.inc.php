@@ -601,6 +601,12 @@ $summary_filename = "summary.csv";
 $csv_row_sep = "\n";  // Separator between rows/records
 $csv_col_sep = ",";   // Separator between columns/fields
 
+// lengths of fields
+$max_purpose_length_for_report = 80;
+$max_organizer_length_for_report = 30;
+$max_comment_length_for_report = 200;
+$max_guest_list_length_for_report = 200;
+
 
 /*************
  * Entry Types

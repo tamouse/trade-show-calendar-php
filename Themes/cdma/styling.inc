@@ -53,6 +53,7 @@ $report_table_border_color      = $standard_font_color;
 $report_h2_border_color         = $banner_back_color;     // border colour for <h2> in report.php
 $report_h3_border_color         = "#879AA8";              // border colour for <h2> in report.php
 $report_entry_border_color      = "#C3CCD3";              // used to separate individual bookings in report.php
+$report_table_background_color  = "#FFFFFF";              // background color of entry table
 
 $search_table_border_color      = $standard_font_color;
 
@@ -73,6 +74,7 @@ $anchor_visited_color_header    = $anchor_link_color_header;   // link color (vi
 $anchor_hover_color_header      = $anchor_link_color_header;   // link color (hover)
 
 $cell_hover_color               = "#FAC3C9";   // highlight a cell in main table when hovering over it
+$report_hover_color             = $cell_hover_color; // highlight a row in the report when hovering over it.
 
 $column_hidden_color            = $main_table_month_invalid_color;    // hidden days in the week and month views
 $calendar_hidden_color          = "#dae0e4";                          // hidden days in the mini-cals

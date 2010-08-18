@@ -1,5 +1,5 @@
 <?php
-// TODO 2010-08-14 modify for new entry schema
+// 
 
 require_once "defaultincludes.inc";
 
@@ -97,7 +97,7 @@ if (!empty($goback))
 
 if (!empty($email_entry))
 {
-	$location = "email_entry.php?event_id=$event_id&day_id=$day_id&room_id=$room_id&entry_id=$id&confirmed=Y"; // bypass confirmation
+	$location = "email_entry.php?type=2&event_id=$event_id&day_id=$day_id&room_id=$room_id&entry_id=$id&confirmed=Y"; // bypass confirmation
 	redirect($location);
 }
 
@@ -112,11 +112,22 @@ $user = getUserName();
 $user_id = getUserIDByname($user);
 $is_admin = (authGetUserLevel($user) >= 2);
 
+// get the creator id from the entry
+$creator_id = get_entry_creator_id($id);
+
+
+// Note: if $creator_id = 0, this is a new appointment
+if ($creator_id == 0)
+{
+	$confirmation_type = 1; // confirmation of new appointment
+}
+else
+{
+	$confirmation_type = 2; // notification of changes
+}
+
 if (!empty($delete_entry))
 {
-	// the user has requested to delete the entry
-	// to be safe, let's check to see if they can
-	$creator_id = get_entry_creator_id($id);
 	if (isEditable($user_id, $creator_id) || $is_admin)
 	{
 		$location="del_entry.php?event_id=$event_id&day_id=$day_id&room_id=$room_id&id=$id&user_id=$user_id&creator_id=$creator_id";
@@ -259,14 +270,8 @@ if (!empty($change_entry))
 		// if everything is OK, release the mutex and go back to
 		// the admin page (for the new event)
 		sql_mutex_unlock("$tbl_entry");
-		if (isset($new_confirmed))
-		{
-			$location = "email_entry.php?event_id=$event_id&day_id=$day_id&room_id=$room_id&entry_id=$id";
-		}
-		else
-		{
-			$location = "day.php?&event_id=$event_id&day_id=$day_id&room_id=$room_id";
-		}
+		$location = "email_entry.php?type=$confirmation_type&event_id=$event_id&day_id=$day_id&room_id=$room_id&entry_id=$id" 
+			. "&user_id=$user_id&creator_id=$creator_id";
 		redirect($location);
 	}
 }
@@ -292,21 +297,6 @@ sql_free($res);
 
 print_header($event_id, $day_id);
 
-// Insert javascript functions for this page
-?>
-<script type="text/javascript">
- $(document).ready(function(){
- 	$(function() {
- 		$("input:submit", ".submit_buttons").button();
- 		
- 	});
- 
-  });
- 
-</script>
-
-<?php
-
 if (!empty($error))
 {
   echo "<p class=\"error\">" . get_vocab($error) . "</p>\n";
@@ -316,6 +306,7 @@ if (!empty($error))
 $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabled=\"disabled\"";
 
 ?>
+
 
 <form class="form_general" id="edit_entry" action="edit_entry.php" method="post">
 <fieldset class="admin">
@@ -422,8 +413,9 @@ $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabl
 	<label for="new_purpose" class="required"><?php echo get_vocab('purpose') ?></label>
 	<input type="text" name="new_purpose" value="<?php echo htmlspecialchars(($first_pass ? $row['purpose'] : $new_purpose)) ?>" id="new_purpose" <?php echo $disabled ?>/>
 	<input type="hidden" name="old_purpose" value="<?php echo htmlspecialchars(($first_pass ? $row['purpose'] : $new_purpose)) ?>"/>
-	<?php echo get_vocab('purposerequired') ?>
+	<div id="purpose_help" class="field_help"><?php echo get_vocab('purposerequired') ?></div>
 	</div>
+		
 	
 	<div id="comments">
 	<label for="new_comments"><?php echo get_vocab('comments') ?></label>
@@ -435,15 +427,17 @@ $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabl
 	<label for="new_guests"><?php echo get_vocab('guests') ?></label>
 	<textarea name="new_guests" id="new_guests" <?php echo $disabled ?>><?php echo htmlspecialchars(($first_pass ? $row['guests'] : $new_guests)) ?></textarea>
 	<input type="hidden" name="old_guests" value="<?php echo htmlspecialchars(($first_pass ? $row['guests'] : $new_guests)) ?>"/>
-	<?php echo get_vocab('guestshelp'); ?>
+	<div id="guests_help" class="field_help"><?php echo get_vocab('guestshelp'); ?></div>
 	</div>
+		
 
 	<div id="guest_emails">
 	<label for="new_guest_emails"><?php echo get_vocab('guestsemails') ?></label>
 	<textarea  name="new_guests_emails" id="new_guest_emails" <?php echo $disabled ?>><?php echo htmlspecialchars(($first_pass ? $row['guest_emails'] : $new_guest_emails)) ?></textarea>
 	<input type="hidden" name="old_guest_emails" value="<?php echo htmlspecialchars(($first_pass ? $row['guest_emails'] : $new_guest_emails)) ?>"/>
-	<?php echo get_vocab('guestemailhelp') ?>
+	<div id="emails_help" class="field_help"><?php echo get_vocab('guestemailhelp') ?></div>
 	</div>
+		
 	
 	<div id="confirmed">
 	<label for="new_confirmed"><?php echo get_vocab('confirmed') ?>?</label>

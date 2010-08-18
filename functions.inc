@@ -964,14 +964,14 @@ function draw_cell($cell, $query_strings, $mode)
 		{
 			$user_id	= $cell["user_id"];
 			$descr		= $cell["purpose"];
-			$descr = truncateToDisplay(get_vocab('booked'))
+			$descr = get_vocab('booked')
 				. "<br/><span class=\"appointmentsettings\">(" . formatTime($start_hour, $start_minute) . " to<br />" . formatTime($cell["end_hour"],$cell["end_minute"]) . ")</span>";
 			$cell_class = 'booked';
 		}
 		else
 		{
 			unset($user_id);
-			$descr		= truncateToDisplay(get_vocab('available'))
+			$descr		= get_vocab('available')
 				. "<br/><span class=\"appointmentsettings\">(" . formatTime($start_hour, $start_minute) . " to<br />" . formatTime($cell["end_hour"],$cell["end_minute"]) . ")</span>";
 			$cell_class = 'available';
 		}
@@ -979,7 +979,7 @@ function draw_cell($cell, $query_strings, $mode)
 	else  // cell not set
 	{
 		unset($id);
-		$descr = truncateToDisplay(get_vocab('noslot'));
+		$descr = get_vocab('noslot');
 		$cell_class = 'no_slot';
    }
 
@@ -1025,11 +1025,11 @@ function draw_cell($cell, $query_strings, $mode)
 }  // end function draw_cell
 
 // shortens a string so that it will display in a cell
-function truncateToDisplay($text)
+function truncateToDisplay($text,$limit)
 {
-	global $max_content_length;
-	$sstr = substr($text, 0, $max_content_length);
-	$sstr .= (strlen($text) > $max_content_length) ? " ..." : "";
+	if (!isset($limit) || $limit < 1) return $text;
+	$sstr = substr($text, 0, $limit);
+	$sstr .= (strlen($text) > $limit) ? " ..." : "";
 	return $sstr;
 }
 
@@ -1127,7 +1127,7 @@ function get_day_from_id($day_id)
 	{
 		$sql = "SELECT day, month, year FROM $tbl_day WHERE id = $day_id;";
 		$res = sql_query($sql);
-		if ($res > 0)
+		if (!$res)
 		{
 			return sql_row_keyed($res,0);
 		}
@@ -1166,7 +1166,7 @@ function get_entry_by_event_day_room($event_id, $day_id, $room_id, $hour, $minut
 	{
 		$sql = "SELECT * FROM $tbl_entry WHERE event_id=$event_id AND day_id=$day_id AND room_id=$room_id AND start_hour=$hour AND start_minute=$minute LIMIT 1";
 		$res = sql_query($sql);
-		if ($res < 1) return 0;
+		if (!$res) return 0;
 		$row = sql_row_keyed($res, 0);
 		return $row;
 		
@@ -1253,7 +1253,7 @@ function get_entry_creator_id($id)
 	{
 		$sql = "SELECT user_id as creator_id FROM $tbl_entry WHERE id=$id LIMIT 1";
 		$creator_id = sql_query1($sql);
-		if ($creator_id < 1)
+		if ($creator_id < 0)
 		{
 			return -2;
 		}
@@ -1309,11 +1309,20 @@ function get_record_by_id($table, $id)
 {
 	$sql = "SELECT * FROM $table WHERE id=$id LIMIT 1";
 	$res = sql_query($sql);
-	if ($res <= 0) {
+	if (!$res) {
 		return -2;
 	}
 	$row = sql_row_keyed($res, 0);
 	return $row;
 }
 
+function get_user_from_user_name($user_name)
+{
+	global $tbl_users;
+	$sql = "SELECT * FROM $tbl_users WHERE name='$user_name' LIMIT 1";
+	$res = sql_query($sql);
+	if (!$res) fatal_error(1, get_vocab('userretrievalfailed') . " " . sql_error());
+	$user = sql_row_keyed($res, 0);
+	return $user;
+}
 ?>

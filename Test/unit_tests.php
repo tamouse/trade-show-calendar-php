@@ -153,6 +153,8 @@ _run_test('test_truncateToDisplay');
 _run_test('test_stripEmailPlaceholders');
 
 _run_test('check_entry_table_fields');
+
+
 // _print_environment();
 
 

@@ -50,20 +50,6 @@ $event_name = get_event_name_by_id($event_id);
 $is_admin = getAdmin();
 
 print_header($event_id, $day_id);
-// Insert javascript functions for this page
-?>
-<script type="text/javascript">
- $(document).ready(function(){
- 	$(function() {
- 		$("input:submit", ".submit_buttons").button();
- 	});
- 
-  });
- 
-</script>
-
-<?php
-
 
 echo "<h2>" . get_vocab("administration") . "</h2>\n";
 if (!empty($error))

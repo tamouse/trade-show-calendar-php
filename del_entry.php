@@ -40,7 +40,8 @@ if (($user_id == $creator_id) || (getAdmin()))
 		"purpose=NULL, " .
 		"comments=NULL, " .
 		"guests=NULL, " .
-		"guest_emails=NULL " .
+		"guest_emails=NULL, " .
+		"confirmed=0 " .
 		"WHERE id=$id";
 	$res = sql_command($sql);
     if ($res < 0)
@@ -51,8 +52,31 @@ if (($user_id == $creator_id) || (getAdmin()))
 	// the admin page (for the new event)
 	sql_mutex_unlock("$tbl_entry");
 	
+	// Set up for mailing
+	$creator_id = $row['user_id'];
+	$to_names = urlencode($row['guests']);
+	$to_emails = urlencode($row['guest_emails']);
+	$purpose = urlencode($row['purpose']);
+	$start_hour = $row['start_hour'];
+	$start_minute = $row['start_minute'];
+	$end_hour = $row['end_hour'];
+	$end_minute = $row['end_minute'];
 	
-	redirect($returl);
+	$location = "email_entry.php?type=3" .
+		"&event_id=$event_id" .
+		"&day_id=$day_id" .
+		"&room_id=$room_id" .
+		"&user_id=$user_id" .
+		"&creator_id=$creator_id" .
+		"&to_names=$to_names" .
+		"&to_emails=$to_emails" .
+		"&purpose=$purpose" .
+		"&start_hour=$start_hour" .
+		"&start_minute=$start_minute" .
+		"&end_minute=$end_minute" .
+		"&end_hour=$end_hour";
+		
+	redirect($location);
 }
 // If you got this far then we got an access denied.
 showAccessDenied($day_id, $event_id);

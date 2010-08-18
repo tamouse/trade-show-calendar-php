@@ -90,6 +90,8 @@ CREATE TABLE cdma_users
   id        int NOT NULL auto_increment,
   level     smallint DEFAULT '0' NOT NULL,  /* play safe and give no rights */
   name      varchar(30),
+  first_name	varchar(30),
+  last_name		varchar(30),
   password  varchar(40),
   phone		varchar(20),
   email     varchar(75),
