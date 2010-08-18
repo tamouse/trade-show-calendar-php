@@ -594,7 +594,7 @@ if (!empty($room_id))
               break;
             case 'room_description':
               echo "<label for=\"room_description\">" . get_vocab("description") . ":</label>\n";
-              echo "<input type=\"text\" id=\"room_description\" name=\"room_description\" value=\"" . htmlspecialchars($row["room_description"]) . "\"$disabled>\n";
+              echo "<textarea id=\"room_description\" name=\"room_description\" $disabled>" . htmlspecialchars($row["room_description"]) . "</textarea>\n";
               break;
             // then look at any user defined fields
             default:
@@ -642,15 +642,11 @@ if (!empty($room_id))
       // Submit and Back buttons (Submit only if they're an admin)  
       echo "<fieldset class=\"submit_buttons\">\n";
       echo "<legend></legend>\n";
-      echo "<div id=\"edit_event_day_room_submit_back\">\n";
-      echo "<input class=\"submit\" type=\"submit\" name=\"change_done\" value=\"" . get_vocab("backadmin") . "\">\n";
-      echo "</div>\n";
       if ($is_admin)
       { 
-        echo "<div id=\"edit_event_day_room_submit_save\">\n";
         echo "<input class=\"submit\" type=\"submit\" name=\"change_room\" value=\"" . get_vocab("change") . "\">\n";
-        echo "</div>\n";
       }
+      echo "<input class=\"submit\" type=\"submit\" name=\"change_done\" value=\"" . get_vocab("backadmin") . "\">\n";
       echo "</fieldset>\n";
         
     	echo "</fieldset>";
@@ -787,11 +783,11 @@ if (!empty($day_id))
       echo "<fieldset class=\"submit_buttons\">\n";
       echo "<legend></legend>\n";
 		echo "<div id=\"submit_buttons\">\n";
-      echo "<input class=\"submit\" type=\"submit\" name=\"change_done\" value=\"" . get_vocab("backadmin") . "\">\n";
       if ($is_admin)
       { 
         echo "<input class=\"submit\" type=\"submit\" name=\"change_day\" value=\"" . get_vocab("change") . "\">\n";
       }
+      echo "<input class=\"submit\" type=\"submit\" name=\"change_done\" value=\"" . get_vocab("backadmin") . "\">\n";
 
 	echo "</div>\n";
       echo "</fieldset>\n";
@@ -903,12 +899,10 @@ if (!empty($event_id))
 
 		<fieldset class="submit_buttons">
 		<legend></legend>
-		<div id="edit_event_room_submit_back">
-		<input class="submit" type="submit" name="change_done" value="<?php echo get_vocab("backadmin") ?>">
-	</div>
-		<div id="edit_event_room_submit_save">
+		<div class="submit_buttons">
 		<input class="submit" type="submit" name="change_event" value="<?php echo get_vocab("change") ?>">
-	</div>
+		<input class="submit" type="submit" name="change_done" value="<?php echo get_vocab("backadmin") ?>">
+		</div>
 		</fieldset>
 
 		</fieldset>

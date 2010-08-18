@@ -477,7 +477,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 			}
 			?>
 				<input type="hidden" name="Action" value="Update">    
-				<input class="submit" type="submit" value="<?php echo(get_vocab("save")); ?>">
+				<div class="submit_buttons"><input class="submit" type="submit" value="<?php echo(get_vocab("save")); ?>"></div>
 
 			</div>
 				</fieldset>
@@ -487,7 +487,7 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 			if (($Id >= 0) && ($level >= $min_user_editing_level) && ($level >= $data['level'])) 
 			{
 				echo "<form id=\"form_delete_users\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-				echo "<div>\n";
+				echo "<div class=\"submit_buttons\">\n";
 				echo "<input type=\"hidden\" name=\"Action\" value=\"Delete\">\n";
 				echo "<input type=\"hidden\" name=\"Id\" value=\"$Id\">\n";
 				echo "<input class=\"submit\" type=\"submit\" " . 
@@ -743,9 +743,11 @@ if (isset($Action) && ($Action == "Update"))
 		print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
 		print "  <fieldset>\n";
 		print "  <legend></legend>\n";
+		print "    <div class=\"submit_buttons\">\n";
 		print "    <p class=\"error\">Error updating the $tbl_users table.</p>\n";
 		print "    <p class=\"error\">" . sql_error() . "</p>\n";
 		print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
+		print "    </div>\n";
 		print "  </fieldset>\n";
 		print "</form>\n";
 
@@ -787,9 +789,11 @@ if (isset($Action) && ($Action == "Delete"))
 		print "<form class=\"edit_users_error\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
 		print "  <fieldset>\n";
 		print "  <legend></legend>\n";
+		print "    <div class=\"submit_buttons\">\n";
 		print "    <p class=\"error\">Error deleting entry $Id from the $tbl_users table.</p>\n";
 		print "    <p class=\"error\">" . sql_error() . "</p>\n";
 		print "    <input type=\"submit\" value=\" " . get_vocab("ok") . " \">\n";
+		print "    </div>\n";
 		print "  </fieldset>\n";
 		print "</form>\n";
 
@@ -813,7 +817,7 @@ print "<h2>" . get_vocab("user_list") . "</h2>\n";
 if ($level >= $min_user_editing_level) /* Administrators get the right to add new users */
 {
 	print "<form id=\"add_new_user\" method=\"post\" action=\"" . htmlspecialchars(basename($PHP_SELF)) . "\">\n";
-	print "  <div>\n";
+	print "  <div class=\"submit_buttons\">\n";
 	print "    <input type=\"hidden\" name=\"Action\" value=\"Add\">\n";
 	print "    <input type=\"hidden\" name=\"Id\" value=\"-1\">\n";
 	print "    <input type=\"submit\" value=\"" . get_vocab("add_new_user") . "\">\n";
