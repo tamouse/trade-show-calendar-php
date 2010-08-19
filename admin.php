@@ -59,6 +59,8 @@ if (!empty($error))
 
 echo "<div class=\"left_side\">\n";
 
+if ($is_admin)
+{
 // Button to go to slot management.
 // Use the day.php function, but set mode to 1 to manage slots instead of appointments
 ?>
@@ -73,6 +75,10 @@ echo "<div class=\"left_side\">\n";
 </div>
 
 <?php
+}
+
+
+
 // TOP SECTION:  THE FORM FOR SELECTING AN EVENT
 
 // Check to see if there is at least one event.
@@ -151,7 +157,6 @@ if (isset($event_id)) {
 	    echo "</tr>\n";
 	    echo "</thead>\n";
 
-
 		// Body of table showing defined days in event
 	    echo "<tbody>\n";
 	    $row_class = "odd_row";
@@ -228,7 +233,7 @@ if ($is_admin && $events_defined && !empty($event_id))
 }
 echo "</div>\n"; // end of day form
 echo "</div>\n"; // end of left side
-
+echo "</div></div>\n";
 
 echo "<div class=\"right_side\">\n";
 

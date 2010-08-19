@@ -20,7 +20,7 @@ if (empty($debug_flag))
   $debug_flag = 0;
 }
 
-if (!isset($event_id))
+if (!isset($event_id) || $event_id < 1)
 {
 	$event_id = get_first_event();
 }

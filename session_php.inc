@@ -228,17 +228,9 @@ function PrintLogonBox()
   $user=getUserName();
   if (isset($user))
   {
-    // words 'you are xxxx' becomes a link to the
-    // report page with only entries created by xxx. Past entries are not
-    // displayed but this can be changed
-    $search_string = "report.php?From_day=$day&amp;From_month=$month&amp;".
-      "From_year=$year&amp;To_day=1&amp;To_month=12&amp;To_year=2030&amp;areamatch=&amp;".
-      "roommatch=&amp;namematch=&amp;descrmatch=&amp;summarize=1&amp;sortby=r&amp;display=d&amp;".
-      "sumby=d&amp;creatormatch=$user"; ?>
 
-                <a name="logonBox" href="<?php echo "$search_string\" title=\""
-         . get_vocab('show_my_entries') . "\">" . get_vocab('you_are')." "
-         . htmlspecialchars($user) ?></a>
+                echo  get_vocab('you_are') . " " . htmlspecialchars($user);
+				?>
                 <form method="post" action="admin.php">
                   <div>
                     <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
@@ -254,8 +246,8 @@ function PrintLogonBox()
   }
   else
   {
+                echo get_vocab('unknown_user'); 
 ?>
-                <a name="logonBox" href=""><?php echo get_vocab('unknown_user'); ?></a>
                 <form method="post" action="admin.php">
                   <div>
                     <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">

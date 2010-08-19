@@ -562,7 +562,7 @@ form#edit_room {float: left; width: 800px; margin: 0 2em 1em 1em}
 .form_general div.group.ampm {width: <?php echo $edit_entry_ampm_width ?>em}
 .edit_area_room div.group {clear: none; width: auto}
 .edit_area_room div.group#private_override div {clear: left}
-.form_general fieldset {width: auto; border: 0; padding-top: 2.0em}
+.form_general fieldset {width: auto; border: 0; padding-top: 0.0em}
 #edit_room fieldset {width: 100%; float: left; padding: 0; margin: 0}
 #edit_room fieldset.submit_buttons {margin-top: 1em}
 
@@ -859,9 +859,63 @@ div#simple_trailer {clear: both; width: 100%; text-align: center; padding-top: 1
 
 div.day_selector {text-align: center; margin-top: 5pt; margin-bottom: 5pt; padding: 5pt;}
 table.day_selector_table {margin: 0 auto 0 auto;}
-td.day_selector_cell {font-size: large;  padding: 5pt;}
+td.day_selector_cell {font-size: large;  padding: 5px;}
 a.day_selector_link {display: block;}
 .unselected {background-color: <?php echo $day_selector_unselected_bg_color ?>; color: <?php echo $day_selector_unselected_fg_color ?>;}
 .selected {background-color: <?php echo $day_selector_selected_bg_color ?>; color: <?php echo $day_selector_selected_fg_color ?>;}
 a.day_selector_link:hover {background-color: <?php echo $day_selector_hover_bg_color ?>;}
+
+/* ---------- Kate Harvest, 8/18/2010, didn't want to dig through this for the best place to put these */
+
+body.edit_entry		div.field_help
+{
+	margin-left:	525px;
+	width:		500px;
+	font-size:	0.9em;
+}
+
+form#edit_entry		div
+{
+	margin-top:	5px;
+	margin-bottom:	5px;
+}
+
+body.admin		div.left_side
+{
+	float:		left;
+}
+
+body.admin		div.right_side
+{
+	float:		left;
+}
+
+body.admin		div.left_side		div.header_columns,
+body.admin		div.right_side		div.header_columns
+{
+	max-width:	100%;
+}
+
+body.admin		div#room_form
+{
+	width:		100%;
+}
+
+table.day_selector_table
+{
+	border-collapse:	collapse;
+}
+
+td.day_selector_cell
+{
+	background-color:	#E7EBEE;
+}
+
+/*
+td.day_selector_cell
+{
+	border-left:	1px solid black;
+	border-right:	1px solid black;
+}
+*/
 

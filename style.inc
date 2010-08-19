@@ -39,6 +39,9 @@
 		
 		<script type="text/javascript" src="jquery/js/jquery.ui.timepicker.js"></script>
 		
+		<script type='text/javascript' src='jquery/js/jquery.curvycorners.packed.js'></script>
+
+		
 	
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo get_charset(); ?>">
     <meta name="robots" content="noindex">

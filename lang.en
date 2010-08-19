@@ -301,6 +301,7 @@ $vocab["confirmed"]             = "Confirmed";
 $vocab["guestlist"]             = "Guest List";
 $vocab["confirmed_q"]           = "Confirmed?";
 $vocab["unassigned"]            = "Unassigned";
+$vocab["notloggedin"]           = "You are not logged in. Must be logged in to see reports.";
 
 // Used in week.php
 //$vocab["weekbefore"]         = "Go To Week Before";

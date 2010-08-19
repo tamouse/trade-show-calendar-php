@@ -145,7 +145,17 @@ function get_users()
 
 print_header($event_id,0);
 
+// Users must be at least Level 1 for this page as we will be displaying
+// information such as email addresses
+if (!getAuthorised(1))
+{
+  showAccessDenied($day_id, $event_id);
+  exit();
+}
+
 $loggedinuser = getUserName();
+
+
 $required_level = (isset($max_level) ? $max_level : 2);
 $is_admin = (authGetUserLevel($loggedinuser) >= $required_level);
 

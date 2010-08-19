@@ -121,11 +121,11 @@ $default_duration = (60 * 60);  // DEFAULT VALUE FOR NEW AREAS
 // being 18:30 -> 19:00
 
 // The beginning of the first slot of the day (DEFAULT VALUES FOR NEW AREAS)
-$morningstarts         = 7;   // must be integer in range 0-23
+$morningstarts         = 9;   // must be integer in range 0-23
 $morningstarts_minutes = 0;   // must be integer in range 0-59
 
 // The beginning of the last slot of the day (DEFAULT VALUES FOR NEW AREAS)
-$eveningends           = 19;  // must be integer in range 0-23
+$eveningends           = 17;  // must be integer in range 0-23
 $eveningends_minutes   = 00;   // must be integer in range 0-59
 
 // Example 1.

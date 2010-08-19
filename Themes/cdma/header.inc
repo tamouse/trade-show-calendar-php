@@ -35,6 +35,13 @@ if (!isset($day_id) || (!$day_id))
     <title><?php echo get_vocab("cdma") ?></title>
     <script type="text/javascript">
 
+	$( function() {
+		$( 'table#banner' ).wrap( "<div style='background-color: #6ccacd; padding: 5px' />" ).parent().corner();
+
+		$( 'table.day_selector_table td.unselected' ).each( function() { $( this ).wrapInner( "<div style='background-color: #6ccacd; padding: 5px;' />" ).children().first().corner( { bl: { radius: 0 }, br: { radius: 0 } } ); } );
+		$( 'table.day_selector_table td.selected' ).wrapInner( "<div style='background-color: #FFEF00; padding: 5px;' />" ).children().first().corner( { bl: { radius: 0 }, br: { radius: 0 } } );
+
+	} );
 //<![CDATA[
 
 <?php
