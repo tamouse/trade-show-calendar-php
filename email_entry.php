@@ -80,13 +80,6 @@ if (isset($confirmed))
 	$creator = get_record_by_id($tbl_users, $creator_id);
 
 	$room = get_record_by_id($tbl_room, $room_id);
-	// DEBUG START
-	echo "<p>room record</p>\n";
-	echo "<pre>\n";
-	print_r($room);
-	echo "</pre>\n";
-	// exit;
-	// DEBUG END
 	
 	$day = get_record_by_id($tbl_day, $day_id);
 	// explode the recipient and email strings into arrays
@@ -130,9 +123,9 @@ if (isset($confirmed))
 	$ORGANIZERPHONE = $creator['phone'];
 	$LOCATION = $room['room_name'];
 	$MEETINGDATE = $day['day_string'];
-	$STARTTIME = formatTime($entry['start_hour'], $entry['start_minute']);
-	$ENDTIME = formatTime($entry['end_hour'], $entry['end_minute']);
-	$PURPOSE = stripslashes($entry['purpose']);
+	$STARTTIME = formatTime($start_hour, $start_minute);
+	$ENDTIME = formatTime($end_hour, $end_minute);
+	$PURPOSE = stripslashes($purpose);
 	$GUESTLIST = $to_names;
 	
 
@@ -141,7 +134,7 @@ if (isset($confirmed))
 	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 
 	// Additional headers
-	$headers .= "From: " . $user['first_name'] . " " . $user['last_name'] . " <" . $user['email'] . ">" . "\r\n";
+	$headers .= "From: $cdma_admin <$cdma_admin_email>\r\n";
 
 	$message = 'norecipients';
 	for ($key = 0, $size = count($to_list); $key < $size; $key++) 
@@ -173,13 +166,6 @@ if (isset($confirmed))
 	{
 		$location .= "&error=" . $error;
 	}
-	// DEBUG START
-	// echo "<p>location=$location</p>\n";
-	// echo "<p>message=$message</p>\n";
-	// echo "<p>count(guests)=" . count($guests) . "</p>\n";
-	// echo "<p>Exiting email_entry.php</p>";
-	// exit;
-	// DEBUG END
 	
 	redirect($location);
 }
