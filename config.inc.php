@@ -49,7 +49,7 @@ $cdma_admin_email = "no-reply@cdmacalendar.com";  // NOTE:  there are more email
 $cdma_company = "CDMA Summit";   // This line must always be uncommented ($cdma_company is used in various places)
 
 // Uncomment this next line to use a logo instead of text for your organisation in the header
-$cdma_company_logo = "images/cdmablanklogo.png";    // name of your logo file.   This example assumes it is in the cdma directory
+$cdma_company_logo = "images/cdma-logo-calendar-site.png";    // name of your logo file.   This example assumes it is in the cdma directory
 
 // Uncomment this next line for supplementary information after your company name or logo
 unset($cdma_company_more_info);  // e.g. "XYZ Department"
