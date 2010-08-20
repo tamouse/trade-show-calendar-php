@@ -4,6 +4,9 @@
 
 require_once "grab_globals.inc.php";
 require_once "systemdefaults.inc.php";
+if (!file_exists("config.inc.php")) {
+	header("Location: noconfig.php"); // redirect to a special page to indicate no local configuation file exits
+}
 require_once "config.inc.php";
 require_once "functions.inc";
 require_once "dbsys.inc";
