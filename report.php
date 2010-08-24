@@ -175,6 +175,9 @@ function get_users()
 
 print_header($event_id,0);
 
+$day_id = get_first_day_for_event($event_id);
+echo "<p><strong><a href=\"day.php?event_id=$event_id&day_id=$day_id\">" . get_vocab(returncal) . "</a></strong></p>\n";
+
 // Users must be at least Level 1 for this page as we will be displaying
 // information such as email addresses
 if (!getAuthorised(1))
