@@ -179,16 +179,12 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
     border-width: <?php echo $main_table_border_width ?>px;
     border-style: solid}
 .dwm_main td {padding: 0;
-    border-top:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>;
-    border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_v_border_color ?>;
-    border-bottom: 0;
-    border-right: 0}
-.dwm_main td:first-child {border-left: 0}
+    border:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>;}
 .dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0 2px;
     color: <?php echo $header_font_color ?>; 
     background-color: <?php echo $header_back_color ?>;
-    border-left: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
-.dwm_main th:first-child {border-left: 0}
+    border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
+/* .dwm_main th:first-child {border-left: 0} */
 .dwm_main a {display: block; min-height: inherit}
 .dwm_main tbody a {padding: 0 2px}
 .dwm_main th a:link    {color: <?php echo $anchor_link_color_header ?>;    text-decoration: none; font-weight: normal}
@@ -205,6 +201,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
 .dwm_main#month_main td.invalid {background-color: <?php echo $main_table_month_invalid_color ?>}
 .dwm_main#month_main a {height: 100%; width: 100%; padding: 0 2px 0 2px}
 
+td.available {background-color: <?php echo $available_background_color; ?>;}
 span.available {background-color: <?php echo $available_background_color; ?>;}
 a.available {display: block; font-size: small; text-align: center; background-color: <?php echo $available_background_color ?>;}
 .available img {margin: auto; padding: 4px 0 2px 0}
@@ -215,6 +212,7 @@ if (!$show_plus_link)
 }
 ?>
 .appointmentsettings {font-size: x-small;}
+td.new_slot {}
 span.new_slot {}
 a.new_slot {display: block; font-size: small; text-align: center}
 .new_slot img {margin: auto; padding: 4px 0 2px 0}
@@ -224,6 +222,7 @@ if (!show_plus_link)
 	echo ".new_booking img {display: none}\n";
 }
 ?>
+td.booked {background-color: <?php echo $booked_background_color ?>}
 span.booked {background-color: <?php echo $booked_background_color;?>;}
 a.booked {display: block; font-size: small; font-style: italic; text-align: center; background-color: <?php echo $booked_background_color; ?>;}
 .booked img {marging: auto; padding: 4px 0 2px 0}
@@ -233,6 +232,7 @@ if (!show_plus_link)
 	echo ".booked img {display: none}\n";
 }
 ?>
+td.booked_mine {background-color: <?php echo $booked_mine_background_color ?>}
 span.booked_mine {background-color: <?php echo $booked_mine_background_color;?>;}
 a.booked_mine {display: block; font-size: small; font-style: italic; text-align: center; background-color: <?php echo $booked_mine_background_color; ?>;}
 .booked_mine img {marging: auto; padding: 4px 0 2px 0}
