@@ -274,5 +274,11 @@ function init()
 </div>
 <?php
 
+// Check to see if a user is logged in. If not, print the logon form and exit.
+$user = getUserName();
+if (!isset($user) || empty($user)) {
+	printLoginForm();
+	exit;
+}
 } // end of print_theme_header()
 ?>

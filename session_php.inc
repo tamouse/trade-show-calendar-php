@@ -77,7 +77,7 @@ if (isset($Action) && ($Action == "SetName"))
   {
     if (!authValidateUser($NewUserName, $NewUserPassword))
     {
-      print_header(0, 0, 0, 0, "");
+      print_header(0, 0);
       echo "<p>".get_vocab('unknown_user')."</p>\n";
       printLoginForm($TargetURL);
       exit();
@@ -110,7 +110,7 @@ if (isset($Action) && ($Action == "SetName"))
   /* Note HTTP 1.1 mandates an absolute URL. Most modern browsers support relative URLs,
     which allows to work around problems with DNS inconsistencies in the server name.
     Anyway, if the browser cannot redirect automatically, the manual link below will work. */
-  print_header(0, 0, 0, 0, "");
+  print_header(0, 0);
   echo "<br>\n";
   echo "<p>Please click <a href=\"".htmlspecialchars($TargetURL)."\">here</a> if you're not redirected automatically to the page you requested.</p>\n";
 
@@ -139,12 +139,10 @@ function printLoginForm($TargetURL)
       <input type="password" id="NewUserPassword" name="NewUserPassword">
     </div>
     <?php
-    // We need to preserve the original calling page, so that it's there when we eventually get
-    // to the TargetURL (especially if that's edit_entry.php).  If this is the first time through then $HTTP_REFERER holds
-    // the original caller.    If this is the second time through we will have stored it in $returl.
+    // Always return to the beginning of the application when a new user logs in
     if (!isset($returl))
     {
-      $returl = isset($HTTP_REFERER) ? $HTTP_REFERER : "";
+      $returl = "index.php";
     }
     echo "<input type=\"hidden\" name=\"returl\" value=\"" . htmlspecialchars($returl) . "\">\n";
     ?>
@@ -166,7 +164,7 @@ function printLoginForm($TargetURL)
 */
 if (isset($Action) && ($Action == "QueryName"))
 {
-  print_header(0, 0, 0, 0, "");
+  print_header(0, 0);
   printLoginForm($TargetURL);
   exit();
 }
@@ -181,11 +179,11 @@ function authGet()
 {
   global $PHP_SELF, $QUERY_STRING;
 
-  print_header(0, 0, 0, 0, "");
+  print_header(0, 0);
 
   echo "<p>".get_vocab("norights")."</p>\n";
 
-  $TargetURL = basename($PHP_SELF);
+  $TargetURL = "index.php";
   if (isset($QUERY_STRING))
   {
     $TargetURL = $TargetURL . "?" . $QUERY_STRING;
@@ -216,7 +214,8 @@ function PrintLogonBox()
 {
   global $PHP_SELF, $QUERY_STRING, $user_list_link, $day, $month, $year;
 
-  $TargetURL = basename($PHP_SELF);
+  //$TargetURL = basename($PHP_SELF);
+  $TargetURL = "index.php"; // always return to the front of the appliation when a new user logs on
   if (isset($url_base) && ($url_base != ""))
   {
     $TargetURL = $url_base . '/' . $TargetURL;
