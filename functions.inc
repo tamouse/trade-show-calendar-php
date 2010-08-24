@@ -1328,4 +1328,15 @@ function get_user_from_user_name($user_name)
 	$user = sql_row_keyed($res, 0);
 	return $user;
 }
+
+function get_full_name($id)
+{		
+	global $tbl_users;
+	$sql = "SELECT first_name, last_name FROM $tbl_users WHERE id=$id LIMIT 1";
+	$res = sql_query($sql);
+	if (!res) return '';
+	$row = sql_row_keyed($res, 0);
+	return $row['first_name'] . " " . $row['last_name'];
+	
+}
 ?>

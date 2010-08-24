@@ -311,7 +311,14 @@ if (!empty($error))
 $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabled=\"disabled\"";
 
 ?>
-
+<script type="text/javascript">
+function swapbuttons(){
+document.getElementById("emailthis").disabled = true;
+$( "#emailthis" ).button( "option", "disabled", true );
+document.getElementById("changethis").disabled = false;
+$( "#changethis" ).button("option", "disabled", false);
+}
+</script>
 
 <form class="form_general" id="edit_entry" action="edit_entry.php" method="post">
 <fieldset class="admin">
@@ -395,12 +402,12 @@ $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabl
 	{
 		// this is an available slot for booking. assign the currently logged in user as the creator
 		$creator_id = $user_id;
-		$creator_name = $user;
+		$creator_name = get_full_name($creator_id);
 	}
 	else
 	{
 		$creator_id = $row['user_id'];
-		$creator_name = get_user_name($creator_id);
+		$creator_name = get_full_name($creator_id);
 		if (is_numeric($creator_name) && ($creator_name < 1))
 		{
 			fatal_error(0, get_vocab('nosuchuser') . " \$creator_id=$creator_id ");
@@ -416,7 +423,8 @@ $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabl
 
 	<div id="purpose">
 	<label for="new_purpose" class="required"><?php echo get_vocab('purpose') ?></label>
-	<input type="text" name="new_purpose" value="<?php echo htmlspecialchars(($first_pass ? $row['purpose'] : $new_purpose)) ?>" id="new_purpose" <?php echo $disabled ?>/>
+	<input type="text" name="new_purpose" value="<?php echo htmlspecialchars(($first_pass ? $row['purpose'] : $new_purpose)) ?>" id="new_purpose" <?php echo $disabled ?> 
+		onChange="swapbuttons();"/>
 	<input type="hidden" name="old_purpose" value="<?php echo htmlspecialchars(($first_pass ? $row['purpose'] : $new_purpose)) ?>"/>
 	<div id="purpose_help" class="field_help"><?php echo get_vocab('purposerequired') ?></div>
 	</div>
@@ -424,13 +432,15 @@ $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabl
 	
 	<div id="comments">
 	<label for="new_comments"><?php echo get_vocab('comments') ?></label>
-	<textarea name="new_comments" id="new_comments" <?php echo $disabled ?>><?php echo htmlspecialchars(($first_pass ? $row['comments'] : $new_comments)) ?></textarea>
+	<textarea name="new_comments" id="new_comments" <?php echo $disabled ?> 
+		onChange="swapbuttons();"><?php echo htmlspecialchars(($first_pass ? $row['comments'] : $new_comments)) ?></textarea>
 	<input type="hidden" name="old_comments" value="<?php echo htmlspecialchars(($first_pass ? $row['comments'] : $new_comments)) ?>"/>
 	</div>
 	
 	<div id="guests">
 	<label for="new_guests"><?php echo get_vocab('guests') ?></label>
-	<textarea name="new_guests" id="new_guests" <?php echo $disabled ?>><?php echo htmlspecialchars(($first_pass ? $row['guests'] : $new_guests)) ?></textarea>
+	<textarea name="new_guests" id="new_guests" <?php echo $disabled ?> 
+		onChange="swapbuttons();"><?php echo htmlspecialchars(($first_pass ? $row['guests'] : $new_guests)) ?></textarea>
 	<input type="hidden" name="old_guests" value="<?php echo htmlspecialchars(($first_pass ? $row['guests'] : $new_guests)) ?>"/>
 	<div id="guests_help" class="field_help"><?php echo get_vocab('guestshelp'); ?></div>
 	</div>
@@ -438,7 +448,8 @@ $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabl
 
 	<div id="guest_emails">
 	<label for="new_guest_emails"><?php echo get_vocab('guestsemails') ?></label>
-	<textarea  name="new_guests_emails" id="new_guest_emails" <?php echo $disabled ?>><?php echo htmlspecialchars(($first_pass ? $row['guest_emails'] : $new_guest_emails)) ?></textarea>
+	<textarea  name="new_guests_emails" id="new_guest_emails" <?php echo $disabled ?> 
+		onChange="swapbuttons();"><?php echo htmlspecialchars(($first_pass ? $row['guest_emails'] : $new_guest_emails)) ?></textarea>
 	<input type="hidden" name="old_guest_emails" value="<?php echo htmlspecialchars(($first_pass ? $row['guest_emails'] : $new_guest_emails)) ?>"/>
 	<div id="emails_help" class="field_help"><?php echo get_vocab('guestemailhelp') ?></div>
 	</div>
@@ -446,7 +457,8 @@ $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabl
 	
 	<div id="confirmed">
 	<label for="new_confirmed"><?php echo get_vocab('confirmed') ?>?</label>
-	<input type="checkbox" class="checkbox" name="new_confirmed" id="new_confirmed" value="<?php echo ($first_pass ? (($row['confirmed']==1) ? "checked" : "") : $new_confirmed) ?>" <?php echo ($first_pass ? (($row['confirmed']==1) ? "checked" : "") : $new_confirmed) ?>/>
+	<input type="checkbox" class="checkbox" name="new_confirmed" id="new_confirmed" value="<?php echo ($first_pass ? (($row['confirmed']==1) ? "checked" : "") : $new_confirmed) ?>" <?php echo ($first_pass ? (($row['confirmed']==1) ? "checked" : "") : $new_confirmed) ?> 
+		onChange="swapbuttons();"/>
 	<input type="hidden" name="old_confirmed" value="<?php echo ($first_pass ? ($row['confirmed']==1 ? "checked" : '') : $new_confirmed) ?>"/>
 	</div>
 
@@ -458,14 +470,14 @@ $disabled = (isEditable($user_id, $row['user_id']) || $is_admin) ? "" : " disabl
 	echo "<div class=\"submit_buttons\">\n";
 	if ($is_admin || isEditable($user_id, $row['user_id']))
 	{
-		echo "<input class=\"submit\" type=\"submit\" name=\"change_entry\" value=\"" . get_vocab("change") . "\"/>\n";
+		echo "<input class=\"submit\" id=\"changethis\" type=\"submit\" name=\"change_entry\" value=\"" . get_vocab("savechanges") . "\" disabled=\"disabled\"/>\n";
 		if ($id)
 		{
-			echo "<input class=\"submit\" type=\"submit\" name=\"delete_entry\" value=\"" . get_vocab("deleteentry") . "\"/>\n";
+			echo "<input class=\"submit\" id=\"deletethis\" type=\"submit\" name=\"delete_entry\" value=\"" . get_vocab("deleteentry") . "\"/>\n";
 		}
-		echo "<input class=\"submit\" type=\"submit\" name=\"email_entry\" value=\"" . get_vocab("emailthis") . "\"/>\n";
+		echo "<input class=\"submit\" id=\"emailthis\" type=\"submit\" name=\"email_entry\" value=\"" . get_vocab("emailthis") . "\"/>\n";
 	}
-	echo "<input class=\"submit\" type=\"submit\" name=\"goback\" value=\"" . get_vocab("goback") . "\"/>\n";
+	echo "<input class=\"submit\" id=\"goback\" type=\"submit\" name=\"goback\" value=\"" . get_vocab("goback") . "\"/>\n";
 	echo "</fieldset>\n";
 
 	?>

@@ -28,10 +28,17 @@ if (!isset($event_id))
  **/
 function get_entries($event_id, $day_id)
 {
-	global $tbl_entry;
+	global $tbl_entry, $tbl_room;
 	
-	$sql = "SELECT * FROM $tbl_entry WHERE event_id=$event_id AND day_id=$day_id ORDER BY start_hour, start_minute";
+	$sql = "SELECT e.id as entry_id, e.event_id as event_id, e.day_id as day_id, e.room_id as room_id, start_hour, start_minute, end_hour, end_minute, " .
+		"user_id, purpose, comments, guests, r.room_name as room_name  " .
+		"FROM $tbl_entry as e, $tbl_room as r " .
+		" WHERE e.event_id=$event_id AND e.day_id=$day_id AND e.event_id=r.event_id AND e.room_id=r.id " .
+		" ORDER BY e.start_hour, e.start_minute, r.room_number";
 	
+	// DEBUG START
+	//echo "<p>sql=$sql</p>\n";
+	// DEBUG END
 	$res = sql_query($sql);
 	if (!$res)
 	{
@@ -43,6 +50,13 @@ function get_entries($event_id, $day_id)
 		$rows[] = $row;
 	}
 	sql_free($res);
+	// DEBUG START
+	//echo "<p>rows:</p>\n";
+	//echo "<pre>\n";
+	//print_r($rows);
+	//echo "</pre>\n";
+	// exit;
+	// DEBUG END
 	return $rows;
 }
 
@@ -54,9 +68,17 @@ function get_entries($event_id, $day_id)
  **/
 function get_appointments_for_user($event_id, $day_id, $user_id)
 {
-	global $tbl_entry;
+	global $tbl_entry, $tbl_room;
 	
-	$sql = "SELECT * FROM $tbl_entry WHERE event_id=$event_id AND day_id=$day_id AND user_id=$user_id ORDER BY start_hour, start_minute";
+	$sql = "SELECT e.id as entry_id, e.event_id as event_id, e.day_id as day_id, e.room_id as room_id, start_hour, start_minute, end_hour, end_minute, " .
+		"user_id, purpose, comments, guests, r.id, r.event_id, r.room_name as room_name, r.room_number as room_number  " .
+		"FROM $tbl_entry as e, $tbl_room as r " .
+		" WHERE e.event_id=$event_id AND e.day_id=$day_id AND e.user_id=$user_id and e.event_id=r.event_id AND e.room_id=r.id " .
+		" ORDER BY start_hour, start_minute, room_number";
+	// DEBUG START
+	//echo "<p>sql=$sql</p>\n";
+	// DEBUG END
+
 	
 	$res = sql_query($sql);
 	if (!$res)
@@ -68,6 +90,14 @@ function get_appointments_for_user($event_id, $day_id, $user_id)
 	{
 		$rows[] = $row;
 	}
+	// DEBUG START
+	//echo "<p>rows:</p>\n";
+	//echo "<pre>\n";
+	//print_r($rows);
+	//echo "</pre>\n";
+	// exit;
+	// DEBUG END
+	
 	sql_free($res);
 	return $rows;
 }
@@ -221,7 +251,7 @@ for ($i=0; $i < count($days), $day=$days[$i]; $i++)
 		// emit_code_for_entry
 		echo "<div class=\"report_day_entry\">\n";
 		?>
-		<table class="report_entry" width="80%" cellpadding="2pt" onMouseUp="location.href='edit_<?php echo ($entry['user_id'] > 0 ? "entry" : "slot") ?>.php?event_id=<?php echo $entry['event_id'] ?>&day_id=<?php echo $entry['day_id'] ?>&room_id=<?php echo $entry['room_id'] ?>&id=<?php echo $entry['id'] ?>'">
+		<table class="report_entry" width="80%" cellpadding="2pt" onMouseUp="location.href='edit_<?php echo ($entry['user_id'] > 0 ? "entry" : "slot") ?>.php?event_id=<?php echo $entry['event_id'] ?>&day_id=<?php echo $entry['day_id'] ?>&room_id=<?php echo $entry['room_id'] ?>&id=<?php echo $entry['entry_id'] ?>'">
 		<tr class="report_entry_row" >
 			<td width="40%" class="report_entry_cell">
 			<?php
@@ -251,7 +281,7 @@ for ($i=0; $i < count($days), $day=$days[$i]; $i++)
 		$end_time = formatTime($entry['end_hour'],$entry['end_minute']);
 		?>
 		<td width="20%" class="report_entry_cell"><?php echo htmlspecialchars($start_time) . " to " . htmlspecialchars($end_time)  ?></td>
- 		<td width="20%" class="report_entry_cell"><?php echo htmlspecialchars($rooms[$entry['room_id']]['room_name']) ?></td>
+ 		<td width="20%" class="report_entry_cell"><?php echo htmlspecialchars($entry['room_name']) ?></td>
 		</tr>
 		<tr>
 		<td colspan="3" class="report_entry_cell"><?php echo truncateToDisplay(htmlspecialchars($entry['guests']),$max_guest_list_length_for_report) ?></td>
@@ -269,7 +299,8 @@ for ($i=0; $i < count($days), $day=$days[$i]; $i++)
 }
 // emit_code_to_close_report
 echo "</div>";
-
+$day_id = get_first_day_for_event($event_id);
+echo "<p><strong><a href=\"day.php?event_id=$event_id&day_id=$day_id\">" . get_vocab(returncal) . "</a></strong></p>\n";
 print_footer(0);
 
 ?>
