@@ -15,7 +15,8 @@ $type = get_form_var('type', 'string');
 $required_level = (isset($max_level) ? $max_level : 2);
 if (!getAuthorised($required_level))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit();
 }
 

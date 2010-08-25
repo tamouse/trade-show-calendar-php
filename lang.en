@@ -196,8 +196,9 @@ $vocab["max_time_before"]     = "The maximum interval between now and the start 
 //$vocab["none_outstanding"]   = "You have no provisional bookings waiting to be approved.";
 
 // Authentication stuff
-$vocab["accessdenied"]       = "Access Denied";
-$vocab["norights"]           = "You do not have access rights to modify this item.";
+$vocab["accessdenied"]       = "You do not have access to this item";
+$vocab["norights"]           = "You do not have sufficient privileges to access or modify this item. Please contact the administrator for more information.";
+$vocab["notowner"]           = "You are not the owner of this item. You cannot modify it or delete it. Please contact the administrator for more information.";
 $vocab["please_login"]       = "Please log in";
 $vocab["users.name"]          = "Name";
 $vocab["users.password"]      = "Password";

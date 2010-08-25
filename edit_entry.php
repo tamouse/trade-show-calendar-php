@@ -100,7 +100,8 @@ $entry_var_prefix = "en_";
     
 if (!getAuthorised(1))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit;
 }
 $user = getUserName();
@@ -119,7 +120,8 @@ if (!empty($email_entry))
 if (!isEditable($user_id, $creator_id) && !$is_admin)
 {
 	// Don't let other users see entry details
-	showAccessDenied($day_id, $event_id);
+	$errormsg = 'notowner';
+	showAccessDenied($day_id, $event_id, $errormsg);
 	exit;
 }
 // Note: if $creator_id = 0, this is a new appointment

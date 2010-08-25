@@ -157,7 +157,8 @@ if (empty($area))
 
 if(!getAuthorised(1))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit;
 }
 $user = getUserName();

@@ -36,7 +36,8 @@ if (empty($area))
 // We must be at least a logged in user
 if(!getAuthorised(1))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit;
 }
 $user = getUserName();
@@ -101,7 +102,8 @@ if (isset($action))
   if ((($action == "accept") || ($action == "reject")) 
        && !auth_book_admin($user, $room_id))
   {
-    showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+    showAccessDenied($day_id, $event_id, $errormsg);
     exit;
   }
   

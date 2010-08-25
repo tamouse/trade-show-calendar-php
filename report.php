@@ -182,7 +182,8 @@ echo "<p><strong><a href=\"day.php?event_id=$event_id&day_id=$day_id\">" . get_v
 // information such as email addresses
 if (!getAuthorised(1))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit();
 }
 

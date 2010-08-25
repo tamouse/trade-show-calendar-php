@@ -127,7 +127,8 @@ if (!isset($day) or !isset($month) or !isset($year))
 // information such as email addresses
 if (!getAuthorised(1))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit();
 }
 $user = getUserName();
@@ -162,7 +163,8 @@ if (isset($change_room) || isset($change_area))
 {
   if (!$is_admin)
   {
-    showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+    showAccessDenied($day_id, $event_id, $errormsg);
     exit();
   }
 }
@@ -596,7 +598,8 @@ if (!empty($area))
   // Only admins can see this form
   if (!$is_admin)
   {
-    showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+    showAccessDenied($day_id, $event_id, $errormsg);
     exit();
   }
   // Get the details for this area

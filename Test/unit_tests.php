@@ -179,8 +179,8 @@ function _print_environment()
 }
 // main
 
-_send_header();
 
+_send_header();
 _run_test('test_get_user_name_LargeID');
 _run_test('test_eventCount');
 _run_test('test_convertTimeToArray');

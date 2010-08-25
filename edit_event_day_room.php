@@ -85,7 +85,8 @@ $day_var_prefix = 'd_';
 // information such as email addresses
 if (!getAuthorised(1))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit();
 }
 $is_admin = getAdmin();
@@ -126,7 +127,8 @@ if (isset($change_room) || isset($change_event) || isset($change_day))
 {
   if (!$is_admin)
   {
-    showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+    showAccessDenied($day_id, $event_id, $errormsg);
     exit();
   }
 }
@@ -803,7 +805,8 @@ if (!empty($event_id))
 	// Only admins can see this form
 	if (!$is_admin)
 	{
-		showAccessDenied($day_id, $event_id);
+		$errormsg = 'norights';
+		showAccessDenied($day_id, $event_id, $errormsg);
 		exit();
 	}
 	// Get the details for this event

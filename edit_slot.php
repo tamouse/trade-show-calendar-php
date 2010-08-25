@@ -58,7 +58,8 @@ if (!isset($id) || empty($id) || (is_numeric($id) && ($id < 0)))
 // check to see if user is authorized to create/edit slots -- must be admin
 if (!getAuthorised(2))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit;
 }
 $user = getUserName();

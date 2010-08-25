@@ -28,7 +28,8 @@ print_header(0,0);
 $is_admin=getAdmin();
 if (!$is_admin) 
 {
-  showAccessDenied(0,0);
+	$errormsg = 'norights';
+  showAccessDenied(0,0, $errormsg);
 }
 
 /**

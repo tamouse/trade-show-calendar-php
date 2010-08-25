@@ -41,7 +41,8 @@ if (isset($delete_x))
 // information such as email addresses
 if (!getAuthorised(1))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit();
 }
 

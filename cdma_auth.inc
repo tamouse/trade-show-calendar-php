@@ -75,16 +75,28 @@ function getWritable($creator_id, $user_id, $room_id)
  * 
  * Returns: Nothing
  */
-function showAccessDenied($day_id, $event_id)
+function showAccessDenied($day_id, $event_id, $errormsg)
 {
   global $HTTP_REFERER;
 
   print_header($event_id, $day_id);
 ?>
   <h1><?php echo get_vocab("accessdenied")?></h1>
-  <p>
-   <?php echo get_vocab("norights")?>
-  </p>
+  <h2>
+   <?php echo get_vocab($errormsg)?>
+  </h2>
+  <?php
+
+	// show the admin's info:
+	$admin = get_admin_user();
+	echo "<p>Admin: ";
+	echo $admin['first_name'] . " " . $admin['last_name'] . " ";
+	echo "<span class=\"username\">(" . $admin['name'] . ")</span> ";
+	echo "<span class=\"emailaddress\">&lt;<a href=\"mailto:" . $admin['email'] ."\">" . $admin['email'] . "</a>&gt;</span> ";
+	echo "<span class=\"phone\">" . $admin['phone'] . "</span> ";
+	echo "</p>\n";
+	
+  ?>
   <p>
     <a href="<?php echo htmlspecialchars($HTTP_REFERER); ?>">
       <?php echo get_vocab("returnprev"); ?>

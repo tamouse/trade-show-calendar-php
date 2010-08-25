@@ -231,7 +231,8 @@ if ($nusers > 0)
 	// Do not allow unidentified people to browse the list.
 	if(!getAuthorised(1))
 	{
-		showAccessDenied($day_id, $event_id);
+		$errormsg = 'norights';
+		showAccessDenied($day_id, $event_id, $errormsg);
 		exit;
 	}
 }
@@ -282,7 +283,8 @@ if (isset($Action) && ( ($Action == "Edit") or ($Action == "Add") ))
 		/* First make sure the user is authorized */
 		if (!$initial_user_creation && !auth_can_edit_user($user, $data['name']))
 		{
-			showAccessDenied(0, 0);
+			$errormsg = 'norights';
+			showAccessDenied(0, 0, $errormsg);
 			exit();
 		}
 
@@ -775,7 +777,8 @@ if (isset($Action) && ($Action == "Delete"))
 	// delete someone higher than you
 	if (($level < $min_user_editing_level) || ($level < $target_level))
 	{
-		showAccessDenied(0, 0);
+		$errormsg = 'norights';
+		showAccessDenied(0, 0, $errormsg);
 		exit();
 	}
 

@@ -1339,4 +1339,16 @@ function get_full_name($id)
 	return $row['first_name'] . " " . $row['last_name'];
 	
 }
+
+function get_admin_user()
+{
+	global $tbl_users, $max_level;
+	
+	// get the first admin user and return a record of their info
+	$sql = "SELECT first_name, last_name, name, email, phone FROM $tbl_users WHERE level>=$max_level LIMIT 1";
+	$res = sql_query($sql);
+	if (!$res) fatal_error("Could not find admin user! " . sql_error());
+	$row = sql_row_keyed($res, 0);
+	return $row;
+}
 ?>

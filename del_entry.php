@@ -79,5 +79,7 @@ if (($user_id == $creator_id) || (getAdmin()))
 	redirect($location);
 }
 // If you got this far then we got an access denied.
-showAccessDenied($day_id, $event_id);
+$errormsg = 'notowner';
+
+showAccessDenied($day_id, $event_id, $errormsg);
 ?>

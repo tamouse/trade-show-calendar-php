@@ -147,7 +147,8 @@ else
 
 if (!getAuthorised(1))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit;
 }
 $user = getUserName();
@@ -161,7 +162,8 @@ if (isset($rep_type) && ($rep_type != REP_NONE) &&
     !$is_admin &&
     !empty($auth['only_admin_can_book_repeat']))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'norights';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit;
 }
 
@@ -194,7 +196,8 @@ else
 }
 if (!getWritable($create_by, $user, $target_room))
 {
-  showAccessDenied($day_id, $event_id);
+	$errormsg = 'notowner';
+  showAccessDenied($day_id, $event_id, $errormsg);
   exit;
 }
 
