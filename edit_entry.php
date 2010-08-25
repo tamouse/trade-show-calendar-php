@@ -95,11 +95,6 @@ if (!empty($goback))
 	redirect($location);
 }
 
-if (!empty($email_entry))
-{
-	$location = "email_entry.php?type=2&event_id=$event_id&day_id=$day_id&room_id=$room_id&entry_id=$id&confirmed=Y"; // bypass confirmation
-	redirect($location);
-}
 
 $entry_var_prefix = "en_";
     
@@ -114,6 +109,12 @@ $is_admin = (authGetUserLevel($user) >= 2);
 
 // get the creator id from the entry
 $creator_id = get_entry_creator_id($id);
+
+if (!empty($email_entry))
+{
+	$location = "email_entry.php?type=2&event_id=$event_id&day_id=$day_id&room_id=$room_id&entry_id=$id&user_id=$user_id&creator_id=$creator_id&confirmed=Y"; // bypass confirmation
+	redirect($location);
+}
 
 if (!isEditable($user_id, $creator_id) && !$is_admin)
 {
@@ -419,6 +420,7 @@ $( "#changethis" ).button("option", "disabled", false);
 	<label for="creator"><?php echo get_vocab('creator') ?></label>
 	<input type="text" name="creator" value="<?php echo htmlspecialchars($creator_name) ?>" id="creator" disabled="disabled"/>
 	<input type="hidden" name="creator_id" value="<?php echo htmlspecialchars($creator_id) ?>"/>
+	<input type="hidden" name="user_id" value="<?php echo htmlspecialchars($user_id) ?>"/>
 	</div>
 
 	<div id="purpose">

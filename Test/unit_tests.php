@@ -1,16 +1,52 @@
 <?php
 
-include '../defaultincludes.inc';
+require_once "../grab_globals.inc.php";
+require_once "../systemdefaults.inc.php";
+if (!file_exists("../config.inc.php")) {
+	header("Location: ../noconfig.php"); // redirect to a special page to indicate no local configuation file exits
+}
+require_once "../config.inc.php";
+require_once "../functions.inc";
+require_once "../dbsys.inc";
+require_once "../cdma_auth.inc";
+
 
 global $verbose;
 
 $verbose=TRUE;
 
+function test_strip_tags()
+{
+	global $verbose;
+	$SENDERFIRSTNAME = 'SenderFirst';
+	$SENDERLASTNAME = 'SenderLast';
+	$SENDEREMAIL = 'SenderEmail';
+	$SENDERPHONE = 'SenderPhone';
+	$ORGANIZERFIRSTNAME = 'CreatorFirst';
+	$ORGANIZERLASTNAME = 'CreatorLast';
+	$ORGANIZEREMAIL = 'CreatorEmail';
+	$ORGANIZERPHONE = 'CreatorPhone';
+	$LOCATION = 'Room Name';
+	$MEETINGDATE = 'Day String';
+	$STARTTIME = 'Start Time';
+	$ENDTIME = 'End Time';
+	$PURPOSE = 'Purpose';
+	$GUESTLIST = 'Guest List';
+	$SUBJECT = 'Subject';
+	$CUSTOMMSG = 'Custom Message';
+	
+	include_once("../confirmation_message.tmpl");
+	if ($verbose) echo "<p>Sending:</p><pre>\n" . $confirmation_message . "\n</pre>\n";
+	$result = strip_tags($confirmation_message);
+	if ($verbose) echo "<p>Received:</p><pre>\n" . $result . "\n</pre>\n";
+	return TRUE;
+}
+
 function test_stripEmailPlaceholders()
 {
 	global $verbose;
 	$instring = "**, mail@gmail.com, **";
-	$expected = " mail@gmail.com,";
+	$expected = " mail@gmail.com, ";
 	if ($verbose) echo "Sending $instring\n";
 	$result = stripEmailPlaceholders($instring);
 	if ($verbose) echo "Returned: $result Expected: $expected\n";
@@ -153,6 +189,7 @@ _run_test('test_truncateToDisplay');
 _run_test('test_stripEmailPlaceholders');
 
 _run_test('check_entry_table_fields');
+_run_test('test_strip_tags')
 
 
 // _print_environment();

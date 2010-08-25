@@ -120,12 +120,12 @@ $vocab["creator"]            = "Creator";
 $vocab["purpose"]            = "Purpose";
 $vocab["comments"]           = "Comments";
 $vocab["guests"]             = "Guests";
-$vocab["guestsemails"]        = "Guests' Emails";
+$vocab["guestsemails"]        = "Recipient Emails";
 $vocab["goback"]             = "Go Back";
 $vocab["cantfindentry"]      = "Cannot find entry in database";
 $vocab["purposerequired"]    = "Purpose is a required field.";
 $vocab['guestshelp']         = "Enter a list of guests for this booking, separated by commas.";
-$vocab['guestemailhelp']     = "Enter emails for each of the guests listed previously, in the same order as each guest, separated by commas. Emails will be validated to make sure they conform to proper rules for email addresses. If you don't know a particular guest's email address, put in $email_placeholder_string (two stars) instead of the email address.";
+$vocab['guestemailhelp']     = "Enter emails for recipients of confirmation emails, separated by commas. Emails will be validated to make sure they conform to proper rules for email addresses.";
 
 // Used in edit_slot.php
 $vocab["deleteslot"]         = "Delete Slot";

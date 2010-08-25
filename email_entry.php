@@ -25,17 +25,22 @@
  *   user_id - the user id of whoever initiated the action (could be creator or admin)
  *   creator_id - the user id of the entry creator (may be different from user_id in the case where the admin changes or deletes and appointment)
  *   entry_id - the actual appointment entry (optional - only for type 1 and 2 transactions)
- *   to_names - the urlencoded list of names to send email to (optional - only for type 3 transactions)
- *   to_emails - the urlencoded list of email address corresponding to the to_names list (optional - only for type 3 transactions)
+ *   to_names - the urlencoded list of names of the appointment guests (optional - only for type 3 transactions)
+ *   to_emails - the urlencoded list of email address to send email to (optional - only for type 3 transactions)
  *   purpose - the urlencoded string containing the purpose of the appointment (optional - only for type 3 transactions)
  *   start_hour - starting hour of the appointment (optional - only for type 3)
  *   start_minute - starting minute of the appointment (optional - only for type 3)
  *   end_hour - ending hour of the appointment (optional - only for type 3)
  *   end_minute - ending minute of the appointment (optional - only for type 3)
  *   confirmed - a flag set on second pass through denoting if the user has confimed sending the email message
+ *
+ * as of 8/24/2010 - to_names and to_emails are no longer tied together.
  */
 require_once 'defaultincludes.inc';
 require_once 'Mail.php';
+require_once('class.phpmailer.php');
+
+
 
 
 $type = get_form_var('type', 'int');
@@ -83,14 +88,14 @@ if (isset($confirmed))
 	
 	$day = get_record_by_id($tbl_day, $day_id);
 	// explode the recipient and email strings into arrays
-	$to_list = preg_split('/\s*,\s*/', $to_names);
+	//$to_list = preg_split('/\s*,\s*/', $to_names);
 	$emails_list = preg_split('/\s*,\s*/', $to_emails);
 	// Add the creator to the lists of recipients
-	$to_list[] = $user['first_name'] . " " . $user['last_name'];
+	//$to_list[] = $user['first_name'] . " " . $user['last_name'];
 	$emails_list[] = $user['email'];
 	if ($creator_id != $user_id)
 	{
-		$to_list[] = $creator['first_name'] . " " . $creator['last_name'];
+		//$to_list[] = $creator['first_name'] . " " . $creator['last_name'];
 		$emails_list[] = $creator['email'];
 	}
 
@@ -128,39 +133,52 @@ if (isset($confirmed))
 	$PURPOSE = stripslashes($purpose);
 	$GUESTLIST = $to_names;
 	
+	$mail             = new PHPMailer(); // defaults to using php "mail()"
 
+	
 	// To send HTML mail, the Content-type header must be set
-	$headers  = 'MIME-Version: 1.0' . "\r\n";
-	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+	//$headers  = 'MIME-Version: 1.0' . "\r\n";
+	//$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 
 	// Additional headers
-	$headers .= "From: $cdma_admin <$cdma_admin_email>\r\n";
+	//$headers .= "From: $cdma_admin <$cdma_admin_email>\r\n";
 
 	$message = 'norecipients';
-	for ($key = 0, $size = count($to_list); $key < $size; $key++) 
+	include("confirmation_message.tmpl");
+	$mail->Body = $confirmation_message;
+	$mail->ContentType = "text/html";
+	$textbody = strip_tags($confirmation_message);
+	$mail->AltBody = $textbody;
+	$mail->Subject = $SUBJECT;
+	$mail->From = $cdma_admin_email;
+	$mail->FromName = $cdma_admin;
+	$mail->Sender = $cdma_admin_email;
+	$mail->AddReplyTo($ORGANIZEREMAIL, $ORGANIZERFIRSTNAME . " " . $ORGANIZERLASTNAME);
+	$mail->IsSMTP();
+
+	for ($key = 0, $size = count($emails_list); $key < $size; $key++) 
 	{
-		$name = trim($to_list[$key]);
+		//$name = trim($to_list[$key]);
 		$email = trim($emails_list[$key]);
 		
-		if (!empty($name) && !empty($email) && $email != $email_placeholder_string)
+		if (/*!empty($name) && !empty($email) && */ $email != $email_placeholder_string)
 		{
-			$to = $name . " <" . $email . ">";
-			$RECIPIENT = $name;
-			include("confirmation_message.tmpl");
-			
-			// Mail it
-			if (mail($to, $SUBJECT, $confirmation_message, $headers)) 
-			{
-				$message = 'emailsent';
-			}
-			else
-			{
-				$error = 'mailerror';
-			}
+			// Set up for phpmailer - create to list
+			$mail->AddAddress($email, preg_replace('/@.*$/', '', $email));
 
 		}
 	}
 
+	
+	if (!$mail->Send())
+	{
+		$error = 'mailerror';
+		$message = "Mailer error: " . $mail->ErrorInfo;
+	}
+	else
+	{
+		$message = 'emailsent';
+	}
 	$location = "day.php?event_id=$event_id&day_id=$day_id&room_id=$room_id&message=" . $message;
 	if (isset($error))
 	{

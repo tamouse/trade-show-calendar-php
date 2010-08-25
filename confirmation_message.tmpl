@@ -16,19 +16,17 @@
 
 $confirmation_message = <<<EOM
 <html>
-<head>
-	<title>$SUBJECT</title>
-</head>
 <body>
+<h3>$SUBJECT</h3>
+
 <table border="0" cellspacing="5" cellpadding="5" align="center" width="70%">
 	<tr><td>
-	<p>Dear $RECIPIENT,</p>
 	<p>Greetings from $ORGANIZERFIRSTNAME $ORGANIZERLASTNAME!</p>
 	$CUSTOMMSG
 	<blockquote>
 	<h2>Details</h2>
 	<ul>
-	<li>Organizer: $ORGANIZERFIRSTNAME $ORGANIZERLASTNAME &lt;$ORGANIZEREMAIL&gt; $ORGANIZERPHONE
+	<li>Organizer: $ORGANIZERFIRSTNAME $ORGANIZERLASTNAME, $ORGANIZEREMAIL, $ORGANIZERPHONE
 	<li>Purpose: $PURPOSE</li>
 	<li>Start Time: $STARTTIME</li>
 	<li>End Time: $ENDTIME</li>
@@ -37,7 +35,7 @@ $confirmation_message = <<<EOM
 	</ul>
 	</blockquote>
 	<p>If you have questions, you can contact me at $ORGANIZEREMAIL or $ORGANIZERPHONE.</p>
-	<p>Sent by $SENDERFIRSTNAME $SENDERLASTNAME &lt;$SENDEREMAIL&gt; $SENDERPHONE</p>
+	<p>Sent by $SENDERFIRSTNAME $SENDERLASTNAME, $SENDEREMAIL, $SENDERPHONE</p>
 	</td></tr>
 </table>
 </body>
