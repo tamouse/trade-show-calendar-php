@@ -147,13 +147,8 @@ $max_slots = 60;
  * Miscellaneous Settings
  *************************/
 // Number of milliseconds to wait before timing out the page due to inactivity
-$page_timeout = 1000 * 60 * 30; // 30 minutes
+$page_timeout = 1000 * 60 * 2; // 2 minutes
 $page_timeout_warning_timeout = 1000 * 30; // 30 seconds 
-// testing values
-//$page_timeout = 1000 * 5; // 30 minutes
-//$page_timeout_warning_timeout = 1000 * 10; // 30 seconds 
-
-
 
 /******************
  * Display settings
@@ -247,7 +242,7 @@ $unicode_encoding = 1;
 // based on the user's browser language settings. It will ensure that
 // the language displayed is always the value of $default_language_tokens,
 // as specified below
-$disable_automatic_language_changing = 0;
+$disable_automatic_language_changing = 1;
 
 // Set this to a different language specifier to default to different
 // language tokens. This must equate to a lang.* file in cdma.
@@ -266,19 +261,6 @@ $override_locale = "";
 // end of the file name, including the underscore (ie. for site_faq_fr.html
 // use "_fr"
 $faqfilelang = ""; 
-
-
-/*************
- * Reports
- *************/
- 
-// Default CSV file names
-$report_filename  = "report.csv";
-$summary_filename = "summary.csv";
-
-// CSV format
-$csv_row_sep = "\n";  // Separator between rows/records
-$csv_col_sep = ",";   // Separator between columns/fields
 
 
 
