@@ -143,6 +143,16 @@ $eveningends_minutes   = 00;   // must be integer in range 0-59
 // is ignored if $times_along_top is set to TRUE).
 $max_slots = 60;
 
+/*************************
+ * Miscellaneous Settings
+ *************************/
+// Number of milliseconds to wait before timing out the page due to inactivity
+$page_timeout = 1000 * 60 * 30; // 30 minutes
+$page_timeout_warning_timeout = 1000 * 30; // 30 seconds 
+// testing values
+//$page_timeout = 1000 * 5; // 30 minutes
+//$page_timeout_warning_timeout = 1000 * 10; // 30 seconds 
+
 
 
 /******************
@@ -221,94 +231,6 @@ $max_level = 2;
 $min_user_editing_level = 2;
 
 
-/**********************************************
- * Email settings
- **********************************************/
-
-// WHO TO EMAIL
-// ------------
-// The following settings determine who should be emailed when a booking is made,
-// edited or deleted (though the latter two events depend on the "When" settings below).
-// Set to TRUE or FALSE as required
-// (Note:  the email addresses for the room and area administrators are set from the
-// edit_area_room.php page in cdma)
-$mail_settings['admin_on_bookings']         = FALSE;  // the addresses defined by $mail_settings['recipients'] below
-$mail_settings['area_admin_on_bookings']    = FALSE;  // the area administrator
-$mail_settings['room_admin_on_bookings']    = FALSE;  // the room administrator
-$mail_settings['booker']                    = FALSE;  // the person making the booking
-$mail_settings['book_admin_on_provisional'] = FALSE;  // the booking administrator when provisional bookings are enabled
-                                                      // (which is the cdma admin, but this setting allows cdma
-                                                      // to be extended to have separate booking approvers)     
-
-// WHEN TO EMAIL
-// -------------
-// These settings determine when an email should be sent (an email is always sent for new
-// bookings provided at least on of the "Who" settings above is set to TRUE).
-// Set to TRUE or FALSE as required
-$mail_settings['admin_on_delete'] = FALSE;  // when an entry is deleted
-$mail_settings['admin_all']       = FALSE;  // edits as well as new bookings
-
-
-// WHAT TO EMAIL
-// -------------
-// These settings determine what should be included in the email
-// Set to TRUE or FALSE as required
-$mail_settings['details'] = FALSE;  // Set to TRUE if you want full booking details;
-                                    // otherwise you just get a link to the entry
-
-// HOW TO EMAIL - CHARACTER SET AND LANGUAGE
-// -----------------------------------------
-// You can override the charset used in emails if $unicode_encoding is 1
-// (utf-8) if you like, but be sure the charset you choose can handle all
-// the characters in the translation and that anyone may use in a
-// booking description
-//$mail_charset = "iso-8859-1";
-
-// Set the language used for emails (choose an available lang.* file).
-$mail_settings['admin_lang'] = 'en';   // Default is 'en'.
-
-
-// HOW TO EMAIL - ADDRESSES
-// ------------------------
-// The email addresses of the cdma administrator are set in the config file, and
-// those of the room and area administrators are set though the edit_area_room.php
-// in cdma.    But if you have set $mail_settings['booker'] above to TRUE, cdma will
-// need the email addresses of ordinary users.   If you are using the "db" 
-// authentication method then cdma will be able to get them from the users table.  But
-// if you are using any other authentication scheme then the following settings allow
-// you to specify a domain name that will be appended to the username to produce a
-// valid email address (eg "@domain.com").
-$mail_settings['domain'] = '';
-// If you use $mail_settings['domain'] above and username returned by cdma contains extra
-// strings appended like domain name ('username.domain'), you need to provide
-// this extra string here so that it will be removed from the username.
-$mail_settings['username_suffix'] = '';
-
-
-// HOW TO EMAIL - BACKEND
-// ----------------------
-// Set the name of the backend used to transport your mails. Either 'mail',
-// 'smtp' or 'sendmail'. Default is 'mail'. See INSTALL for more details.
-$mail_settings['admin_backend'] = 'sendmail';
-
-// EMAIL - MISCELLANEOUS
-// ---------------------
-
-// Set the email address of the From field. Default is 'admin_email@your.org'
-$mail_settings['from'] = 'tamara@tamaratemple.com';
-
-// Set the recipient email. Default is 'admin_email@your.org'. You can define
-// more than one recipient like this "john@doe.com,scott@tiger.com"
-$mail_settings['recipients'] = 'tamara@tamaratemple.com';
-
-// Set email address of the Carbon Copy field. Default is ''. You can define
-// more than one recipient (see 'recipients')
-$mail_settings['cc'] = '';
-
-// Set to TRUE if you want the cc addresses to be appended to the to line.
-// (Some email servers are configured not to send emails if the cc or bcc
-// fields are set)
-$mail_settings['treat_cc_as_to'] = FALSE;
 
 
 

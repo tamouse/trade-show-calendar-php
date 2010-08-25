@@ -9,8 +9,11 @@ function print_theme_header($event_id, $day_id)
          $search_str, $locale_warning, $provisional_enabled;
   global $tbl_entry, $tbl_room, $tbl_area;
   global $PHP_SELF;
+  global $page_timeout, $page_timeout_warning_timeout;
   
   $page = basename($PHP_SELF, ".php" );
+$user = getUserName();
+$nouser = (!isset($user) || empty($user) ? TRUE : FALSE);
 
 if (!isset($day_id) || (!$day_id))
 {
@@ -18,7 +21,7 @@ if (!isset($day_id) || (!$day_id))
   // If we dont know the right date then make it up 
     $day   = date("d");
     $month = date("m");
-    $year  = date("Y");
+    $year  = date("Y"); 
 }
   
   header("Content-Type: text/html; charset=" . get_charset());
@@ -127,11 +130,54 @@ if ($page == 'pending')
 	 $(document).ready(function(){
 	 	$(function() {
 	 		$("input:submit", ".submit_buttons").button();
+			$("input:button", ".submit_buttons").button();
 
 	 	});
 
 	  });
 
+<?php if ($page_timeout > 0 && !$nouser) { ?>
+	var autoCloseTimer;
+	var timeoutObject;
+	var timePeriod = <?php echo $page_timeout ?>;
+	var warnPeriod = <?php echo $page_timeout_warning_timeout ?>;
+
+	function promptForClose()
+	{
+		//alert("prompting for close");
+	$('#autoCloseDiv').css('display','block');
+	 autoCloseTimer = setTimeout("definitelyClose()",warnPeriod);
+	}
+
+
+	function autoClose()
+	{
+		//alert("auto close prompt");
+	 $('#autoCloseDiv').css('display','block');
+	 autoCloseTimer = setTimeout("definitelyClose()",timePeriod); //starts countdown to closure
+	}
+
+	function cancelClose()
+	{
+		
+	 clearTimeout(autoCloseTimer); //stops auto-close timer
+	 $('#autoCloseDiv').css('display','none'); //hides message
+	//alert("canceled close");
+	}
+
+	function resetTimeout()
+	{
+		//alert("timer reset");
+	  clearTimeout(timeoutObject); //stops timer
+	  timeoutObject = setTimeout("promptForClose()",timePeriod); //restarts timer from 0
+	}
+
+
+	function definitelyClose() {
+		//alert("logging off")
+	    location.href="index.php?Action=SetName"; // causes user to log off
+	}
+<?php } // close if ($page_timeout && !$nouser) ?> 
 
 // actions to be taken on page load
 function init()
@@ -169,7 +215,17 @@ function init()
   <?php
   }
 
+	// Check to see if a user is logged in. If so, set page timeout
+	
+	if (!$nouser) {  
   ?>
+
+	// activate page timeout functions
+	timeoutObject=setTimeout('promptForClose()',timePeriod);
+	//alert("Page time out set");
+	<?php
+	} // close if (!$nouser)
+	?>
 }
 
 
@@ -179,8 +235,19 @@ function init()
   <?php
   // Put the filename in as a class to aid styling.   
   // (Use a class rather than id to avoid specificity problems)
-  echo "<body class=\"$page\" onLoad =\"init()\">\n";
+  	echo "<body class=\"$page\" onLoad =\"init()\" " . 
+		// only set the triggers if a user is logged in
+		($nouser ? "" : "onkeydown='resetTimeout();' onmousedown='resetTimeout();'") .
+		">\n";
   ?>
+	<div id='autoCloseDiv' style="display:none;">
+		<h3><?php echo get_vocab('inactivitywarning') ?></h3>
+		<p><?php echo get_vocab('warningmessage') ?></p>
+		<div class="submit_buttons">
+		<input type='button' value='<?php echo get_vocab('closebutton') ?>' onclick='definitelyClose();' />
+		<input type='button' value='<?php echo get_vocab('cancelbutton') ?>' onclick='cancelClose();' />
+		</div>
+	</div>
     <div class="screenonly">
 
 <?php // show a warning if this is using a low version of php
@@ -275,8 +342,7 @@ function init()
 <?php
 
 // Check to see if a user is logged in. If not, print the logon form and exit.
-$user = getUserName();
-if (!isset($user) || empty($user)) {
+if ($nouser) {
 	printLoginForm();
 	exit;
 }

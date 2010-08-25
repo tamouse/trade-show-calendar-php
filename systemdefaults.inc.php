@@ -260,6 +260,9 @@ $phone_number_pattern = '/^((\+)?[1-9]{1,2})?([-\s\.])?((\(\d{1,4}\))|\d{1,4})((
 // US numbers:
 // $phone_number_pattern = '/^(?:\([2-9]\d{2}\)\ ?|[2-9]\d{2}(?:\-?|\ ?))[2-9]\d{2}[- ]?\d{4}$/';
 
+// Number of milliseconds to wait before timing out the page due to inactivity
+$page_timeout = 1000 * 60 * 15; // 15 minutes
+$page_timeout_warning_timeout = 1000 * 30; // 30 seconds
 
 
 // Days of the week that are working days (Sunday = 0, etc.)

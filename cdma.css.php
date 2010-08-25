@@ -919,3 +919,16 @@ td.day_selector_cell
 }
 */
 
+#autoCloseDiv {
+	 background-color: <?php echo $cdma_yellow ?>;
+	color: <?php echo $cdma_black ?> 
+	margin-left: -100px;
+	margin-top: -100px; 
+	width: 200px; 
+	height: 200px; 
+	position: absolute; 
+	top: 50%; 
+	left: 50%; 
+	text-align: center; 
+	border: 1px solid <?php echo $cdma_black ?>;
+}

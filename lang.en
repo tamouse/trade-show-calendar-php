@@ -19,6 +19,12 @@ $vocab["notimplemented"]      = "That feature is not implemented yet";
 // Used in style.inc
 $vocab["cdma"]               = "CDMA Calendar Booking";
 
+// Used in Themes/<themename>/header.inc
+$vocab["inactivitywarning"]   = "Inactivity warning!";
+$vocab["warningmessage"]      = "You will automatically be logged out in " .  $page_timeout_warning_timeout / 1000 . " seconds unless you hit 'Cancel.'";
+$vocab["closebutton"]         = "Log off";
+$vocab["cancelbutton"]        = "Cancel";
+
 // Used in functions.inc
 $vocab["report"]             = "Report";
 $vocab["admin"]              = "Admin";

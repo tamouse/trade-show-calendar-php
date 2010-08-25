@@ -148,7 +148,7 @@ function printLoginForm($TargetURL)
     ?>
     <input type="hidden" name="TargetURL" value="<?php echo htmlspecialchars($TargetURL) ?>">
     <input type="hidden" name="Action" value="SetName">
-    <div id="logon_submit">
+    <div id="logon_submit" class="submit_buttons">
       <input class="submit" type="submit" value=" <?php echo get_vocab('login') ?> ">
     </div>
   </fieldset>
