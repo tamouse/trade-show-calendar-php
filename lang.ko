@@ -402,3 +402,7 @@ $vocab["type_2_custom_msg"]    = "<p><b>This is a notice of change for your  app
 $vocab["type_3_custom_msg"]    = "<p><b>This is to inform you of a CANCELATION of your appointment at the CDMA Summit.</b> The following were the details of the appointment:</p>";
 $vocab["unknownmailtype"]     = "Internal error: unknown mail transaction type. No mail sent.";
 ?>
+<?php
+// Additional vocabulary for translating
+$vocab["notyourtimeslot"]    = "You do not have access to this time slot";
+?>

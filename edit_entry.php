@@ -120,9 +120,20 @@ if (!empty($email_entry))
 if (!isEditable($user_id, $creator_id) && !$is_admin)
 {
 	// Don't let other users see entry details
-	$errormsg = 'notowner';
-	showAccessDenied($day_id, $event_id, $errormsg);
-	exit;
+	  print_header($event_id, $day_id);
+	?>
+	  <h1><?php echo get_vocab("notyourtimeslot")?></h1>
+	  <o>
+	   <?php echo get_vocab("notowner")?>
+	  </p>
+	  <p style="font-size: small">
+	    <a href="<?php echo htmlspecialchars($HTTP_REFERER); ?>">
+	      <?php echo get_vocab("returnprev"); ?>
+	    </a>
+	  </p>
+	<?php
+	  // Print footer and exit
+	  print_footer(TRUE);
 }
 // Note: if $creator_id = 0, this is a new appointment
 if ($creator_id == 0)

@@ -197,8 +197,9 @@ $vocab["max_time_before"]     = "The maximum interval between now and the start 
 
 // Authentication stuff
 $vocab["accessdenied"]       = "You do not have access to this item";
+$vocab["notyourtimeslot"]    = "You do not have access to this time slot";
 $vocab["norights"]           = "You do not have sufficient privileges to access or modify this item. Please contact the administrator for more information.";
-$vocab["notowner"]           = "You are not the owner of this item. You cannot modify it or delete it. Please contact the administrator for more information.";
+$vocab["notowner"]           = "The slot is taken by someone else. Please contact the administrator for assistance. Thank you for your understanding.";
 $vocab["please_login"]       = "Please log in";
 $vocab["users.name"]          = "Name";
 $vocab["users.password"]      = "Password";
