@@ -1,9 +1,9 @@
-*~
-.*~
 .DS_Store
 .backups
-functionlist.txt
+.git
+.gitignore
 .flashbake
-*.zip
+.tarexcludes
+._*
 config.inc.php
 *.back.*
