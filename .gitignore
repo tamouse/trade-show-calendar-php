@@ -7,3 +7,4 @@ functionlist.txt
 .tarexcludes
 *.zip
 config.inc.php
+*.back.*

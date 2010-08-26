@@ -53,7 +53,7 @@ $vocab["slotdeletefailed"]   = "Slot delete attempt failed";
 $vocab["selectdayfailed"]	 = "Selection of day entries failed";
 $vocab['instructions1']      = "Click on an <span class=\"available\">available</span> space to book an appointment.";
 $vocab['instructions2']      = "Click on a <span class=\"booked_mine\">booked</span> space to edit it.";
-$vocab['instructions3']      = "Click on a time slot to add an appointment slot. Click on a <span class=\"available\" space to edit or delete it.";
+$vocab['instructions3']      = "Click on 'add a slot' to add a time slot. Click on an <span class=\"available\">available</span> time slot to edit or delete it.";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "View Day";
