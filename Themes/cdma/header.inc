@@ -240,7 +240,7 @@ function init()
 		($nouser ? "" : "onkeydown='resetTimeout();' onmousedown='resetTimeout();'") .
 		">\n";
   ?>
-	<div id='autoCloseDiv' style="display:none;">
+	<div id='autoCloseDiv' style="display:none; z-index: 99;">
 		<h3><?php echo get_vocab('inactivitywarning') ?></h3>
 		<p><?php echo get_vocab('warningmessage') ?></p>
 		<div class="submit_buttons">
@@ -278,7 +278,7 @@ function init()
           else
           {
             $logo_size = getimagesize($cdma_company_logo);
-            echo "<img src=\"$cdma_company_logo\" " . $logo_size[3] . " alt=\"logo\">\n";
+            echo "<img src=\"$cdma_company_logo\" alt=\"logo\">\n";
           }
           if (!empty($cdma_company_url))
           {

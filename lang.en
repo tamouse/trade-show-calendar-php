@@ -197,9 +197,9 @@ $vocab["max_time_before"]     = "The maximum interval between now and the start 
 
 // Authentication stuff
 $vocab["accessdenied"]       = "You do not have access to this item";
-$vocab["notyourtimeslot"]    = "You do not have access to this time slot";
+$vocab["notyourtimeslot"]    = "A meeting has been booked for the time you have requested.";
 $vocab["norights"]           = "You do not have sufficient privileges to access or modify this item. Please contact the administrator for more information.";
-$vocab["notowner"]           = "The slot is taken by someone else. Please contact the administrator for assistance. Thank you for your understanding.";
+$vocab["notowner"]           = "Please return to the previous page and select an available meeting time.  If you have any problems please contact <a href=\"mailto:$cdma_admin_email\">$cdma_admin_email</a> for assistance.<br /><br />Thank you for your understanding.";
 $vocab["please_login"]       = "Please log in";
 $vocab["users.name"]          = "Name";
 $vocab["users.password"]      = "Password";
@@ -432,7 +432,7 @@ $vocab["please_contact"]     = "Please contact ";
 $vocab["for_any_questions"]  = "for any questions that aren't answered here.";
 
 // Used in email_entry.php
-$vocab["sureemail"]          = "Do you want to send a confirmation email of the Appointment?";
+$vocab["sureemail"]          = "Would you like to email details of this meeting to attendees?";
 $vocab["emailsent"]          = "Confirmation email sent";
 $vocab["mailerror"]          = "Error mailing confirmation message";
 $vocab["norecipients"]       = "No email recipients";

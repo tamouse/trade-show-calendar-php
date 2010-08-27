@@ -40,8 +40,8 @@ $db_tbl_prefix = "cdma_";
 /*********************************
  * Site identification information
  *********************************/
-$cdma_admin = "CDMA Administrator";
-$cdma_admin_email = "no-reply@cdmacalendar.com";  // NOTE:  there are more email addresses in $mail_settings below
+$cdma_admin = "CDMA Meetings";
+$cdma_admin_email = "meetings@cdmacalendar.com";  // NOTE:  there are more email addresses in $mail_settings below
 
 // The company name is mandatory.   It is used in the header and also for email notifications.
 // The company logo, additional information and URL are all optional.
