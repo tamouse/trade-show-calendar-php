@@ -23,7 +23,7 @@ $error_font_color				= "#FF0000";	// used to display error messages
 
 $banner_back_color              = $cdma_teal;    // background colour for banner
 $banner_border_color            = $body_background_color;    // border colour for banner
-$banner_font_color              = $header_font_color;       // font colour for banner
+$banner_font_color              = $cdma_black;       // font colour for banner
 
 $header_back_color              = $cdma_black;  // background colour for headers
 
