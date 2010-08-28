@@ -66,7 +66,7 @@ $anchor_link_color              = $standard_font_color;        // link color
 $anchor_visited_color           = $anchor_link_color;          // link color (visited)
 $anchor_hover_color             = $highlight_font_color;       // link color (hover)
 
-$anchor_link_color_banner       = $header_font_color;          // link color
+$anchor_link_color_banner       = $banner_font_color;          // link color
 $anchor_visited_color_banner    = $anchor_link_color_banner;   // link color (visited)
 $anchor_hover_color_banner      = $anchor_link_color_banner;   // link color (hover)
 
