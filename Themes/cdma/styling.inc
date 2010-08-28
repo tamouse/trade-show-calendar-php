@@ -16,7 +16,7 @@ $cdma_black                     = "#000";
 
 $body_background_color          = "#e7ebee";    // background colour for the main body
 $standard_font_color            = $cdma_black;    // default font color
-$header_font_color              = "#ffffff";    // font color for text in headers
+$header_font_color              = $cdma_black;    // font color for text in headers
 $highlight_font_color           = $cdma_orange;    // used for highlighting text (eg links, errors)
 $colour_key_font_color          = $standard_font_color;    // used in the colour key table
 $error_font_color				= "#FF0000";	// used to display error messages
@@ -25,7 +25,7 @@ $banner_back_color              = $cdma_teal;    // background colour for banner
 $banner_border_color            = $body_background_color;    // border colour for banner
 $banner_font_color              = $header_font_color;       // font colour for banner
 
-$header_back_color              = $banner_back_color;  // background colour for headers
+$header_back_color              = $cdma_yellow;  // background colour for headers
 
 $admin_table_header_back_color  = $header_back_color;     // background colour for header and also border colour for table cells
 $admin_table_header_sep_color   = $body_background_color; // vertical separator colour in header
@@ -33,7 +33,7 @@ $admin_table_header_font_color  = $header_font_color;     // font colour for hea
 $admin_table_border_color       = "#C3CCD3";
 
 $main_table_border_color        = $cdma_black; // border colour for day/week/month tables - outside
-$main_table_header_border_color = $body_background_color; // border colour for day/week/month tables - header
+$main_table_header_border_color = $cdma_black; // border colour for day/week/month tables - header
 $main_table_body_h_border_color = $main_table_border_color;              // border colour for day/week/month tables - body, horizontal
 $main_table_body_v_border_color = $main_table_border_color; // border colour for day/week/month tables - body, vertical
 $main_table_month_color         = "#ffffff";    // background colour for days in the month view

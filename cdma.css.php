@@ -180,7 +180,7 @@ table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: se
     border-style: solid}
 .dwm_main td {padding: 0;
     border:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>;}
-.dwm_main th {font-size: small; font-weight: normal; vertical-align: top; padding: 0 2px;
+.dwm_main th {font-size: normal; font-weight: normal; vertical-align: top; padding: 0 2px;
     color: <?php echo $header_font_color ?>; 
     background-color: <?php echo $header_back_color ?>;
     border: <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_header_border_color ?>}
