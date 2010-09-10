@@ -1351,4 +1351,19 @@ function get_admin_user()
 	$row = sql_row_keyed($res, 0);
 	return $row;
 }
+
+/**
+ * Get the full day string in dddd, mmm dd, yyyy format
+ *
+ * @return string with full date
+ * @author Tamara Temple
+ **/
+function get_full_day_string($day_id)
+{
+	global $tbl_day, $full_date_format;
+	$day_rec = get_record_by_id($tbl_day, $day_id);
+	$curr_date = mktime(0,0,0,$day_rec['month'],$day_rec['day'],$day_rec['year']);
+	$curr_date_string = strftime($full_date_format, $curr_date);
+	return $curr_date_string;
+}
 ?>

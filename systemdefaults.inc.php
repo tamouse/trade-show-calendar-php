@@ -191,6 +191,9 @@ $display_app_title = TRUE;
 $dateformat = 0;
 $date_format_str = "m-d-y"; // m-d-yy
 
+// Full date format string
+$full_date_format = "%A, %B %e, %Y"; // dddd, mmm d, yyyy: Friday, September 10, 2010
+
 // Time format in pages. 0 to show dates in 12 hour format, 1 to show them
 // in 24 hour format
 $twentyfourhour_format = 1;

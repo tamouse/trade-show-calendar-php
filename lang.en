@@ -54,6 +54,7 @@ $vocab["selectdayfailed"]	 = "Selection of day entries failed";
 $vocab['instructions1']      = "Click on an <span class=\"available\">available</span> space to book an appointment.";
 $vocab['instructions2']      = "Click on a <span class=\"booked_mine\">booked</span> space to edit it.";
 $vocab['instructions3']      = "Click on 'add a slot' to add a time slot. Click on an <span class=\"available\">available</span> time slot to edit or delete it.";
+$vocab["currentlyviewing"]    = "You are currently viewing entries for ";
 
 // Used in trailer.inc
 $vocab["viewday"]            = "View Day";

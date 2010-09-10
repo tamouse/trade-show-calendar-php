@@ -169,6 +169,7 @@ div#dwm_rooms  {float: left; margin-right: 2.0em}
 
 h2#dwm {text-align: center}
 
+div.daydisplay	{text-align: center; margin-top: 0.5em; margin-bottom: 0.5em; font-weight: bold}
 div.date_nav    {float: left;  width: 100%; margin-top: 0.5em; margin-bottom: 0.5em; font-weight: bold}
 div.date_before {float: left;  width: 33%; text-align: left}
 div.date_now    {float: left;  width: 33%; text-align: center}
@@ -176,10 +177,20 @@ div.date_after  {float: right; width: 33%; text-align: right}
 
 table.dwm_main {clear: both; width: 100%; border-spacing: 0; border-collapse: separate;
     border-color: <?php echo $main_table_border_color ?>;
-    border-width: <?php echo $main_table_border_width ?>px;
+    border-left-width: <?php echo $main_table_border_side_width ?>px;
+	border-right-width: <?php echo $main_table_border_side_width ?>px;
+	border-top-width: <?php echo $main_table_border_surface_width ?>px;
+	border-bottom-width: <?php echo $main_table_border_surface_width ?>px;
     border-style: solid}
 .dwm_main td {padding: 0;
-    border:  <?php echo $main_table_cell_border_width ?>px solid <?php echo $main_table_body_h_border_color ?>;}
+    border-style:  solid;
+ 	border-color: <?php echo $main_table_body_h_border_color ?>;
+	border-left-width: <?php echo $main_table_cell_border_side_width ?>px; 
+	border-right-width: <?php echo $main_table_cell_border_side_width ?>px; 
+	border-top-width: <?php echo $main_table_cell_border_surface_width ?>px; 
+	border-bottom-width: <?php echo $main_table_cell_border_surface_width ?>px; 
+	
+}
 .dwm_main th {font-size: normal; font-weight: bold; vertical-align: top; padding: 0 2px;
     color: <?php echo $header_font_color ?>; 
     background-color: <?php echo $header_back_color ?>;

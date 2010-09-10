@@ -120,7 +120,9 @@ $day_selector_hover_bg_color      = $cdma_orange;
 $banner_border_width          = '0';  // (px)  border width for the outside of the banner
 $banner_border_cell_width     = '1';  // (px)  border width for the cells of the banner
 $main_table_border_width      = '0';  // (px)  border width for the outside of the main day/week/month tables    
-$main_table_cell_border_width = '1';  // (px)  border width for the cells of the main day/week/month tables
+$main_table_cell_border_width = '3';  // (px)  border width for the cells of the main day/week/month tables
+$main_table_cell_border_side_width = '3'; // (px) side border width for the cells of the main day/week/month tables
+$main_table_cell_border_surface_width = '1'; // (px) top/bottom border width for cells of the main tables
 $main_cell_height             = '17'; // (px)  height of the cells in the main day/week tables
          
     

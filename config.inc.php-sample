@@ -49,7 +49,7 @@ $cdma_admin_email = "meetings@cdmacalendar.com";  // NOTE:  there are more email
 $cdma_company = "CDMA Summit";   // This line must always be uncommented ($cdma_company is used in various places)
 
 // Uncomment this next line to use a logo instead of text for your organisation in the header
-$cdma_company_logo = "images/CDMA_Banner_DatePlace300ppi.JPG";    // name of your logo file.   This example assumes it is in the cdma directory
+$cdma_company_logo = "images/CDMA_Banner_Register2.jpg";    // name of your logo file.   This example assumes it is in the cdma directory
 
 // Uncomment this next line for supplementary information after your company name or logo
 unset($cdma_company_more_info);  // e.g. "XYZ Department"
@@ -121,7 +121,7 @@ $default_duration = (60 * 60);  // DEFAULT VALUE FOR NEW AREAS
 // being 18:30 -> 19:00
 
 // The beginning of the first slot of the day (DEFAULT VALUES FOR NEW AREAS)
-$morningstarts         = 8;   // must be integer in range 0-23
+$morningstarts         = 12;   // must be integer in range 0-23
 $morningstarts_minutes = 0;   // must be integer in range 0-59
 
 // The beginning of the last slot of the day (DEFAULT VALUES FOR NEW AREAS)

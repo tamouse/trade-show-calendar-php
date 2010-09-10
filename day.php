@@ -64,6 +64,22 @@ if ($display_events)
 	echo make_event_selector_html($event_id, $room_id, $day_id, FALSE);
 }
 
+/**
+ * Add in a notification of the current day being viewed
+ *
+ * @author Tamara Temple
+ */
+if (isset($day_id) && ($day_id > 0))
+{
+	$full_day_string = get_full_day_string($day_id);
+	echo "<div class=\"daydisplay\">" . get_vocab('currentlyviewing') . " " . $full_day_string. "</div>\n";
+}
+
+/**
+ * Present a day selector to allow user to choose between days of the event
+ *
+ * @author Tamara Temple
+ */
 echo make_day_selector_html($event_id, $room_id, $day_id, $mode);
 
 if ($mode == 0)
@@ -75,7 +91,7 @@ else
 {
 	echo "<div class=\"instructions\">" . get_vocab('instructions3') . "</div>\n";
 }
-// We need to know what all the rooms area called, so we can show them all
+// We need to know what all the rooms are called, so we can show them all
 // pull the data from the db and store it. Convienently we can print the room
 // headings and capacities at the same time
 
